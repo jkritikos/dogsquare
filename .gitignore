@@ -2,5 +2,6 @@
 tmp
 app/tmp
 *.log
-
 app/tmp/sessions/sess_d0f99e1992f769be07527f9afd6bebfd
+*.log
+app/tmp/cache/persistent/myapp_cake_core_file_map
