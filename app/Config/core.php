@@ -189,7 +189,7 @@
  */
 	Configure::write('Session', array(
 		'defaults' => 'cake',
-                'timeout' => '15'
+                'timeout' => '10'
 	));
 
 /**
