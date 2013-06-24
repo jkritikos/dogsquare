@@ -1,0 +1,1316 @@
+2013-06-17 14:22:21 Debug: header.ctp active tab is  role is 
+2013-06-17 14:34:37 Debug: header.ctp active tab is  role is 
+2013-06-17 14:34:39 Debug: header.ctp active tab is  role is 
+2013-06-17 14:34:41 Debug: header.ctp active tab is  role is 
+2013-06-17 14:37:44 Debug: header.ctp active tab is  role is 
+2013-06-17 14:37:47 Debug: header.ctp active tab is  role is 
+2013-06-17 14:39:16 Debug: header.ctp active tab is  role is 
+2013-06-17 14:45:10 Debug: header.ctp active tab is  role is 
+2013-06-17 14:45:15 Debug: header.ctp active tab is  role is 
+2013-06-17 14:51:29 Debug: header.ctp active tab is  role is 
+2013-06-17 14:51:30 Debug: header.ctp active tab is  role is 
+2013-06-17 14:51:31 Debug: header.ctp active tab is  role is 
+2013-06-17 14:51:31 Debug: header.ctp active tab is  role is 
+2013-06-17 14:51:32 Debug: header.ctp active tab is  role is 
+2013-06-17 19:11:35 Debug: header.ctp active tab is  role is 
+2013-06-17 19:13:58 Debug: header.ctp active tab is  role is 
+2013-06-17 19:15:25 Debug: header.ctp active tab is  role is 
+2013-06-17 19:15:49 Debug: header.ctp active tab is  role is 
+2013-06-17 19:25:15 Debug: header.ctp active tab is  role is 
+2013-06-17 19:25:46 Debug: header.ctp active tab is  role is 
+2013-06-17 19:34:01 Debug: header.ctp active tab is  role is 
+2013-06-17 21:36:20 Debug: User->validateCredentials() called with email te and password te
+2013-06-17 21:36:20 Debug: header.ctp active tab is  role is 
+2013-06-17 21:37:14 Debug: User->validateCredentials() called with email te and password te
+2013-06-17 21:37:14 Debug: header.ctp active tab is  role is 
+2013-06-17 21:43:42 Debug: User->validateCredentials() called with email te and password te
+2013-06-17 21:43:42 Debug: User->validateCredentials() returns 
+2013-06-17 21:44:06 Debug: User->validateCredentials() called with email te and password te
+2013-06-17 21:44:06 Debug: User->validateCredentials() returns 
+2013-06-17 21:44:26 Debug: User->validateCredentials() called with email te and password te
+2013-06-17 21:44:26 Debug: User->validateCredentials() returns 
+2013-06-17 21:47:59 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-17 21:47:59 Debug: User->validateCredentials() returns Array
+2013-06-17 21:47:59 Debug: header.ctp active tab is  role is 2
+2013-06-17 21:50:06 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-17 21:50:06 Debug: User->validateCredentials() returns Array
+2013-06-17 21:50:06 Debug: Users->login() redirecting to /users/index
+2013-06-17 21:50:06 Debug: header.ctp active tab is users role is 2
+2013-06-17 21:50:15 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:19:18 Debug: header.ctp active tab is  role is 
+2013-06-18 07:21:03 Debug: User->validateCredentials() called with email djason@djason.com and password 1
+2013-06-18 07:21:03 Debug: User->validateCredentials() returns 
+2013-06-18 07:21:08 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 07:21:08 Debug: User->validateCredentials() returns Array
+2013-06-18 07:21:08 Debug: Users->login() redirecting to /users/index
+2013-06-18 07:21:09 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:22:24 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:22:53 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:23:08 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:25:38 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:33:49 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:50:41 Debug: header.ctp active tab is  role is 2
+2013-06-18 07:52:01 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:52:35 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:53:40 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:54:04 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:54:19 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:56:25 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:56:26 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:59:26 Debug: header.ctp active tab is users role is 2
+2013-06-18 07:59:27 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:01:09 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:02:58 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:03:22 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:03:25 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:04:06 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:05:29 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:05:31 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:05:51 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:05:53 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:06:37 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:06:39 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:06:56 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:06:57 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:09:25 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:09:27 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:09:28 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:11:10 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:11:34 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:11:59 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:13:21 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:13:22 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:13:28 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:14:28 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:19:34 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:19:52 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:23:15 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:23:17 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:23:30 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:26:06 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:26:08 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:26:19 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:27:45 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:27:47 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:27:50 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:27:51 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:37:32 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:37:46 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:37:53 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:38:12 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:38:14 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:38:30 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:39:01 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:39:03 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:39:05 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:39:58 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:40:07 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:41:23 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:41:24 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:42:23 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:42:29 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:42:33 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:42:46 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:42:53 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:43:29 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:44:35 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:47:19 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:47:21 Debug: User->search() returns 3
+2013-06-18 08:47:21 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:47:41 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:47:42 Debug: User->search() returns 3
+2013-06-18 08:47:42 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:47:57 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:47:58 Debug: User->search() returns 3
+2013-06-18 08:47:58 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:48:29 Debug: User->search() returns 3
+2013-06-18 08:48:29 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:49:34 Debug: User->search() returns 3
+2013-06-18 08:49:34 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:50:06 Debug: User->search() returns 3
+2013-06-18 08:50:06 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:52:11 Debug: User->search() returns 3
+2013-06-18 08:52:11 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:52:33 Debug: User->search() returns 3
+2013-06-18 08:52:33 Debug: header.ctp active tab is users role is 2
+2013-06-18 08:53:42 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:55:09 Debug: header.ctp active tab is  role is 2
+2013-06-18 08:58:30 Debug: header.ctp active tab is users role is 2
+2013-06-18 09:01:05 Debug: header.ctp active tab is  role is 
+2013-06-18 09:01:08 Debug: header.ctp active tab is  role is 
+2013-06-18 09:01:10 Debug: header.ctp active tab is  role is 
+2013-06-18 09:01:11 Debug: header.ctp active tab is  role is 
+2013-06-18 09:01:23 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:01:23 Debug: User->validateCredentials() returns Array
+2013-06-18 09:01:23 Debug: Users->login() redirecting to /users/create
+2013-06-18 09:04:12 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:04:12 Debug: User->validateCredentials() returns Array
+2013-06-18 09:04:12 Debug: Users->login() redirecting to /users/create
+2013-06-18 09:04:51 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:04:51 Debug: User->validateCredentials() returns Array
+2013-06-18 09:04:51 Debug: Users->login() redirecting to /users/create
+2013-06-18 09:04:51 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:05:11 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:05:42 Debug: header.ctp active tab is  role is 
+2013-06-18 09:05:45 Debug: header.ctp active tab is  role is 
+2013-06-18 09:05:53 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:05:53 Debug: User->validateCredentials() returns Array
+2013-06-18 09:05:53 Debug: Users->login() redirecting to /users/search
+2013-06-18 09:05:53 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:05:59 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:06:00 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:15:09 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:15:10 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:15:14 Debug: User->search() returns 1
+2013-06-18 09:15:14 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:15:23 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:24:21 Debug: User->search() returns 1
+2013-06-18 09:24:21 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:24:21 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:24:23 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:24:26 Debug: header.ctp active tab is  role is 
+2013-06-18 09:24:32 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:24:32 Debug: User->validateCredentials() returns Array
+2013-06-18 09:24:32 Debug: Users->login() redirecting to /users/search
+2013-06-18 09:27:53 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:27:53 Debug: User->validateCredentials() returns Array
+2013-06-18 09:27:53 Debug: Users->login() redirecting to /users/search
+2013-06-18 09:28:52 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:28:52 Debug: User->validateCredentials() returns Array
+2013-06-18 09:28:52 Debug: Users->login() redirecting to /users/search
+2013-06-18 09:28:52 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:29:02 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:31:22 Debug: header.ctp active tab is  role is 
+2013-06-18 09:31:28 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 09:31:28 Debug: User->validateCredentials() returns Array
+2013-06-18 09:31:28 Debug: Users->login() redirecting to /users/create
+2013-06-18 09:31:28 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:33:34 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:33:35 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:38:36 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:38:57 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:38:59 Debug: User->search() returns 3
+2013-06-18 09:38:59 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:39:01 Debug: header.ctp active tab is  role is Array
+2013-06-18 09:41:27 Debug: header.ctp active tab is  role is Array
+2013-06-18 09:41:42 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:44:25 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:49:38 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:49:51 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:50:20 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:51:59 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:56:23 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:57:05 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:57:59 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:58:00 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:58:02 Debug: header.ctp active tab is users role is Array
+2013-06-18 09:58:03 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:50:46 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:50:48 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:50:48 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:54:35 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:54:36 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:55:40 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:55:42 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:55:57 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:56:12 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:58:02 Debug: header.ctp active tab is users role is Array
+2013-06-18 11:58:10 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:00:22 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:00:33 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:00:39 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:00:57 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:01:06 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:01:16 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:01:27 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:01:37 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:05:19 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:05:27 Debug: User->search() returns 3
+2013-06-18 12:05:27 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:06:10 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:06:11 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:10:51 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:10:56 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:10:56 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:11:58 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:12:27 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:12:32 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: javascript in [/Users/jace/dev/dogsquare_web/app/View/Users/validate_email.ctp, line 4]
+Trace:
+include - APP/View/Users/validate_email.ctp, line 4
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::render() - CORE/Cake/View/View.php, line 471
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 194
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 162
+[main] - APP/webroot/index.php, line 110
+
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 11]
+Trace:
+include - APP/View/Elements/header.ctp, line 11
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:32 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 13]
+Trace:
+include - APP/View/Elements/header.ctp, line 13
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 18]
+Trace:
+include - APP/View/Elements/header.ctp, line 18
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 23]
+Trace:
+include - APP/View/Elements/header.ctp, line 23
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 28]
+Trace:
+include - APP/View/Elements/header.ctp, line 28
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:32 Notice: Notice (8): Undefined variable: headerTitle in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 70]
+Trace:
+include - APP/View/Elements/header.ctp, line 70
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:41 Debug: Users->validateEmail() called for a
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: javascript in [/Users/jace/dev/dogsquare_web/app/View/Users/validate_email.ctp, line 4]
+Trace:
+include - APP/View/Users/validate_email.ctp, line 4
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::render() - CORE/Cake/View/View.php, line 471
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 194
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 162
+[main] - APP/webroot/index.php, line 110
+
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 11]
+Trace:
+include - APP/View/Elements/header.ctp, line 11
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:42 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 13]
+Trace:
+include - APP/View/Elements/header.ctp, line 13
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 18]
+Trace:
+include - APP/View/Elements/header.ctp, line 18
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 23]
+Trace:
+include - APP/View/Elements/header.ctp, line 23
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 28]
+Trace:
+include - APP/View/Elements/header.ctp, line 28
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:12:42 Notice: Notice (8): Undefined variable: headerTitle in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 70]
+Trace:
+include - APP/View/Elements/header.ctp, line 70
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:16:30 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:16:31 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:16:39 Debug: Users->validateEmail() called for 11
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: javascript in [/Users/jace/dev/dogsquare_web/app/View/Users/validate_email.ctp, line 4]
+Trace:
+include - APP/View/Users/validate_email.ctp, line 4
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::render() - CORE/Cake/View/View.php, line 471
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 194
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 162
+[main] - APP/webroot/index.php, line 110
+
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 11]
+Trace:
+include - APP/View/Elements/header.ctp, line 11
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:16:39 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 13]
+Trace:
+include - APP/View/Elements/header.ctp, line 13
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 18]
+Trace:
+include - APP/View/Elements/header.ctp, line 18
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 23]
+Trace:
+include - APP/View/Elements/header.ctp, line 23
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 28]
+Trace:
+include - APP/View/Elements/header.ctp, line 28
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:16:39 Notice: Notice (8): Undefined variable: headerTitle in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 70]
+Trace:
+include - APP/View/Elements/header.ctp, line 70
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:17:37 Debug: Users->validateEmail() called for a
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: javascript in [/Users/jace/dev/dogsquare_web/app/View/Users/validate_email.ctp, line 4]
+Trace:
+include - APP/View/Users/validate_email.ctp, line 4
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::render() - CORE/Cake/View/View.php, line 471
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 194
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 162
+[main] - APP/webroot/index.php, line 110
+
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 11]
+Trace:
+include - APP/View/Elements/header.ctp, line 11
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:17:37 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 13]
+Trace:
+include - APP/View/Elements/header.ctp, line 13
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 18]
+Trace:
+include - APP/View/Elements/header.ctp, line 18
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 23]
+Trace:
+include - APP/View/Elements/header.ctp, line 23
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 28]
+Trace:
+include - APP/View/Elements/header.ctp, line 28
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:17:37 Notice: Notice (8): Undefined variable: headerTitle in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 70]
+Trace:
+include - APP/View/Elements/header.ctp, line 70
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:18:40 Debug: Users->validateEmail() called for a
+2013-06-18 12:18:40 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:19:24 Debug: Users->validateEmail() called for a
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: javascript in [/Users/jace/dev/dogsquare_web/app/View/Users/validate_email.ctp, line 4]
+Trace:
+include - APP/View/Users/validate_email.ctp, line 4
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::render() - CORE/Cake/View/View.php, line 471
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 194
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 162
+[main] - APP/webroot/index.php, line 110
+
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 11]
+Trace:
+include - APP/View/Elements/header.ctp, line 11
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:19:24 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 13]
+Trace:
+include - APP/View/Elements/header.ctp, line 13
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 18]
+Trace:
+include - APP/View/Elements/header.ctp, line 18
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 23]
+Trace:
+include - APP/View/Elements/header.ctp, line 23
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: activeTab in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 28]
+Trace:
+include - APP/View/Elements/header.ctp, line 28
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:19:24 Notice: Notice (8): Undefined variable: headerTitle in [/Users/jace/dev/dogsquare_web/app/View/Elements/header.ctp, line 70]
+Trace:
+include - APP/View/Elements/header.ctp, line 70
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::_renderElement() - CORE/Cake/View/View.php, line 1210
+View::element() - CORE/Cake/View/View.php, line 414
+include - APP/View/Layouts/default.ctp, line 67
+View::_evaluate() - CORE/Cake/View/View.php, line 947
+View::_render() - CORE/Cake/View/View.php, line 909
+View::renderLayout() - CORE/Cake/View/View.php, line 535
+View::render() - CORE/Cake/View/View.php, line 479
+Controller::render() - CORE/Cake/Controller/Controller.php, line 948
+ExceptionRenderer::_outputMessage() - CORE/Cake/Error/ExceptionRenderer.php, line 276
+ExceptionRenderer::error500() - CORE/Cake/Error/ExceptionRenderer.php, line 245
+ExceptionRenderer::render() - CORE/Cake/Error/ExceptionRenderer.php, line 178
+ErrorHandler::handleException() - CORE/Cake/Error/ErrorHandler.php, line 123
+call_user_func - [internal], line ??
+ErrorHandler::handleFatalError() - CORE/Cake/Error/ErrorHandler.php, line 236
+ErrorHandler::handleError() - CORE/Cake/Error/ErrorHandler.php, line 184
+call_user_func - [internal], line ??
+App::_checkFatalError() - CORE/Cake/Core/App.php, line 927
+App::shutdown() - CORE/Cake/Core/App.php, line 900
+[main] - [internal], line ??
+
+2013-06-18 12:25:42 Debug: Users->validateEmail() called for a
+2013-06-18 12:25:44 Debug: Users->validateEmail() called for a
+2013-06-18 12:26:22 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:29:28 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:29:30 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:29:47 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:29:54 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:32:07 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:38:39 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:42:09 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:42:10 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:42:16 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:42:16 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:42:19 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:49:23 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:49:23 Debug: header.ctp active tab is  role is Array
+2013-06-18 12:50:15 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:50:30 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:50:32 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:50:32 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:50:44 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:51:14 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:51:18 Debug: Users->validateEmail() called for djason@djason.comd
+2013-06-18 12:51:31 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:51:42 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:51:49 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:51:55 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:53:10 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:53:11 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:53:11 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:53:27 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:53:34 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:53:49 Debug: Users->validateEmail() called for djason@djason.come
+2013-06-18 12:54:23 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:54:30 Debug: Users->validateEmail() called for djason@djason.comd
+2013-06-18 12:54:36 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:54:54 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:54:59 Debug: Users->validateEmail() called for djason@djason.comd
+2013-06-18 12:54:59 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:55:01 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:55:07 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:55:24 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:55:32 Debug: Users->validateEmail() called for djason@djason.com
+2013-06-18 12:55:37 Debug: Users->validateEmail() called for user@dogsquare.com
+2013-06-18 12:55:37 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:55:39 Debug: header.ctp active tab is users role is Array
+2013-06-18 12:55:41 Debug: User->search() returns 2
+2013-06-18 12:55:41 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:27:52 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:27:53 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:34:31 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 13:34:31 Debug: User->validateCredentials() returns Array
+2013-06-18 13:34:32 Debug: Users->login() redirecting to /users/create
+2013-06-18 13:34:32 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:34:33 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:34:35 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:34:35 Debug: header.ctp active tab is users role is Array
+2013-06-18 13:34:36 Debug: header.ctp active tab is users role is Array
+2013-06-18 14:49:22 Debug: header.ctp active tab is  role is Array
+2013-06-18 14:49:23 Debug: header.ctp active tab is users role is Array
+2013-06-18 14:49:25 Debug: header.ctp active tab is users role is Array
+2013-06-18 14:49:27 Debug: header.ctp active tab is users role is Array
+2013-06-18 14:49:28 Debug: header.ctp active tab is users role is Array
+2013-06-18 14:49:29 Debug: header.ctp active tab is users role is Array
+2013-06-18 14:49:30 Debug: header.ctp active tab is users role is Array
+2013-06-18 19:42:58 Debug: header.ctp active tab is  role is 
+2013-06-18 19:43:11 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-18 19:43:11 Debug: User->validateCredentials() returns Array
+2013-06-18 19:43:11 Debug: Users->login() redirecting to /users/index
+2013-06-18 19:43:11 Debug: header.ctp active tab is users role is Array
+2013-06-18 19:43:15 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:28:53 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-19 07:28:53 Debug: User->validateCredentials() returns Array
+2013-06-19 07:28:53 Debug: Users->login() redirecting to /users/create
+2013-06-19 07:28:53 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:29:30 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:29:32 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:30:36 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:39:48 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:39:50 Debug: header.ctp active tab is  role is 
+2013-06-19 07:39:58 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-19 07:39:58 Debug: User->validateCredentials() returns Array
+2013-06-19 07:39:58 Debug: Users->login() redirecting to /users/create
+2013-06-19 07:39:58 Debug: header.ctp active tab is users role is Array
+2013-06-19 07:40:11 Debug: Users->validateEmail() called for user@dogsquare.com
+2013-06-19 07:40:11 Debug: header.ctp active tab is users role is Array
+2013-06-19 08:21:31 Debug: header.ctp active tab is users role is Array
+2013-06-19 08:21:32 Debug: header.ctp active tab is  role is Array
+2013-06-19 08:22:00 Debug: header.ctp active tab is  role is Array
+2013-06-19 08:22:50 Debug: header.ctp active tab is  role is Array
+2013-06-19 08:24:01 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:26:16 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:26:49 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:26:50 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:26:52 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:27:57 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:29:46 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:29:52 Debug: header.ctp active tab is users role is Array
+2013-06-19 08:29:53 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:30:05 Debug: header.ctp active tab is users role is Array
+2013-06-19 08:30:07 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:31:28 Debug: header.ctp active tab is users role is Array
+2013-06-19 08:31:32 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:46:16 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:46:18 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:46:33 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:46:34 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:46:34 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:47:17 Debug: header.ctp active tab is  role is 
+2013-06-19 08:47:27 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-19 08:47:27 Debug: User->validateCredentials() returns Array
+2013-06-19 08:47:27 Debug: Users->login() redirecting to /users/search
+2013-06-19 08:47:27 Debug: header.ctp active tab is users role is Array
+2013-06-19 08:47:28 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:47:29 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:47:30 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:47:30 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:03 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:03 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:04 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:04 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:04 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:04 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:11 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:12 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:12 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:48 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:48 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:48:49 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:49:00 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:49:01 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:49:20 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:50:17 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:50:51 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:51:04 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:52:00 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:53:49 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:53:51 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:55:25 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:55:40 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:56:31 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 08:57:38 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 09:02:30 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 09:10:29 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 09:10:49 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 09:10:59 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 09:12:23 Debug: header.ctp active tab is configurations role is Array
+2013-06-19 14:08:37 Debug: header.ctp active tab is configurations role is 
+2013-06-19 14:08:47 Debug: header.ctp active tab is configurations role is 
+2013-06-19 14:08:49 Debug: header.ctp active tab is configurations role is 
+2013-06-19 14:08:49 Debug: header.ctp active tab is configurations role is 
+2013-06-19 14:08:50 Debug: header.ctp active tab is configurations role is 
+2013-06-19 14:09:23 Debug: header.ctp active tab is  role is 
+2013-06-19 14:09:29 Debug: header.ctp active tab is  role is 
+2013-06-19 14:10:23 Debug: header.ctp active tab is  role is 
+2013-06-19 14:11:00 Debug: header.ctp active tab is  role is 
+2013-06-19 14:11:57 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-19 14:11:57 Debug: User->validateCredentials() returns Array
+2013-06-19 14:11:57 Debug: Users->login() redirecting to /configurations/index
+2013-06-19 14:11:57 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 08:35:33 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-21 08:35:33 Debug: User->validateCredentials() returns Array
+2013-06-21 08:35:33 Debug: Users->login() redirecting to /users/index
+2013-06-21 08:35:33 Debug: header.ctp active tab is users role is Array
+2013-06-21 08:35:35 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 08:35:38 Debug: header.ctp active tab is users role is Array
+2013-06-21 08:35:57 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 08:38:20 Debug: header.ctp active tab is  role is Array
+2013-06-21 08:38:22 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 11:38:12 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 11:38:13 Debug: header.ctp active tab is  role is Array
+2013-06-21 11:38:16 Debug: header.ctp active tab is  role is Array
+2013-06-21 11:38:17 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:08:14 Debug: header.ctp active tab is users role is Array
+2013-06-21 12:08:15 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:08:36 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:10:55 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:11:05 Debug: header.ctp active tab is  role is Array
+2013-06-21 12:11:31 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:11:44 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:20:36 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:20:39 Debug: Configurations->validateBreed() called for 
+2013-06-21 12:21:11 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:21:16 Debug: Configurations->validateBreed() called for 
+2013-06-21 12:21:18 Debug: Configurations->validateBreed() called for 
+2013-06-21 12:21:18 Debug: Configurations->validateBreed() called for 
+2013-06-21 12:21:18 Debug: Configurations->validateBreed() called for 
+2013-06-21 12:21:48 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:21:48 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:21:53 Debug: Configurations->validateBreed() called for Terrier
+2013-06-21 12:21:58 Debug: Configurations->validateBreed() called for Terrier2
+2013-06-21 12:21:58 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:39:01 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-21 12:39:01 Debug: User->validateCredentials() returns Array
+2013-06-21 12:39:01 Debug: Users->login() redirecting to /configurations/breedView
+2013-06-21 12:39:01 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:39:04 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:39:05 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:39:06 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:45:28 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:45:29 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:45:36 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:45:55 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:45:56 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 12:46:55 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:00:57 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:01:51 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:02:00 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:02:03 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:02:05 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:05:57 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:05:57 Debug: header.ctp active tab is configurations role is Array
+2013-06-21 13:06:56 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:20:30 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:20:32 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:19 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-21 14:22:19 Debug: User->validateCredentials() returns Array
+2013-06-21 14:22:19 Debug: Users->login() redirecting to /users/create
+2013-06-21 14:22:19 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:21 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:22 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:23 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:24 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:34 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:37 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:46 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:22:50 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:23:00 Debug: header.ctp active tab is users role is Array
+2013-06-21 14:24:22 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-21 14:24:22 Debug: User->validateCredentials() returns Array
+2013-06-21 14:24:22 Debug: Users->login() redirecting to /users/create
+2013-06-21 14:24:22 Debug: header.ctp active tab is users role is Array
+2013-06-23 18:17:48 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-23 18:17:49 Debug: User->validateCredentials() returns Array
+2013-06-23 18:17:49 Debug: Users->login() redirecting to /users/create
+2013-06-23 18:17:49 Debug: header.ctp active tab is users role is Array
+2013-06-23 18:17:50 Debug: header.ctp active tab is configurations role is Array
+2013-06-23 18:17:53 Debug: header.ctp active tab is configurations role is Array
+2013-06-23 18:17:55 Debug: header.ctp active tab is configurations role is Array
+2013-06-23 18:33:49 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-23 18:33:49 Debug: User->validateCredentials() returns Array
+2013-06-23 18:33:49 Debug: Users->login() redirecting to /users/create
+2013-06-23 18:33:49 Debug: header.ctp active tab is users role is Array
+2013-06-23 18:33:55 Debug: header.ctp active tab is configurations role is Array
+2013-06-24 06:06:10 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-24 06:06:10 Debug: User->validateCredentials() returns Array
+2013-06-24 06:06:10 Debug: Users->login() redirecting to /configurations/breedCreate
+2013-06-24 06:06:10 Debug: header.ctp active tab is configurations role is Array
+2013-06-24 06:06:13 Debug: header.ctp active tab is configurations role is Array
+2013-06-24 06:06:14 Debug: header.ctp active tab is configurations role is Array
+2013-06-24 06:07:15 Debug: header.ctp active tab is users role is Array
+2013-06-24 06:07:18 Debug: header.ctp active tab is users role is Array
+2013-06-24 06:08:23 Debug: header.ctp active tab is users role is Array
+2013-06-24 06:08:24 Debug: header.ctp active tab is users role is Array
+2013-06-24 06:08:26 Debug: User->search() returns 2
+2013-06-24 06:08:26 Debug: header.ctp active tab is users role is Array
+2013-06-24 06:08:39 Debug: header.ctp active tab is configurations role is Array
+2013-06-24 06:43:18 Debug: User->validateCredentials() called with email djason@djason.com and password 1234
+2013-06-24 06:43:18 Debug: User->validateCredentials() returns Array
+2013-06-24 06:43:18 Debug: Users->login() redirecting to /configurations/index
+2013-06-24 06:43:18 Debug: header.ctp active tab is configurations role is Array
