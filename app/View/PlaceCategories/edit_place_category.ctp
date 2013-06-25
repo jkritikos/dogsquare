@@ -1,11 +1,11 @@
 <?php
-$action = "/configurations/breedEdit/$id";
+$action = "/placeCategories/editPlaceCategory/$id";
 
 $activeSelected = "";
 $deactiveSelected = "";
 
-if(isset($breed)){
-    if($breed['DogBreed']['active'] == '1'){
+if(isset($placeCategory)){
+    if($placeCategory['PlaceCategory']['active'] == '1'){
 	$activeSelected = "selected";
 	$deactiveSelected = "";
     } else {
@@ -32,10 +32,11 @@ $(document).ready(function(){
         
     	//client-side passed
     	if (!e.isDefaultPrevented()) {
-            $.post("/configurations/validateBreed", { 
-            	breed: $("#breed").val(),
-            	edit_breed: '<?php echo $breed['DogBreed']['name']; ?>'
+            $.post("/placeCategories/validatePlaceCategory", { 
+            	place_category: $("#placeCategory").val(),
+            	edit_place_category: '<?php echo $placeCategory['PlaceCategory']['name']; ?>'
             },function(json) {
+                
                 if(json.data === true){
                     $('#loader').show();
                     document.getElementById('form').submit();
@@ -62,18 +63,18 @@ $(document).ready(function(){
     <div class="grid_6 first">		
 
         <form id="form" class="form panel" method="post" action="<?php echo $action; ?>" novalidate>
-            <input type="hidden" name="data[DogBreed][id]" value="<?php echo $id; ?>" />
-            <header><h2>Use the following fields to edit this breed:</h2></header>
+            <input type="hidden" name="data[PlaceCategory][id]" value="<?php echo $id; ?>" />
+            <header><h2>Use the following fields to edit this place Category:</h2></header>
 
             <hr />
             <fieldset>
                 <div class="clearfix">
                     <label>Name *</label>
-                    <input id="breed" type="text" name="data[DogBreed][name]" value="<?php echo $breed['DogBreed']['name']; ?>" required="required" />
+                    <input id="placeCategory" type="text" name="data[PlaceCategory][name]" value="<?php echo $placeCategory['PlaceCategory']['name']; ?>" required="required" />
                 </div>
                 <div class="clearfix">
                     <label>Active *</label>
-                    <select name="data[DogBreed][active]" required="required" />
+                    <select name="data[PlaceCategory][active]" required="required" />
                         <option <?php echo $activeSelected; ?> value="1">Active</option>
                         <option <?php echo $deactiveSelected; ?> value="0">Deactive</option>
                     </select>

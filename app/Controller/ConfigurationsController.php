@@ -60,9 +60,15 @@ class ConfigurationsController extends AppController{
     /*AJAX validator for dog breed validations*/
     function validateBreed(){
         if(isset($_REQUEST['breed'])) $breed = $_REQUEST['breed'];
-        $this->log("Configurations->validateBreed() called for $breed", LOG_DEBUG);
+		if(isset($_REQUEST['edit_breed'])) {
+			$edit_breed = $_REQUEST['edit_breed'];
+		} else{
+			$edit_breed = "";
+		}
+        $this->log("Configurations->validateBreed() called for $breed and $edit_breed", LOG_DEBUG);
         
-        if(!empty($breed)){
+        //If we are creating a new breed, or editing an existing one (and have edited the name)
+        if((!empty($breed) && !isset($edit_breed)) || (!empty($breed) && isset($edit_breed) && $breed != $edit_breed)){
             $this->loadModel('DogBreed');
             
             $dd = $this->DogBreed->findByName($breed);
@@ -72,6 +78,8 @@ class ConfigurationsController extends AppController{
             } else {
                 $data = true;
             }
+        } else {
+        	$data = true;
         }
         
         $this->layout = 'blank';
@@ -100,7 +108,12 @@ class ConfigurationsController extends AppController{
             
             //on submit
             if (!empty($this->request->data)){
-                
+                $this->DogBreed->id = $id;
+                if($this->DogBreed->save($this->request->data)){
+                    $this->set('notification', 'Breed successfully modified.');
+                } else {
+                    $this->set('error', 'Unable to modify the breed - please try again.');
+                }
             }
             
             //load breed object
