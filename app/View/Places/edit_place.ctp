@@ -56,19 +56,18 @@ $(document).ready(function(){
 		<fieldset>
                     <div class="clearfix">
                         <label>Name</label>
-                        <input value="<?php echo $place['Place']['name']; ?>" type="text" name="data[Place][name]" " />
+                        <input value="<?php echo $place['Place']['name']; ?>" type="text" name="data[Place][name]" />
                     </div>
                     <div class="clearfix">
                     <label>Category</label>
-                    <select name="data[Place][category_id]" " />
-                        <option value="">Please select</option>
+                    <select name="data[Place][category_id]" />
+                        <option value="<?php echo $place['Place']['category_id']; ?>"><?php echo $placeCategoryById['PlaceCategory']['name'] ?></option>
                         <?php  
                         	foreach ($categoryNames as $key => $cat): 
                         		$categoryName = $cat['PlaceCategory']['name']; 
-								$data['Place']['id'] = $cat['PlaceCategory']['id'];  
-								$categoryId = $data['Place']['id'];
+								$categoryId = $cat['PlaceCategory']['id']; 
                         ?>
-                         	<option value="<?php echo $categoryId ?>"><?php echo $categoryName ?></option>
+                        <option value="<?php echo $categoryId ?>"><?php echo $categoryName ?></option>
                         <?php endforeach; ?>
                     </select>
                 	</div>

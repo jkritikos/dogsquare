@@ -2,19 +2,13 @@
 
 class PlacesController extends AppController {
 	/*Executed before all functions*/
+	var $components = array('Cookie', 'RequestHandler');
+	var $helpers = array('Js','Time');
+	
     function beforeFilter() {	
 		parent::beforeFilter();
-		$this->set('headerTitle', "Places Management");
+		$this->set('headerTitle', "Configuration Management");
 		$this->set('activeTab', "configurations");
-    }
-    
-    function index(){
-        $currentUser = $this->Session->read('userID');
-		if($currentUser != null){
-	
-		} else {
-	        $this->requireLogin('/configurations/index');
-		}
     }
 	
 	function createPlace(){
@@ -38,7 +32,7 @@ class PlacesController extends AppController {
 			$userNames = $this->User->find('all', array('fields' => array( 'User.id', 'User.name') ));
 			$this->set('userNames', $userNames);
 		} else {
-	        $this->requireLogin('/configurations/index');
+	        $this->requireLogin('/places/createPlace');
 		}
     }
 	
@@ -86,7 +80,7 @@ class PlacesController extends AppController {
 	        }
 	
 		} else {
-	        $this->requireLogin('/configurations/index');
+	        $this->requireLogin('/places/searchPlace');
 		}
     }
 
@@ -109,12 +103,21 @@ class PlacesController extends AppController {
                 $this->set('place', $placeObj);
             }
 			
+			$catId = $placeObj['Place']['category_id'];
+			
 			$this->loadModel('PlaceCategory');
+			$placeCategoryById = $this->PlaceCategory->findById($catId);
+        	if($placeCategoryById != null){
+            	$this->set('placeCategoryById', $placeCategoryById);
+       	 	}
+			
 			$categoryNames = $this->PlaceCategory->find('all', array('fields' => array('PlaceCategory.id','PlaceCategory.name') ));
-			$this->set('categoryNames', $categoryNames);
+			if($categoryNames != null){
+				$this->set('categoryNames', $categoryNames);
+			}
 
 		} else {
-	            $this->requireLogin('/configurations/index');
+	            $this->requireLogin("/places/editPlace/$id");
 		}
     }
 }

@@ -3,21 +3,15 @@
 
 class PlaceCategoriesController extends AppController{
 		
+	var $components = array('Cookie', 'RequestHandler');
+	var $helpers = array('Js','Time');	
+		
 	/*Executed before all functions*/
     function beforeFilter() {	
 		parent::beforeFilter();
-		$this->set('headerTitle', "Place Category Management");
+		$this->set('headerTitle', "Configuration Management");
 		$this->set('activeTab', "configurations");
     }
-    
-    function index(){
-        $currentUser = $this->Session->read('userID');
-		if($currentUser != null){
-	
-		} else {
-	            $this->requireLogin('/configurations/index');
-		}
-    }	
 		
 	function createPlaceCategory(){
 	    $currentUser = $this->Session->read('userID');
@@ -31,7 +25,7 @@ class PlaceCategoriesController extends AppController{
 	            } 
 	        }
 		} else {
-	            $this->requireLogin('/configurations/index');
+	            $this->requireLogin('/placeCategories/createPlaceCategory');
 		}
     }
 	
@@ -71,7 +65,7 @@ class PlaceCategoriesController extends AppController{
             $placeCategories = $this->PlaceCategory->find('all');
             $this->set('placeCategories', $placeCategories);
 		} else {
-	        $this->requireLogin('/configurations/index');
+	        $this->requireLogin('/placeCategories/viewPlaceCategory');
 		}
     }
 	
@@ -100,7 +94,7 @@ class PlaceCategoriesController extends AppController{
             $this->set('id',$id);
 	            
 		} else {
-	        $this->requireLogin('/configurations/index');
+	        $this->requireLogin("/placeCategories/editPlaceCategory/$id");
 		}
 	    }
 }

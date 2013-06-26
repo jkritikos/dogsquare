@@ -126,7 +126,7 @@ class ConfigurationsController extends AppController{
             $this->set('id',$id);
             
 	} else {
-            $this->requireLogin('/configurations/index');
+            $this->requireLogin("/configurations/breedEdit/$id");
 	}
     }
 }
