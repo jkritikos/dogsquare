@@ -41,6 +41,10 @@ insert into user_roles(user_id, role_id) values (1,1);
 CREATE TABLE `dog_breeds` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+ `origin` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+ `weight_from` int (2),
+ `weight_to` int (2),
+ `kennel_club` varchar(256) COLLATE utf8_unicode_ci
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
@@ -63,12 +67,6 @@ CREATE TABLE `dogs` (
  `photo_id` int(11),
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
-
-
-
 
 #Place categories table
 CREATE TABLE `place_categories` (
@@ -101,6 +99,19 @@ CREATE TABLE `place_checkins` (
  `place_id` int(11) not null,
  `user_id` int(11) not null,
  `comment` text COLLATE utf8_unicode_ci NOT NULL,
+ `active` int(1) DEFAULT '1',
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Dogfuel algorithm table
+CREATE TABLE `dogfuel_rules` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `breed_id` int(11) not null,
+ `user_id` int(11) not null,
+ `walk_distance` int(2) not null,
+ `playtime` int(11) not null,
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
