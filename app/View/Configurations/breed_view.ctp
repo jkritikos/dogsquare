@@ -8,7 +8,7 @@
     <div class="columns leading">
         <div class="grid_6 first">
 	     
-            <h3>All Users</h3>				
+            <h3>All Breeds</h3>				
             <hr />
             
 	     <table class="paginate sortable full">

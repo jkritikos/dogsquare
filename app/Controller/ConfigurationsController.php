@@ -35,7 +35,7 @@ class ConfigurationsController extends AppController{
 	}
     }
     
-    /*Creates a new dog breed*/
+    /*Creates a new dog s*/
     function breedCreate(){
         $currentUser = $this->Session->read('userID');
 	if($currentUser != null){
@@ -129,6 +129,91 @@ class ConfigurationsController extends AppController{
             $this->requireLogin("/configurations/breedEdit/$id");
 	}
     }
+
+	
+	function dogfuelView(){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+		$this->set('currentUser', $currentUser);
+		
+        $this->loadModel('DogfuelRule');
+        
+		$this->loadModel('DogBreed');
+		$breed = $this->DogBreed->getDogBreedName();
+		$this->set('breed', $breed);
+		
+		$dogfuel = $this->DogfuelRule->getDogfuelAll();
+		$this->set('dogfuel', $dogfuel);
+		
+        //on submit
+        if (!empty($this->request->data)){
+            if($this->DogfuelRule->save($this->request->data)){
+                $this->set('notification', 'Dog fuel successfully created.');
+				$this->redirect(array('action' => 'dogfuelView'));
+            } else {
+                $this->set('error', 'Unable to create the Dog fuel - please try again.');
+            }
+        }
+	} else {
+            $this->requireLogin("/configurations/dogfuelView");
+	}
+    }
+	
+	function validateDogfuel(){
+        if(isset($_REQUEST['dogfuel'])) $dogfuel = $_REQUEST['dogfuel'];
+		
+        $this->log("Configurations->validateDogfuel() called for $dogfuel", LOG_DEBUG);
+        
+        //If we are creating a new dog fuel, or editing an existing one (and have edited the name)
+        if(!empty($dogfuel)){
+            
+            $this->loadModel('DogfuelRule');
+            
+            $dd = $this->DogfuelRule->findByBreedId($dogfuel);
+            if($dd != null && isset($dd['DogfuelRule']['breed_id'])){
+                $data['data[DogfuelRule][breed_id]'] = "Breed already defined";
+            } else {
+                $data = true;
+            }
+        } else {
+        	$data = true;
+        }
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+
+
+	function dogfuelEdit($id){
+		$currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $this->loadModel('DogfuelRule');
+		
+            //on submit
+            if (!empty($this->request->data)){
+                $this->DogfuelRule->id = $id;
+                if($this->DogfuelRule->save($this->request->data)){
+                    $this->set('notification', 'Dog fuel rule successfully modified.');
+                } else {
+                    $this->set('error', 'Unable to modify the dog fuel rule - please try again.');
+                }
+            }
+			
+			//load dog fuel object
+            $dogfuel = $this->DogfuelRule->getDogfuelById($id);
+			
+            if($dogfuel != null){
+                $this->set('dogfuel', $dogfuel);
+            }
+            
+            //return the dog fuel id to the view
+            $this->set('id',$id);
+            
+	} else {
+            $this->requireLogin("/configurations/dogfuelEdit/$id");
+	}
+	}
 }
 
 ?>

@@ -72,6 +72,21 @@ $(document).ready(function(){
                     <input id="breed" type="text" name="data[DogBreed][name]" value="<?php echo $breed['DogBreed']['name']; ?>" required="required" />
                 </div>
                 <div class="clearfix">
+                    <label>Origin *</label>
+                    <input id="breed" type="text" name="data[DogBreed][origin]" value="<?php echo $breed['DogBreed']['origin']; ?>" required="required" />
+                </div>
+                <div class="clearfix">
+                    <label>Weight *</label>
+                    <label style="width:30px;">from </label>
+                    <input id="breed" style="width:30px;" type="number" name="data[DogBreed][weight_from]" value="<?php echo $breed['DogBreed']['weight_from']; ?>" required="required" />
+                    <label style="width:22px; margin-left: 10px;">to </label>
+                    <input id="breed" style="width:30px; margin-left:0;" type="number" name="data[DogBreed][weight_to]" value="<?php echo $breed['DogBreed']['weight_to']; ?>" required="required" />
+                </div>
+                <div class="clearfix">
+                    <label>Kennel Club *</label>
+                    <input id="breed" type="text" name="data[DogBreed][kennel_club]" value="<?php echo $breed['DogBreed']['kennel_club']; ?>" value="<?php echo $breed['DogBreed']['kennel_club']; ?>" required="required" />
+                </div>
+                <div class="clearfix">
                     <label>Active *</label>
                     <select name="data[DogBreed][active]" required="required" />
                         <option <?php echo $activeSelected; ?> value="1">Active</option>
