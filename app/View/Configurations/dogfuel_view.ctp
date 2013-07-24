@@ -1,9 +1,7 @@
 <script type="text/javascript" src="/js/jquery.rules.js"></script>
 <script>
 $(document).ready(function(){
-	
-	
-			           
+	     
     $("#form").validator({    	
     	position: 'left',
     	offset: [25, 10],

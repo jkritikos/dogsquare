@@ -32,7 +32,7 @@ class DogfuelRule extends AppModel {
 			}
 		}
 		
-		$this->log("DogfuelRule->getDogfuel() returns ".count($data), LOG_DEBUG);
+		$this->log("DogfuelRule->getDogfuelAll() returns ".count($data), LOG_DEBUG);
 		return $data;
 		
 	 }
@@ -63,7 +63,7 @@ class DogfuelRule extends AppModel {
 			}
 		}
 		
-		$this->log("DogfuelRule->getDogfuel() returns ".count($data), LOG_DEBUG);
+		$this->log("DogfuelRule->getDogfuelById() returns ".count($data), LOG_DEBUG);
 		return $data;
 		
 	 }
