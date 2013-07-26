@@ -37,11 +37,12 @@ $(document).ready(function(){
 
 <section class="grid_6 first">
 
-	<div class="columns">
+	<div class="columns leading">
+		
 	    <div class="grid_6 first">		
-			
+			<?php if($breed != null) { ?>
 	        <form id="form" class="form panel" method="post" action="/configurations/dogfuelView" novalidate>
-	        	<?php if($breed != null) { ?>
+	        	
 	            <header><h2>Use the following fields to create a new dog fuel rule:</h2></header>
 	
 	            <hr />
@@ -84,33 +85,27 @@ $(document).ready(function(){
 	            <button class="button button-green" type="submit">Create</button>
 	            <button class="button button-gray" type="reset">Reset</button>
 	            <img id="loader" style="display:none;position:absolute;" src="/img/ajax-loader.gif" />
-	            <?php }else{ ?>
-	        	<header><h2>There are no breeds that need dog fuel info implemented.</h2></header>
-	       <?php } ?>
+	            
 	        </form>
+	        <?php }else{ ?>
+	            <div style="margin-top: 30px;" class="message info">
+	                <h3>Information</h3>
+	                <p>
+	                    There are no breeds that need dog fuel info implemented.
+	                </p>
+	            </div>
+	       <?php } ?>
 	    </div>
 	</div>
+	
     
 <div class="clear">&nbsp;</div>
-    
-</section>
-    
+
 <!-- End of create dog fuel section-->
 
-<!-- Right column/section -->
-
-    <?php echo $this->element('menu_configuration'); ?>
-    <!-- End of Right column/section -->
-    <div class="clear"></div>
-    
 <!-- Start of dog fuel View section -->
 
-<section id="content">
-    <div class="wrapper">
-
-    <section class="grid_6 first">
-
-    <div class="columns leading">
+<div class="columns leading">
         <div class="grid_6 first">
 	     
             <h3>Dogfuel Rules</h3>				
@@ -155,10 +150,15 @@ $(document).ready(function(){
     </div>
 
 	<div class="clear">&nbsp;</div>
- 
+	<!-- End of dog fuel View section -->
+    
 </section>
+    
+<!-- Right column/section -->
 
-<!-- End of dog fuel View section -->
+<?php echo $this->element('menu_configuration'); ?>
+    <!-- End of Right column/section -->
+    <div class="clear"></div>
     
 </div>
 <div id="push"></div>
