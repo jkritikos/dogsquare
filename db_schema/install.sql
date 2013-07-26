@@ -44,7 +44,7 @@ CREATE TABLE `dog_breeds` (
  `origin` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
  `weight_from` int (2),
  `weight_to` int (2),
- `kennel_club` varchar(256) COLLATE utf8_unicode_ci
+ `kennel_club` varchar(256) COLLATE utf8_unicode_ci,
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
