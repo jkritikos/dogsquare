@@ -139,7 +139,7 @@ class ConfigurationsController extends AppController{
         $this->loadModel('DogfuelRule');
         
 		$this->loadModel('DogBreed');
-		$breed = $this->DogBreed->find('all', array('order' => 'DogBreed.name'));
+		$breed = $this->DogBreed->getDogBreedNames();
 		$this->set('breed', $breed);
 		
 		$dogfuel = $this->DogfuelRule->getDogfuelAll();

@@ -39,8 +39,9 @@ $(document).ready(function(){
 
 	<div class="columns">
 	    <div class="grid_6 first">		
-	
+			
 	        <form id="form" class="form panel" method="post" action="/configurations/dogfuelView" novalidate>
+	        	<?php if($breed != null) { ?>
 	            <header><h2>Use the following fields to create a new dog fuel rule:</h2></header>
 	
 	            <hr />
@@ -83,6 +84,9 @@ $(document).ready(function(){
 	            <button class="button button-green" type="submit">Create</button>
 	            <button class="button button-gray" type="reset">Reset</button>
 	            <img id="loader" style="display:none;position:absolute;" src="/img/ajax-loader.gif" />
+	            <?php }else{ ?>
+	        	<header><h2>There are no breeds that need dog fuel info implemented.</h2></header>
+	       <?php } ?>
 	        </form>
 	    </div>
 	</div>
