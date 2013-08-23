@@ -111,3 +111,19 @@ CakeLog::config('error', array(
 //User roles
 define("ROLE_ADMIN", "1");
 define("ROLE_USER", "2");
+
+//Uploaded files path
+$path = "/uploaded_files";
+define("UPLOAD_PATH", $_SERVER["DOCUMENT_ROOT"].$path);
+define("FILE_PATH", $path);
+
+//API general
+define("REQUEST_OK", 1);
+define("REQUEST_FAILED", -1);
+
+//API Error codes
+define("ERROR_EMAIL_TAKEN", -1);
+define("ERROR_USER_CREATION", -2);
+define("ERROR_USER_PHOTO_UPLOAD", -3);
+define("ERROR_DOG_CREATION", -4);
+define("ERROR_DOG_PHOTO_UPLOAD", -5);

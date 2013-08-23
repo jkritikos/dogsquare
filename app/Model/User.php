@@ -60,6 +60,22 @@ class User extends AppModel {
         return $obj;
     }
     
+    /*Returns an MD5 hash of the supplied string*/
+    function hashPassword($s){
+        $hash = null;
+        if($s != null){
+            $hash = Security::hash($s, 'md5');
+        }
+        
+        return $hash;
+    }
+    
+    /*Creates a security token for the specified user id*/
+    function generateToken($userID){
+        $input = "t0k3n!$userID";
+        return Security::hash($input, 'md5');
+    }
+    
     /*Checks whether the specified email/password combination is valid.
     Returns the user id on success, null otherwise. Used by the API*/
     function validateAdminCredentials($email, $password){

@@ -6,6 +6,7 @@ CREATE TABLE `users` (
  `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
  `active` int(1) DEFAULT '1',
  `gender` int(1),
+ `age` int(4),
  `facebook_id` varchar(256),
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
@@ -112,6 +113,17 @@ CREATE TABLE `dogfuel_rules` (
  `user_id` int(11) not null,
  `walk_distance` int(2) not null,
  `playtime` int(11) not null,
+ `active` int(1) DEFAULT '1',
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `photos` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) not null,
+ `title` varchar(256) COLLATE utf8_unicode_ci,
+ `path` varchar(512) not null,
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,

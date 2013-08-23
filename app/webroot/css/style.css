@@ -215,9 +215,9 @@ div#linebreak {
  */
 #page-header {
     background: #fc7300;
-    background: -moz-linear-gradient(top,  #fc7300 0%,  #fc7300 50%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fc7300), color-stop(0.5, #fc7300));
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fc7300', endColorstr='#fc7300')
+    background: -moz-linear-gradient(top,  #f9bf30 0%,  #f9bf30 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f9bf30), color-stop(0.5, #f9bf30));
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9bf30', endColorstr='#f9bf30')
         progid:DXImageTransform.Microsoft.Shadow(color='#444444', Direction=180, Strength=3);
     box-shadow: rgba(0,0,0,0.6) 0px 2px 3px; -moz-box-shadow: rgba(0,0,0,0.6) 0px 2px 3px; -webkit-box-shadow: rgba(0,0,0,0.6) 0px 2px 3px; -khtml-box-shadow: rgba(0,0,0,0.6) 0px 2px 3px;
     height: 135px;

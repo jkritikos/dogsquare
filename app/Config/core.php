@@ -347,3 +347,6 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+//Upload dir
+Configure::write('Upload.dir', $_SERVER["DOCUMENT_ROOT"] . "/tmp_uploads");
