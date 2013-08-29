@@ -8,7 +8,34 @@ class User extends AppModel {
             'className' => 'UserRole',
         )
     );
+    
+    function areUsers($emailList){
+        $sql = "select u.name, u.email, u.id from users u where u.email in ($emailList)";
+        $rs = $this->query($sql);
+        $data = array();
+        $emails = array();
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $name = $rs[$i]['u']['name'];
+		$id = $rs[$i]['u']['id'];
+		$email = $rs[$i]['u']['email'];
+		
+		$obj['User']['name'] = $name;
+		$obj['User']['email'] = $email;
+		$obj['User']['id'] = $id;
 
+                $emails[] = $email;
+		$data[] = $obj;
+            }
+	}
+        
+        $object['users'] = $data;
+        $object['matching_emails'] = $emails;
+        
+	$this->log("User->areUsers() returns ".count($data), LOG_DEBUG);
+	return $object;
+    }
+    
     function search($name,$email,$status){
         $sql = "select u.name, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created from users u where 1=1 ";
 

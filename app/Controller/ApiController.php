@@ -271,6 +271,41 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function followUser(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        
+        $this->loadModel('UserFollows');
+        $obj = array();
+        $obj['UserFollows']['user_id'] = $user_id;
+        $obj['UserFollows']['follows_user'] = $follow_user;
+        
+        if($this->UserFollows->save($obj)){
+            $response = REQUEST_OK;
+        } else {
+            $response = REQUEST_FAILED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Checks if the specified list of emails maps to dogsquare users
+    function areUsers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
+        
+        $this->loadModel('User');
+        $userData = $this->User->areUsers($list);
+        
+        $data['response'] = 1;
+        $data['results'] = $userData;
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function searchUser(){
         if(isset($_REQUEST['name'])){
             $name = $_REQUEST['name'];
