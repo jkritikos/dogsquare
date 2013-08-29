@@ -5,7 +5,7 @@ app/tmp
 app/tmp/sessions/sess_d0f99e1992f769be07527f9afd6bebfd
 *.log
 app/tmp/cache/persistent/myapp_cake_core_file_map
-app/webroot/uploaded_images/*
+app/webroot/uploaded_files/*
 app/tmp/logs/debug.log
 
 app/tmp/logs/error.log

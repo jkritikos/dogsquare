@@ -67,7 +67,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
         if(isset($_REQUEST['mating'])) $mating = $_REQUEST['mating'];
         
-        $this->log("API->addDog() called for $name and photo ".$_FILES['photo'] , LOG_DEBUG);
+        $this->log("API->addDog() called for $name breed $breed and photo ".$_FILES['photo'] , LOG_DEBUG);
         
         $dogCreated = false;
         $dogID = null;
@@ -151,6 +151,7 @@ class ApiController extends AppController{
         $this->log("API->addDog() returns: response $response error $errorMessage" , LOG_DEBUG);
         
         $data['response'] = $response;
+        $data['dog_id'] = $dogID;
         $data['error'] = $errorMessage;
         $data['dog_id'] = $dogID;
         

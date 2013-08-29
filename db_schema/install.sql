@@ -129,3 +129,13 @@ CREATE TABLE `photos` (
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `user_follows` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) not null,
+ `follows_user` int(11) not null,
+ `active` int(1) DEFAULT '1',
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
