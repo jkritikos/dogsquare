@@ -84,8 +84,9 @@ class ApiController extends AppController{
         $dog['Dog']['gender'] = $gender;
         $dog['Dog']['mating'] = $mating;
         $dog['Dog']['weight'] = $weight;
-        
+        $this->log("API->addDog() called ", LOG_DEBUG);
         if($this->Dog->save($dog)){
+            
             $dogCreated = true;
             $dogID = $this->Dog->getLastInsertID();
         } else {
@@ -151,6 +152,7 @@ class ApiController extends AppController{
         
         $data['response'] = $response;
         $data['error'] = $errorMessage;
+        $data['dog_id'] = $dogID;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -264,6 +266,22 @@ class ApiController extends AppController{
         $data['token'] = $securityToken;
         
         
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function searchUser(){
+        if(isset($_REQUEST['name'])){
+            $name = $_REQUEST['name'];
+        } else {
+            $name = "";
+        }
+        
+        $this->loadModel('User');
+        $userData = $this->User->search($name, null, null);
+        
+        $data['response'] = 1;
+        $data['users'] = $userData;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }

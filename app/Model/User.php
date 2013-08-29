@@ -13,7 +13,7 @@ class User extends AppModel {
         $sql = "select u.name, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created from users u where 1=1 ";
 
 	if($name != ''){
-            $sql .= " and u.name like '%$name%' ";
+            $sql .= " and u.name like '%$name%' order by u.name";
 	}
 
 	if($email != ''){
