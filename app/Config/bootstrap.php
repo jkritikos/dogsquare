@@ -122,8 +122,10 @@ define("REQUEST_OK", 1);
 define("REQUEST_FAILED", -1);
 
 //API Error codes
-define("ERROR_EMAIL_TAKEN", -1);
-define("ERROR_USER_CREATION", -2);
-define("ERROR_USER_PHOTO_UPLOAD", -3);
-define("ERROR_DOG_CREATION", -4);
-define("ERROR_DOG_PHOTO_UPLOAD", -5);
+define("ERROR_EMAIL_TAKEN", -2);
+define("ERROR_USER_CREATION", -3);
+define("ERROR_USER_PHOTO_UPLOAD", -4);
+define("ERROR_DOG_CREATION", -5);
+define("ERROR_DOG_PHOTO_UPLOAD", -6);
+define("ERROR_USER_ALREADY_FOLLOWING", -7);
+define("ERROR_USER_NOT_FOLLOWING", -8);

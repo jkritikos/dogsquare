@@ -23,22 +23,7 @@ class ApiController extends AppController{
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     function login(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
@@ -175,89 +160,96 @@ class ApiController extends AppController{
         $errorMessage = null;
         $securityToken = null;
         
-        //Save user object
         $this->loadModel('User');
-        $user = array();
-        $user['User']['name'] = $name;
-        $user['User']['email'] = $email;
-        $user['User']['password'] = $this->User->hashPassword($password);
         
-        if(isset($facebook_id) && $facebook_id != ''){
-            $user['User']['facebook_id'] = $facebook_id;
-        }
-        
-        if(isset($age) && $age != ''){
-            $user['User']['age'] = $age;
-        }
-        
-        if(isset($gender) && $gender != ''){
-            if($gender == 'male') $gender = 1;
-            else if($gender == 'female') $gender = 2;
-            $user['User']['gender'] = $gender;
-        }
-        
-        if($this->User->save($user)){
-            $userCreated = true;
-            $userID = $this->User->getLastInsertID();
-            $securityToken = $this->User->generateToken($userID);
+        //Check if email exists
+        if($this->User->findAllByEmail($email) != null){
+            $this->log("API->signup() email $email is already in use" , LOG_DEBUG);
+            $response = ERROR_EMAIL_TAKEN;
         } else {
-            $response = REQUEST_FAILED;
-            $errorMessage = ERROR_USER_CREATION;
-        }
-        
-        //handle photo if user was created OK
-        if($userCreated && isset($_FILES['photo'])){
-            $targetPath = FILE_PATH;
-            $userDirectoryOK = file_exists($targetPath);
+            //Save user object
+            $user = array();
+            $user['User']['name'] = $name;
+            $user['User']['email'] = $email;
+            $user['User']['password'] = $this->User->hashPassword($password);
 
-            //Check for valid extension
-            $dateString = Security::hash(time().rand(1, 10), 'md5');
-            $fileExtension = "jpeg";
-            $fileName = $dateString.$fileExtension;
-            $filePath = FILE_PATH ."/". $fileName;
-           
-            $uploadfile = UPLOAD_PATH ."/". "$dateString.$fileExtension";
-            
-            $this->log("API->signup() uploadfile is $uploadfile" , LOG_DEBUG);
-            
-            if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                $this->log("API->signup() uploading succeeded" , LOG_DEBUG);
-                
-                //Save photo info to the db
-                $this->loadModel('Photo');
-                $obj = array();
-                $obj['Photo']['path'] = $fileName;
-                $obj['Photo']['user_id'] = $userID;
-                if($this->Photo->save($obj)){
-                    $photoID = $this->Photo->getLastInsertID();
-                    
-                    $this->log("API->signup() saved photo $photoID to db" , LOG_DEBUG);
-                    
-                    //Update user with profile photo
-                    $user['User']['id'] = $userID;
-                    $user['User']['photo_id'] = $photoID;
-                    if(!$this->User->save($user)){
-                        $this->log("API->signup() failed to set profile image for user $userID" , LOG_DEBUG);
-                        
+            if(isset($facebook_id) && $facebook_id != ''){
+                $user['User']['facebook_id'] = $facebook_id;
+            }
+
+            if(isset($age) && $age != ''){
+                $user['User']['age'] = $age;
+            }
+
+            if(isset($gender) && $gender != ''){
+                if($gender == 'male') $gender = 1;
+                else if($gender == 'female') $gender = 2;
+                $user['User']['gender'] = $gender;
+            }
+
+            if($this->User->save($user)){
+                $userCreated = true;
+                $userID = $this->User->getLastInsertID();
+                $securityToken = $this->User->generateToken($userID);
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_USER_CREATION;
+            }
+        
+            //handle photo if user was created OK
+            if($userCreated && isset($_FILES['photo'])){
+                $targetPath = FILE_PATH;
+                $userDirectoryOK = file_exists($targetPath);
+
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = "jpeg";
+                $fileName = $dateString.$fileExtension;
+                $filePath = FILE_PATH ."/". $fileName;
+
+                $uploadfile = UPLOAD_PATH ."/". "$dateString.$fileExtension";
+
+                $this->log("API->signup() uploadfile is $uploadfile" , LOG_DEBUG);
+
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    $this->log("API->signup() uploading succeeded" , LOG_DEBUG);
+
+                    //Save photo info to the db
+                    $this->loadModel('Photo');
+                    $obj = array();
+                    $obj['Photo']['path'] = $fileName;
+                    $obj['Photo']['user_id'] = $userID;
+                    if($this->Photo->save($obj)){
+                        $photoID = $this->Photo->getLastInsertID();
+
+                        $this->log("API->signup() saved photo $photoID to db" , LOG_DEBUG);
+
+                        //Update user with profile photo
+                        $user['User']['id'] = $userID;
+                        $user['User']['photo_id'] = $photoID;
+                        if(!$this->User->save($user)){
+                            $this->log("API->signup() failed to set profile image for user $userID" , LOG_DEBUG);
+
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                        } else {
+                            $response = REQUEST_OK;
+                        }
+
+                    } else {
+                        $this->log("API->signup() saving photo to db failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_USER_PHOTO_UPLOAD;
-                    } else {
-                        $response = REQUEST_OK;
                     }
-                    
+
                 } else {
-                    $this->log("API->signup() saving photo to db failed" , LOG_DEBUG);
+                    $this->log("API->signup() uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_USER_PHOTO_UPLOAD;
                 }
-                
             } else {
-                $this->log("API->signup() uploading failed" , LOG_DEBUG);
-                $response = REQUEST_FAILED;
-                $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                $this->log("API->signup() no photo found" , LOG_DEBUG);
             }
-        } else {
-            $this->log("API->signup() no photo found" , LOG_DEBUG);
         }
         
         $this->log("API->signup() returns: response $response error $errorMessage token $securityToken" , LOG_DEBUG);
@@ -271,6 +263,7 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Follows the specified user
     function followUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
@@ -280,10 +273,14 @@ class ApiController extends AppController{
         $obj['UserFollows']['user_id'] = $user_id;
         $obj['UserFollows']['follows_user'] = $follow_user;
         
-        if($this->UserFollows->save($obj)){
-            $response = REQUEST_OK;
+        if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
+            if($this->UserFollows->save($obj)){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
         } else {
-            $response = REQUEST_FAILED;
+            $response = ERROR_USER_ALREADY_FOLLOWING;
         }
         
         $data['response'] = $response;
@@ -300,12 +297,14 @@ class ApiController extends AppController{
         $this->loadModel('User');
         $userData = $this->User->areUsers($list);
         
-        $data['response'] = 1;
+        $data['response'] = REQUEST_OK;
         $data['results'] = $userData;
+        
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
     
+    //TODO Alex TERRIBLE bug here, find it..
     function searchUser(){
         if(isset($_REQUEST['name'])){
             $name = $_REQUEST['name'];
@@ -316,10 +315,84 @@ class ApiController extends AppController{
         $this->loadModel('User');
         $userData = $this->User->search($name, null, null);
         
-        $data['response'] = 1;
+        $data['response'] = REQUEST_OK;
         $data['users'] = $userData;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
+    }
+    
+    //Unfollows the specified user
+    function unfollowUser(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        
+        $this->loadModel('UserFollows');
+        if($this->UserFollows->isUserFollowing($user_id, $follow_user)){
+            $rows = $this->UserFollows->deleteUserFollow($user_id, $follow_user);
+            
+            if($rows > 0){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+            
+        } else {
+            $response = ERROR_USER_NOT_FOLLOWING;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function saveActivity(){
+        
+    }
+    
+    function getUser(){
+        
+    }
+    
+    function getInbox(){
+        
+    }
+    
+    function sendMessage(){
+        
+    }
+    
+    //Searches for users and places
+    function search(){
+        
+    }
+    
+    //Searches for nearby places
+    function getPlaces(){
+        
+    }
+    
+    //Creates a new place
+    function addPlace(){
+        
+    }
+    
+    //Performs a checkin
+    function checkin(){
+        
+    }
+    
+    //Sets the user's current location
+    function saveLocation(){
+        
+    }
+    
+    function likeActivity(){
+        
+    }
+    
+    function likePlace(){
+        
     }
 }
 
