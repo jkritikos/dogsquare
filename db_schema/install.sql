@@ -124,6 +124,7 @@ CREATE TABLE `photos` (
  `user_id` int(11) not null,
  `title` varchar(256) COLLATE utf8_unicode_ci,
  `path` varchar(512) not null,
+ `thumb` varchar(512) not null,
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,

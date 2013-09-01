@@ -28,6 +28,44 @@ class UserFollows extends AppModel {
         $this->log("UserFollows->deleteUserFollow() deleted $deleted rows for id $id and followingId $followingId", LOG_DEBUG);
     }
     
+    //Returns the followers of user with id $id
+    function getFollowers($id){
+        $sql = "select u.id, u.name, p.thumb from users u inner join user_follows uf on (u.id=uf.user_id) inner join photos p on (u.photo_id=p.id) where uf.follows_user=$id";
+        $rs = $this->query($sql);
+        $data = array();
+        
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['User']['name'] = $rs[$i]['u']['name'];
+		$obj['User']['thumb'] = $name = $rs[$i]['p']['thumb'];
+		$obj['User']['id'] = $rs[$i]['u']['id'];
+
+		$data[] = $obj;
+            }
+        }
+        
+        return $data;
+    }
+    
+    //Reutns the users that user $id is following
+    function getFollowing($id){
+        $sql = "select u.id, u.name, p.thumb from users u inner join user_follows uf on (u.id=uf.user_id) inner join photos p on (u.photo_id=p.id) where uf.user_id=$id";
+        $rs = $this->query($sql);
+        $data = array();
+        
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['User']['name'] = $rs[$i]['u']['name'];
+		$obj['User']['thumb'] = $name = $rs[$i]['p']['thumb'];
+		$obj['User']['id'] = $rs[$i]['u']['id'];
+
+		$data[] = $obj;
+            }
+        }
+        
+        return $data;
+    }
+    
 }
 
 ?>

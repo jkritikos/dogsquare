@@ -116,6 +116,9 @@ define("ROLE_USER", "2");
 $path = "/uploaded_files";
 define("UPLOAD_PATH", $_SERVER["DOCUMENT_ROOT"].$path);
 define("FILE_PATH", $path);
+define("USER_PATH", "/users");
+define("DOG_PATH", "/dogs");
+define("PLACE_PATH", "/places");
 
 //API general
 define("REQUEST_OK", 1);

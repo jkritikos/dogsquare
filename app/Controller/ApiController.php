@@ -81,15 +81,15 @@ class ApiController extends AppController{
         
         //handle photo if dog was created OK
         if($dogCreated && isset($_FILES['photo'])){
-            $targetPath = FILE_PATH;
+            //$targetPath = FILE_PATH;
             
             //Check for valid extension
             $dateString = Security::hash(time().rand(1, 10), 'md5');
-            $fileExtension = "jpeg";
+            $fileExtension = ".jpeg";
             $fileName = $dateString.$fileExtension;
-            $filePath = FILE_PATH ."/". $fileName;
+            //$filePath = FILE_PATH ."/". $fileName;
            
-            $uploadfile = UPLOAD_PATH ."/". "$dateString.$fileExtension";
+            $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$dateString.$fileExtension";
             
             $this->log("API->addDog() uploadfile is $uploadfile" , LOG_DEBUG);
             
@@ -198,50 +198,60 @@ class ApiController extends AppController{
         
             //handle photo if user was created OK
             if($userCreated && isset($_FILES['photo'])){
-                $targetPath = FILE_PATH;
-                $userDirectoryOK = file_exists($targetPath);
-
+                //$targetPath = FILE_PATH;
+                
                 //Check for valid extension
                 $dateString = Security::hash(time().rand(1, 10), 'md5');
-                $fileExtension = "jpeg";
+                $fileExtension = ".jpeg";
                 $fileName = $dateString.$fileExtension;
-                $filePath = FILE_PATH ."/". $fileName;
+                //$filePath = FILE_PATH ."/". $fileName;
+                $uploadfile = UPLOAD_PATH.USER_PATH."/". "$fileName";
 
-                $uploadfile = UPLOAD_PATH ."/". "$dateString.$fileExtension";
-
-                $this->log("API->signup() uploadfile is $uploadfile" , LOG_DEBUG);
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                //$filePathThumb = FILE_PATH ."/". $filenameThumb;
+                $uploadfileThumb = UPLOAD_PATH.USER_PATH."/". "$filenameThumb";
+                
+                $this->log("API->signup() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
 
                 if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                    $this->log("API->signup() uploading succeeded" , LOG_DEBUG);
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->signup() uploading succeeded" , LOG_DEBUG);
 
-                    //Save photo info to the db
-                    $this->loadModel('Photo');
-                    $obj = array();
-                    $obj['Photo']['path'] = $fileName;
-                    $obj['Photo']['user_id'] = $userID;
-                    if($this->Photo->save($obj)){
-                        $photoID = $this->Photo->getLastInsertID();
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
+                        $obj['Photo']['user_id'] = $userID;
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
 
-                        $this->log("API->signup() saved photo $photoID to db" , LOG_DEBUG);
+                            $this->log("API->signup() saved photo $photoID to db" , LOG_DEBUG);
 
-                        //Update user with profile photo
-                        $user['User']['id'] = $userID;
-                        $user['User']['photo_id'] = $photoID;
-                        if(!$this->User->save($user)){
-                            $this->log("API->signup() failed to set profile image for user $userID" , LOG_DEBUG);
+                            //Update user with profile photo
+                            $user['User']['id'] = $userID;
+                            $user['User']['photo_id'] = $photoID;
+                            if(!$this->User->save($user)){
+                                $this->log("API->signup() failed to set profile image for user $userID" , LOG_DEBUG);
 
+                                $response = REQUEST_FAILED;
+                                $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                            } else {
+                                $response = REQUEST_OK;
+                            }
+
+                        } else {
+                            $this->log("API->signup() saving photo to db failed" , LOG_DEBUG);
                             $response = REQUEST_FAILED;
                             $errorMessage = ERROR_USER_PHOTO_UPLOAD;
-                        } else {
-                            $response = REQUEST_OK;
                         }
 
                     } else {
-                        $this->log("API->signup() saving photo to db failed" , LOG_DEBUG);
+                        $this->log("API->signup() uploading failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_USER_PHOTO_UPLOAD;
                     }
-
                 } else {
                     $this->log("API->signup() uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
@@ -258,32 +268,6 @@ class ApiController extends AppController{
         $data['error'] = $errorMessage;
         $data['token'] = $securityToken;
         
-        
-        $this->layout = 'blank';
-        echo json_encode(compact('data', $data));
-    }
-    
-    //Follows the specified user
-    function followUser(){
-        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
-        if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
-        
-        $this->loadModel('UserFollows');
-        $obj = array();
-        $obj['UserFollows']['user_id'] = $user_id;
-        $obj['UserFollows']['follows_user'] = $follow_user;
-        
-        if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
-            if($this->UserFollows->save($obj)){
-                $response = REQUEST_OK;
-            } else {
-                $response = REQUEST_FAILED;
-            }
-        } else {
-            $response = ERROR_USER_ALREADY_FOLLOWING;
-        }
-        
-        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -321,6 +305,32 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Follows the specified user
+    function followUser(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        
+        $this->loadModel('UserFollows');
+        $obj = array();
+        $obj['UserFollows']['user_id'] = $user_id;
+        $obj['UserFollows']['follows_user'] = $follow_user;
+        
+        if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
+            if($this->UserFollows->save($obj)){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = ERROR_USER_ALREADY_FOLLOWING;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Unfollows the specified user
     function unfollowUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
@@ -344,6 +354,25 @@ class ApiController extends AppController{
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
+    }
+    
+    //Returns the followers of user $target_id
+    function getFollowers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        
+        $this->loadModel('UserFollows');
+        $users = $this->UserFollows->getFollowers($target_id);
+        
+        $data['response'] = REQUEST_OK;
+        $data['users'] = $users;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function getFollowing(){
+        
     }
     
     function saveActivity(){
