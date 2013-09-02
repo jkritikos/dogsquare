@@ -387,6 +387,21 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Returns the unread notifications of the specified user
+    function getNotifications(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        $this->log("API->getNotifications() called for user $user_id" , LOG_DEBUG);
+        
+        $this->loadModel('UserNotification');
+        $notifications = $this->UserNotification->getUnreadNotifications($user_id);
+        
+        $data['response'] = REQUEST_OK;
+        $data['notifications'] = $notifications;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function saveActivity(){
         
     }
