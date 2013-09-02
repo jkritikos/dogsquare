@@ -267,6 +267,7 @@ class ApiController extends AppController{
         $data['response'] = $response;
         $data['error'] = $errorMessage;
         $data['token'] = $securityToken;
+        $data['user_id'] = $userID;
         
         
         $this->layout = 'blank';
@@ -371,8 +372,19 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Returns the users following user $target_id
     function getFollowing(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
         
+        $this->loadModel('UserFollows');
+        $users = $this->UserFollows->getFollowing($target_id);
+        
+        $data['response'] = REQUEST_OK;
+        $data['users'] = $users;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     function saveActivity(){
@@ -416,12 +428,157 @@ class ApiController extends AppController{
         
     }
     
+    //Sets a like for an activity
     function likeActivity(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
         
+        $this->loadModel('ActivityLike');
+        $obj = array();
+        $obj['ActivityLike']['user_id'] = $user_id;
+        $obj['ActivityLike']['activity_id'] = $activity_id;
+        
+        if(!$this->ActivityLike->userLikesActivity($user_id, $activity_id)){
+            if($this->ActivityLike->save($obj)){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = REQUEST_INVALID;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
-    function likePlace(){
+    //Deletes a like for an activity
+    function unlikeActivity(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
         
+        $this->loadModel('ActivityLike');
+        
+        if($this->ActivityLike->userLikesActivity($user_id, $activity_id)){
+            $rows = $this->ActivityLike->deleteLike($user_id, $activity_id);
+            
+            if($rows > 0){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = REQUEST_INVALID;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Sets a like for a place
+    function likePlace(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        
+        $this->loadModel('PlaceLike');
+        $obj = array();
+        $obj['PlaceLike']['user_id'] = $user_id;
+        $obj['PlaceLike']['place_id'] = $place_id;
+        
+        if(!$this->PlaceLike->userLikesPlace($user_id, $place_id)){
+            if($this->PlaceLike->save($obj)){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = REQUEST_INVALID;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Deletes a like for a place
+    function unlikePlace(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        
+        $this->loadModel('PlaceLike');
+        
+        if($this->PlaceLike->userLikesPlace($user_id, $place_id)){
+            $rows = $this->PlaceLike->deleteLike($user_id, $place_id);
+            
+            if($rows > 0){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = REQUEST_INVALID;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Sets a like for a dog
+    function likeDog(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        
+        $this->loadModel('DogLike');
+        $obj = array();
+        $obj['DogLike']['user_id'] = $user_id;
+        $obj['DogLike']['dog_id'] = $dog_id;
+        
+        if(!$this->DogLike->userLikesDog($user_id, $dog_id)){
+            if($this->DogLike->save($obj)){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = REQUEST_INVALID;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Deletes a like for a dog
+    function unlikeDog(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        
+        $this->loadModel('DogLike');
+        
+        if($this->DogLike->userLikesDog($user_id, $dog_id)){
+            $rows = $this->DogLike->deleteLike($user_id, $dog_id);
+            
+            if($rows > 0){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        } else {
+            $response = REQUEST_INVALID;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
 }
 

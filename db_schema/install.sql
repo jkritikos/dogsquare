@@ -69,6 +69,16 @@ CREATE TABLE `dogs` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+#Dog likes table
+CREATE TABLE `dog_likes` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `dog_id` int(11) not null,
+ `user_id` int(11) not null,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 #Place categories table
 CREATE TABLE `place_categories` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -92,6 +102,16 @@ CREATE TABLE `places` (
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  `photo_id` int(11),
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Place likes table
+CREATE TABLE `place_likes` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `place_id` int(11) not null,
+ `user_id` int(11) not null,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -136,6 +156,37 @@ CREATE TABLE `user_follows` (
  `user_id` int(11) not null,
  `follows_user` int(11) not null,
  `active` int(1) DEFAULT '1',
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Notifications table
+CREATE TABLE `user_notifications` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) not null,
+ `user_from` int(11) not null,
+ `read` int(1) not null,
+ `type_id` int(4) not null,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Notification types table
+CREATE TABLE `notification_types` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `name` varchar(128) not null,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Activity likes table
+CREATE TABLE `activity_likes` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `activity_id` int(11) not null,
+ `user_id` int(11) not null,
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)

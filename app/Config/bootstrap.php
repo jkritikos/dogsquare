@@ -120,9 +120,16 @@ define("USER_PATH", "/users");
 define("DOG_PATH", "/dogs");
 define("PLACE_PATH", "/places");
 
+//Notification types
+define("NOTIFICATION_NEW_FOLLOWER", 1);
+define("NOTIFICATION_WALK_REQUEST", 2);
+define("NOTIFICATION_COMMENT_ACTIVITY", 3);
+define("NOTIFICATION_LIKE_ACTIVITY", 4);
+
 //API general
 define("REQUEST_OK", 1);
 define("REQUEST_FAILED", -1);
+define("REQUEST_INVALID", 100);
 
 //API Error codes
 define("ERROR_EMAIL_TAKEN", -2);
