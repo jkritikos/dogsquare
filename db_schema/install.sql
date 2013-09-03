@@ -168,6 +168,7 @@ CREATE TABLE `user_notifications` (
  `user_from` int(11) not null,
  `read` int(1) not null,
  `type_id` int(4) not null,
+ `activity_id` int(11),
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
