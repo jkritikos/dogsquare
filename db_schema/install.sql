@@ -61,6 +61,7 @@ CREATE TABLE `dogs` (
  `gender` int(1),
  `mating` int(1),
  `weight` int(4),
+ `age` int(2),
  `birthdate` date,
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
