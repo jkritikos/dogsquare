@@ -69,6 +69,7 @@ class ApiController extends AppController{
         $dog['Dog']['gender'] = $gender;
         $dog['Dog']['mating'] = $mating;
         $dog['Dog']['weight'] = $weight;
+        $dog['Dog']['age'] = $age;
         $this->log("API->addDog() called ", LOG_DEBUG);
         if($this->Dog->save($dog)){
             
@@ -89,7 +90,7 @@ class ApiController extends AppController{
             $fileName = $dateString.$fileExtension;
             //$filePath = FILE_PATH ."/". $fileName;
            
-            $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$dateString.$fileExtension";
+            $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$fileName";
             
             $this->log("API->addDog() uploadfile is $uploadfile" , LOG_DEBUG);
             
@@ -412,6 +413,19 @@ class ApiController extends AppController{
     
     function getInbox(){
         
+    }
+    
+    function getDog(){
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        
+        $this->loadModel('Dog');
+        $dog = $this->Dog->getDogById($dog_id);
+        
+        $data['response'] = REQUEST_OK;
+        $data['dog'] = $dog;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     function sendMessage(){
