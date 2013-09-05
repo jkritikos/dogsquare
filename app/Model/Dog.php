@@ -25,8 +25,6 @@ class Dog extends AppModel {
         $obj['liked'] = $rs[0]['dl']['id'];
         $obj['likes'] = $rs[0][0]['likes'];
                 
-		
-        
         return $obj;
     }
 }

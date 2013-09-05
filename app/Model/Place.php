@@ -44,6 +44,26 @@ class Place extends AppModel {
 		$this->log("Place->search() returns ".count($data), LOG_DEBUG);
 		return $data;
 	}
+        
+        function getPlaceById($placeId){
+            $sql = "select p.id, p.name, p.lon, p.lat, pc.name, ph.path, pl.id";
+            $sql .= " from places p";
+            $sql .= " left outer join place_categories pc on (p.category_id = pc.id)";
+            $sql .= " left outer join photos ph on (p.photo_id = ph.id)";
+            $sql .= " left outer join place_likes pl on (p.id = pl.place_id)";
+            $sql .= " where p.id = $placeId";
+            $rs = $this->query($sql);
+
+            $obj['id'] = $rs[0]['p']['id'];
+            $obj['name'] = $name = $rs[0]['p']['name'];
+            $obj['longitude'] = $rs[0]['p']['lon'];
+            $obj['latitude'] = $rs[0]['p']['lat'];
+            $obj['category'] = $rs[0]['pc']['name'];
+            $obj['photo'] = $rs[0]['ph']['path'];
+            $obj['liked'] = $rs[0]['pl']['id'];
+
+            return $obj;
+       }
 }
 
 ?>
