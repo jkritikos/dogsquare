@@ -12,8 +12,6 @@ class Dog extends AppModel {
         $sql .= " LEFT OUTER JOIN dog_likes dl on (d.id = dl.dog_id)";
         $sql .= " WHERE d.id = $dogId";
         $rs = $this->query($sql);
-        $obj = array();
-        
         
         $obj['id'] = $rs[0]['d']['id'];
         $obj['name'] = $name = $rs[0]['d']['name'];
@@ -27,6 +25,37 @@ class Dog extends AppModel {
                 
         return $obj;
     }
+    
+    function getUserDogs($userId){
+        $sql = "select d.id, d.name, d.age, d.gender, d.mating, d.weight, p.thumb, p.path, db.name  ";
+        $sql .= " from dogs d";
+        $sql .= " inner join users u on (d.owner_id = u.id)";
+        $sql .= " inner join photos p on (d.photo_id = p.id)";
+        $sql .= " inner join dog_breeds db on (d.breed_id = db.id)";
+        $sql .= " where u.id = $userId";
+        $rs = $this->query($sql);
+        $data = array();
+        
+        
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['Dog']['id'] = $rs[$i]['d']['id'];
+                $obj['Dog']['name'] = $name = $rs[$i]['d']['name'];
+                $obj['Dog']['dog_breed'] = $rs[$i]['db']['name'];
+                $obj['Dog']['age'] = $rs[$i]['d']['age'];
+                $obj['Dog']['gender'] = $rs[$i]['d']['gender'];
+                $obj['Dog']['weight'] = $rs[$i]['d']['weight'];
+                $obj['Dog']['photo'] = $rs[$i]['p']['path'];
+                $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
+                $obj['Dog']['mating'] = $rs[$i]['d']['mating'];
+                
+                $data[] = $obj;
+            }
+        }
+       
+        return $data;
+    }
+    
 }
 
 ?>

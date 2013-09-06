@@ -130,6 +130,26 @@ class User extends AppModel {
 	$this->log("User->validateCredentials() returns $result", LOG_DEBUG);
 	return $result;
     }
+    
+    
+    function getOtherUserById($userId, $targetId){
+        $sql = "select u.name, p.path, count(uf.id) as following, ";
+        $sql .= " (select count(id) from user_follows where follows_user = $targetId) as followers,";
+        $sql .= " (select id from user_follows where follows_user = $targetId and user_id = $userId) as followed";
+        $sql .= " from users u";
+        $sql .= " left outer join photos p on (u.photo_id=p.id)";
+        $sql .= " left outer join user_follows uf on (u.id=uf.user_id)";
+        $sql .= " where u.id=$targetId";
+        $rs = $this->query($sql);
+        
+        $obj['name'] = $name = $rs[0]['u']['name'];
+        $obj['photo'] = $rs[0]['p']['path'];
+        $obj['following'] = $rs[0][0]['following'];
+        $obj['followers'] = $rs[0][0]['followers'];
+        $obj['followed'] = $rs[0][0]['followed'];
+                
+        return $obj;
+    }
 }
 
 ?>

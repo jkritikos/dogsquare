@@ -527,10 +527,28 @@ class ApiController extends AppController{
         if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
         
         $this->loadModel('Place');
-        $place_id = $this->Place->getPlaceById($place_id);
+        $place = $this->Place->getPlaceById($place_id);
         
         $data['response'] = REQUEST_OK;
-        $data['place'] = $place_id;
+        $data['place'] = $place;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function getOtherUser(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        
+        $this->loadModel('User');
+        $otherUser = $this->User->getOtherUserById($user_id, $target_id);
+        
+        $this->loadModel('Dog');
+        $dogs = $this->Dog->getUserDogs($target_id);
+        
+        $data['response'] = REQUEST_OK;
+        $data['user'] = $otherUser;
+        $data['dogs'] = $dogs;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
