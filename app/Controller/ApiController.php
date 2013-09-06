@@ -712,6 +712,16 @@ class ApiController extends AppController{
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
+    
+    //Saves a comment for a given place
+    function savePlaceComment(){
+        
+    }
+    
+    //Saves a comment for a given activity
+    function saveActivityComment(){
+        
+    }
 }
 
 ?>

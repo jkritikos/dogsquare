@@ -90,6 +90,18 @@ CREATE TABLE `place_categories` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+#Place comments table
+CREATE TABLE `place_comments` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `comment` text COLLATE utf8_unicode_ci NOT NULL,
+ `user_id` int(11) not null,
+ `place_id` int(1) not null,
+ `active` int(1) DEFAULT '1',
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 #Places
 CREATE TABLE `places` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
