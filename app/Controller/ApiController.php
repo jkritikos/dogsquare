@@ -370,6 +370,82 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //add a comment for a given place
+    function addPlaceComment(){
+        if(isset($_REQUEST['user_id'])) $userId = $_REQUEST['user_id'];
+        if(isset($_REQUEST['comment'])) $comment = $_REQUEST['comment'];
+        if(isset($_REQUEST['place_id'])) $placeId = $_REQUEST['place_id'];
+        
+        $this->log("API->addPlaceComment() called for palce: $placeId from user: $userId", LOG_DEBUG);
+        
+        $commentId = null;
+        $response = null;
+        $errorMessage = null;
+        
+        //Save place comment object
+        $this->loadModel('PlaceComment');
+        $com = array();
+        $com['PlaceComment']['user_id'] = $userId;
+        $com['PlaceComment']['comment'] = $comment;
+        $com['PlaceComment']['place_id'] = $placeId;
+        $this->log("API->addPlaceComment() called ", LOG_DEBUG);
+        if($this->PlaceComment->save($com)){
+            
+            $response = REQUEST_OK;
+            $commentId = $this->PlaceComment->getLastInsertID();
+        } else {
+            $response = REQUEST_FAILED;
+            $errorMessage = ERROR_COMMENT_CREATION;
+        }
+        
+        $this->log("API->addPlaceComment() returns: response $response error $errorMessage" , LOG_DEBUG);
+        
+        $data['response'] = $response;
+        $data['comment_id'] = $commentId;
+        $data['error'] = $errorMessage;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //add a comment for a given activity
+    function addActivityComment(){
+        if(isset($_REQUEST['user_id'])) $userId = $_REQUEST['user_id'];
+        if(isset($_REQUEST['comment'])) $comment = $_REQUEST['comment'];
+        if(isset($_REQUEST['place_id'])) $placeId = $_REQUEST['place_id'];
+        
+        $this->log("API->addActivityComment() called for palce: $placeId from user: $userId", LOG_DEBUG);
+        
+        $commentId = null;
+        $response = null;
+        $errorMessage = null;
+        
+        //Save activity comment object
+        $this->loadModel('ActivityComment');
+        $com = array();
+        $com['ActivityComment']['user_id'] = $userId;
+        $com['ActivityComment']['comment'] = $comment;
+        $com['ActivityComment']['place_id'] = $placeId;
+        $this->log("API->addActivityComment() called ", LOG_DEBUG);
+        if($this->ActivityComment->save($com)){
+            
+            $response = REQUEST_OK;
+            $commentId = $this->ActivityComment->getLastInsertID();
+        } else {
+            $response = REQUEST_FAILED;
+            $errorMessage = ERROR_COMMENT_CREATION;
+        }
+        
+        $this->log("API->addActivityComment() returns: response $response error $errorMessage" , LOG_DEBUG);
+        
+        $data['response'] = $response;
+        $data['comment_id'] = $commentId;
+        $data['error'] = $errorMessage;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Checks if the specified list of emails maps to dogsquare users
     function areUsers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
@@ -731,15 +807,7 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
-    //Saves a comment for a given place
-    function savePlaceComment(){
-        
-    }
     
-    //Saves a comment for a given activity
-    function saveActivityComment(){
-        
-    }
 }
 
 ?>
