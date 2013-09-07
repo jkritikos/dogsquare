@@ -412,9 +412,9 @@ class ApiController extends AppController{
     function addActivityComment(){
         if(isset($_REQUEST['user_id'])) $userId = $_REQUEST['user_id'];
         if(isset($_REQUEST['comment'])) $comment = $_REQUEST['comment'];
-        if(isset($_REQUEST['place_id'])) $placeId = $_REQUEST['place_id'];
+        if(isset($_REQUEST['activity_id'])) $activityId = $_REQUEST['activity_id'];
         
-        $this->log("API->addActivityComment() called for palce: $placeId from user: $userId", LOG_DEBUG);
+        $this->log("API->addActivityComment() called for palce: $activityId from user: $userId", LOG_DEBUG);
         
         $commentId = null;
         $response = null;
@@ -425,7 +425,7 @@ class ApiController extends AppController{
         $com = array();
         $com['ActivityComment']['user_id'] = $userId;
         $com['ActivityComment']['comment'] = $comment;
-        $com['ActivityComment']['place_id'] = $placeId;
+        $com['ActivityComment']['activity_id'] = $activityId;
         $this->log("API->addActivityComment() called ", LOG_DEBUG);
         if($this->ActivityComment->save($com)){
             
