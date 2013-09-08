@@ -38,6 +38,18 @@ CREATE TABLE `user_roles` (
 #assign roles to root user
 insert into user_roles(user_id, role_id) values (1,1);
 
+#User inbox table 
+CREATE TABLE `user_inbox` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_from` int(11) NOT NULL,
+  `user_to` int(11) NOT NULL,
+  `read` int(1) default 0,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 #Dog breed table
 CREATE TABLE `dog_breeds` (
  `id` int(11) NOT NULL AUTO_INCREMENT,

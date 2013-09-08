@@ -582,10 +582,6 @@ class ApiController extends AppController{
         
     }
     
-    function getInbox(){
-        
-    }
-    
     function getDog(){
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
         
@@ -630,8 +626,35 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Sends a message from $user_id to $target_id
     function sendMessage(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['message'])) $message = $_REQUEST['message'];
         
+        $this->loadModel('UserInbox');
+        $obj = array();
+        $obj['UserInbox']['user_from'] = $user_id;
+        $obj['UserInbox']['user_to'] = $target_id;
+        $obj['UserInbox']['message'] = $message;
+        
+        if($this->UserInbox->save($obj)){
+            $response = REQUEST_OK;
+        } else {
+            $response = REQUEST_FAILED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Gets all unread messages
+    function getMessages(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        
+        $this->loadModel('UserInbox');
     }
     
     //Searches for users and places
