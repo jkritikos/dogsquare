@@ -428,9 +428,18 @@ class ApiController extends AppController{
         $com['ActivityComment']['activity_id'] = $activityId;
         $this->log("API->addActivityComment() called ", LOG_DEBUG);
         if($this->ActivityComment->save($com)){
-            
-            $response = REQUEST_OK;
-            $commentId = $this->ActivityComment->getLastInsertID();
+            $this->loadModel('UserNotification');
+                
+            $not['UserNotification']['user_from'] = $userId;
+            $not['UserNotification']['activity_id'] = $activityId;
+            $not['UserNotification']['type_id'] = NOTIFICATION_COMMENT_ACTIVITY;
+
+            if($this->UserNotification->save($not)){
+                $response = REQUEST_OK;
+                $commentId = $this->ActivityComment->getLastInsertID();
+            }else{
+                $response = REQUEST_FAILED;
+            }
         } else {
             $response = REQUEST_FAILED;
             $errorMessage = ERROR_COMMENT_CREATION;
@@ -488,7 +497,17 @@ class ApiController extends AppController{
         
         if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
             if($this->UserFollows->save($obj)){
-                $response = REQUEST_OK;
+                $this->loadModel('UserNotification');
+                
+                $obj2['UserNotification']['user_from'] = $user_id;
+                $obj2['UserNotification']['user_id'] = $follow_user;
+                $obj2['UserNotification']['type_id'] = NOTIFICATION_NEW_FOLLOWER;
+                
+                if($this->UserNotification->save($obj2)){
+                    $response = REQUEST_OK;
+                }else{
+                    $response = REQUEST_FAILED;
+                }
             } else {
                 $response = REQUEST_FAILED;
             }
