@@ -9,8 +9,10 @@ class User extends AppModel {
         )
     );
     
-    function areUsers($emailList){
-        $sql = "select u.name, u.email, u.id from users u where u.email in ($emailList)";
+    function areUsers($emailList, $userId){
+        $sql = "select u.name, u.email, u.id, ";
+        $sql .= " (select uf.id from user_follows uf where uf.user_id = $userId and uf.follows_user=u.id) as followed";
+        $sql .= " from users u where u.email in ($emailList)";
         $rs = $this->query($sql);
         $data = array();
         $emails = array();
@@ -19,10 +21,12 @@ class User extends AppModel {
                 $name = $rs[$i]['u']['name'];
 		$id = $rs[$i]['u']['id'];
 		$email = $rs[$i]['u']['email'];
+                $followed = $rs[$i][0]['followed'];
 		
 		$obj['User']['name'] = $name;
 		$obj['User']['email'] = $email;
 		$obj['User']['id'] = $id;
+                $obj['User']['followed'] = $followed;
 
                 $emails[] = $email;
 		$data[] = $obj;
@@ -36,8 +40,10 @@ class User extends AppModel {
 	return $object;
     }
     
-    function search($name,$email,$status){
-        $sql = "select u.name, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created from users u where 1=1 ";
+    function search($name,$email,$status, $userId){
+        $sql = "select u.name, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created,";
+        $sql .= " (select uf.id from user_follows uf where uf.user_id = $userId and uf.follows_user=u.id) as followed";
+        $sql .= " from users u where 1=1";
 
 	if($name != ''){
             $sql .= " and u.name like '%$name%' order by u.name";
@@ -60,11 +66,13 @@ class User extends AppModel {
 		$id = $rs[$i]['u']['id'];
 		$email = $rs[$i]['u']['email'];
 		$created = $rs[$i]['0']['created'];
+                $followed = $rs[$i]['0']['followed'];
                 
 		$obj['User']['name'] = $name;
 		$obj['User']['email'] = $email;
 		$obj['User']['created'] = $created;
 		$obj['User']['id'] = $id;
+                $obj['User']['followed'] = $followed;
 
 		$data[] = $obj;
             }

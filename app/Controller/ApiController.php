@@ -452,7 +452,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
         
         $this->loadModel('User');
-        $userData = $this->User->areUsers($list);
+        $userData = $this->User->areUsers($list, $user_id);
         
         $data['response'] = REQUEST_OK;
         $data['results'] = $userData;
@@ -463,14 +463,12 @@ class ApiController extends AppController{
     
     //TODO Alex TERRIBLE bug here, find it..
     function searchUser(){
-        if(isset($_REQUEST['name'])){
-            $name = $_REQUEST['name'];
-        } else {
-            $name = "";
-        }
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
+        
         
         $this->loadModel('User');
-        $userData = $this->User->search($name, null, null);
+        $userData = $this->User->search($name, null, null, $user_id);
         
         $data['response'] = REQUEST_OK;
         $data['users'] = $userData;
