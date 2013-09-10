@@ -48,6 +48,21 @@ class UserFollows extends AppModel {
         return $data;
     }
     
+    //Returns a count of the followers for the specified user
+    function countFollowers($id){
+        $sql = "select count(*) cnt from user_follows uf where follows_user=$userId";
+        $rs = $this->query($sql);
+        
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        return $count;
+    }
+    
     //Reutns the users that user $id is following
     function getFollowing($id){
         $sql = "select u.id, u.name, p.thumb from users u inner join user_follows uf on (u.id=uf.follows_user) inner join photos p on (u.photo_id=p.id) where uf.user_id=$id";
@@ -88,6 +103,11 @@ class UserFollows extends AppModel {
         }
         
         return $data;
+    }
+    
+    //Returns an array with the users that are mutually followed by user $id
+    function getMutualFollowers($id){
+        $sql = "";
     }
 }
 

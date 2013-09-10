@@ -468,7 +468,6 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
-    //TODO Alex TERRIBLE bug here, find it..
     function searchUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
@@ -513,6 +512,20 @@ class ApiController extends AppController{
             $response = ERROR_USER_ALREADY_FOLLOWING;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -536,6 +549,20 @@ class ApiController extends AppController{
             
         } else {
             $response = ERROR_USER_NOT_FOLLOWING;
+        }
+        
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
         }
         
         $data['response'] = $response;
@@ -572,6 +599,11 @@ class ApiController extends AppController{
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
+    }
+    
+    //Returns the users that are mutually followed for user $user_id
+    function getMutualFollowers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
     }
     
     //Returns the unread notifications of the specified user

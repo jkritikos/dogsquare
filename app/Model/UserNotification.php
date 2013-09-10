@@ -3,6 +3,7 @@
 class UserNotification extends AppModel {
     var $name = 'UserNotification';
     
+    //Returns the unread notifications for this user
     function getUnreadNotifications($user_id){
         $sql = "select un.id, un.user_from, un.type_id, un.activity_id, p.thumb, u.name, un.created from user_notifications un ";
         $sql .= "inner join users u on (u.id=un.user_from) inner join photos p on (p.id=u.photo_id) where un.user_id=$user_id and un.read=0";
@@ -24,6 +25,23 @@ class UserNotification extends AppModel {
         }
         
         return $data;
+    }
+    
+    //Returns the number of unread notifications for this user
+    function countUnreadNotifications($user_id){
+        $sql = "select count(*) cnt from user_notifications un where un.user_id=$user_id and un.read=0";
+  
+        $rs = $this->query($sql);
+        $count = 0;
+        
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i]['un']['id'];
+                
+            }
+        }
+        
+        return $count;
     }
      
 }
