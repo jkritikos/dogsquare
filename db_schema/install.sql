@@ -229,3 +229,44 @@ CREATE TABLE `activity_likes` (
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Activities table
+CREATE TABLE `activities` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) not null,
+ `start_date` timestamp,
+ `start_time` timestamp,
+ `end_time` timestamp,
+ `type_id` int(2),
+ `temperature` float,
+ `pace` float,
+ `distance` float,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Activity dogs table
+CREATE TABLE `activity_dogs` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `activity_id` int(11) not null,
+ `dog_id` int(11) not null,
+ `walk_distance` float,
+ `playtime` int(2),
+ `dogfuel` int(4),
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Activity coordinates table
+CREATE TABLE `activity_coordinates` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `activity_id` int(11) not null,
+ `lat` float not null,
+ `lon` float,
+ `logtime` timestamp,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

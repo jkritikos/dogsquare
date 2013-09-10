@@ -300,13 +300,11 @@ class ApiController extends AppController{
                 $dateString = Security::hash(time().rand(1, 10), 'md5');
                 $fileExtension = ".jpeg";
                 $fileName = $dateString.$fileExtension;
-                //$filePath = FILE_PATH ."/". $fileName;
-                $uploadfile = UPLOAD_PATH.USER_PATH."/". "$fileName";
+                $uploadfile = UPLOAD_PATH . USER_PATH . "/". "$fileName";
 
                 //Thumbnail
                 $filenameThumb = "thumb_".$dateString.$fileExtension;
-                //$filePathThumb = FILE_PATH ."/". $filenameThumb;
-                $uploadfileThumb = UPLOAD_PATH.USER_PATH."/". "$filenameThumb";
+                $uploadfileThumb = UPLOAD_PATH . USER_PATH . "/". "$filenameThumb";
                 
                 $this->log("API->signup() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
 
