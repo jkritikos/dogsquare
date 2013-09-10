@@ -38,6 +38,17 @@ class ApiController extends AppController{
             }
         }
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($userID);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -136,10 +147,24 @@ class ApiController extends AppController{
        
         $this->log("API->addDog() returns: response $response error $errorMessage" , LOG_DEBUG);
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($userID);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['dog_id'] = $dogID;
         $data['error'] = $errorMessage;
-        $data['dog_id'] = $dogID;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -232,6 +257,21 @@ class ApiController extends AppController{
        
         $this->log("API->addPlace() returns: response $response error $errorMessage" , LOG_DEBUG);
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($userID);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['place_id'] = $placeID;
         $data['error'] = $errorMessage;
@@ -398,6 +438,21 @@ class ApiController extends AppController{
         
         $this->log("API->addPlaceComment() returns: response $response error $errorMessage" , LOG_DEBUG);
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($userId);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['comment_id'] = $commentId;
         $data['error'] = $errorMessage;
@@ -445,6 +500,20 @@ class ApiController extends AppController{
         
         $this->log("API->addActivityComment() returns: response $response error $errorMessage" , LOG_DEBUG);
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($userId);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['comment_id'] = $commentId;
         $data['error'] = $errorMessage;
@@ -461,6 +530,17 @@ class ApiController extends AppController{
         $this->loadModel('User');
         $userData = $this->User->areUsers($list, $user_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['results'] = $userData;
         
@@ -476,6 +556,17 @@ class ApiController extends AppController{
         $this->loadModel('User');
         $userData = $this->User->search($name, null, null, $user_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['users'] = $userData;
         $this->layout = 'blank';
@@ -516,16 +607,15 @@ class ApiController extends AppController{
         if($response == REQUEST_OK){
         
             //Count unread notifications
-            $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
             $data['count_notifications'] = $count_notifications;
 
             //Count followers
-            $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
         }
         
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -560,11 +650,11 @@ class ApiController extends AppController{
             $data['count_notifications'] = $count_notifications;
 
             //Count followers
-            $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
         }
         
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -579,6 +669,16 @@ class ApiController extends AppController{
         $this->loadModel('UserFollows');
         $users = $this->UserFollows->getFollowers($target_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['users'] = $users;
         
@@ -594,6 +694,16 @@ class ApiController extends AppController{
         $this->loadModel('UserFollows');
         $users = $this->UserFollows->getFollowing($target_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['users'] = $users;
         
@@ -614,6 +724,16 @@ class ApiController extends AppController{
         $this->loadModel('UserNotification');
         $notifications = $this->UserNotification->getUnreadNotifications($user_id);
         
+        //Count unread notifications
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['notifications'] = $notifications;
         
@@ -631,10 +751,22 @@ class ApiController extends AppController{
     
     function getDog(){
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         
         $this->loadModel('Dog');
         $dog = $this->Dog->getDogById($dog_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['dog'] = $dog;
         
@@ -644,10 +776,22 @@ class ApiController extends AppController{
     
     function getPlace(){
         if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         
         $this->loadModel('Place');
         $place = $this->Place->getPlaceById($place_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['place'] = $place;
         
@@ -665,6 +809,17 @@ class ApiController extends AppController{
         $this->loadModel('Dog');
         $dogs = $this->Dog->getUserDogs($target_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
         $data['response'] = REQUEST_OK;
         $data['user'] = $otherUser;
         $data['dogs'] = $dogs;
@@ -691,6 +846,21 @@ class ApiController extends AppController{
             $response = REQUEST_FAILED;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -744,6 +914,21 @@ class ApiController extends AppController{
             $response = REQUEST_INVALID;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -769,6 +954,21 @@ class ApiController extends AppController{
             $response = REQUEST_INVALID;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -795,6 +995,21 @@ class ApiController extends AppController{
             $response = REQUEST_INVALID;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -820,6 +1035,21 @@ class ApiController extends AppController{
             $response = REQUEST_INVALID;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -846,6 +1076,21 @@ class ApiController extends AppController{
             $response = REQUEST_INVALID;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -871,6 +1116,21 @@ class ApiController extends AppController{
             $response = REQUEST_INVALID;
         }
         
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';

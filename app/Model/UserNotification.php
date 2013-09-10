@@ -36,7 +36,7 @@ class UserNotification extends AppModel {
         
 	if(is_array($rs)){
             foreach($rs as $i => $values){
-                $count = $rs[$i]['un']['id'];
+                $count = $rs[$i][0]['cnt'];
                 
             }
         }

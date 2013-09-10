@@ -49,7 +49,7 @@ class UserFollows extends AppModel {
     }
     
     //Returns a count of the followers for the specified user
-    function countFollowers($id){
+    function countFollowers($userId){
         $sql = "select count(*) cnt from user_follows uf where follows_user=$userId";
         $rs = $this->query($sql);
         
