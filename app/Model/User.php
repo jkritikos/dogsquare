@@ -111,10 +111,39 @@ class User extends AppModel {
         return Security::hash($input, 'md5');
     }
     
+    
     /*Checks whether the specified email/password combination is valid.
-    Returns the user id on success, null otherwise. Used by the API*/
+    Returns the user id on success, null otherwise*/
+    function validateClientCredentials($email, $password){
+        $this->log("User->validateClientCredentials() called with email $email and password $password", LOG_DEBUG);
+        $id = null;
+        
+        //try to login
+	$currentUser = $this->findAllByEmail($email);
+	if($currentUser != null){
+            //if the account is active
+            if($currentUser[0]['User']['active'] == '1'){
+                $userHash = Security::hash($password, 'md5');
+
+		//and the password is a match
+		if($currentUser[0]['User']['password'] == $userHash){
+                    $id = $currentUser[0]['User']['id'];
+		} else {
+                    $id = null;
+		}
+            }
+	} else {
+            $id = null;
+	}
+        
+        $this->log("User->validateClientCredentials() returns $id", LOG_DEBUG);
+        return $id;
+    }
+    
+    /*Checks whether the specified email/password combination is valid.
+    Returns the user id on success, null otherwise*/
     function validateAdminCredentials($email, $password){
-	$this->log("User->validateCredentials() called with email $email and password $password", LOG_DEBUG);
+	$this->log("User->validateAdminCredentials() called with email $email and password $password", LOG_DEBUG);
 	$result = null;
 
 	//try to login
@@ -135,7 +164,7 @@ class User extends AppModel {
             $result = null;
 	}
 
-	$this->log("User->validateCredentials() returns $result", LOG_DEBUG);
+	$this->log("User->validateAdminCredentials() returns $result", LOG_DEBUG);
 	return $result;
     }
     

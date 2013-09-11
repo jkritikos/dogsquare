@@ -107,7 +107,26 @@ class UserFollows extends AppModel {
     
     //Returns an array with the users that are mutually followed by user $id
     function getMutualFollowers($id){
-        $sql = "";
+        //IDs only
+        //$sql = "select uf.follows_user from user_follows uf where uf.user_id=$id and exists (select uf2.follows_user from user_follows uf2 where uf2.follows_user=$id and uf2.user_id=uf.follows_user)";
+        $sql = "select uf.follows_user,u.name, p.thumb from user_follows uf inner join users u on (uf.follows_user=u.id) ";
+        $sql .= "inner join photos p on (u.photo_id = p.id) where uf.user_id=$id and exists ";
+        $sql .= "(select uf2.follows_user from user_follows uf2 where uf2.follows_user=$id and uf2.user_id=uf.follows_user)";
+        
+        $rs = $this->query($sql);
+        $data = array();
+        
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['User']['name'] = $rs[$i]['u']['name'];
+		$obj['User']['thumb'] = $name = $rs[$i]['p']['thumb'];
+		$obj['User']['id'] = $rs[$i]['uf']['follows_user'];
+
+		$data[] = $obj;
+            }
+        }
+        
+        return $data;
     }
 }
 

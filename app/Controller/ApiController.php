@@ -25,30 +25,46 @@ class ApiController extends AppController{
     }
 
     function login(){
-        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
-        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
+        if(isset($_REQUEST['password'])) $password = $_REQUEST['password'];
         
-        $response = false;
-        
-        if($userID != '' && $token != ''){
+        if($email != '' && $password != ''){
             $this->loadModel('User');
-            $serverToken = $this->User->generateToken($userID);
-            if($serverToken == $token){
-                $response = true;
+            $user_id = $this->User->validateClientCredentials($email, $password);
+            
+            if($user_id != null){
+                
+                //Get user
+                $this->loadModel('User');
+                $user = $this->User->getOtherUserById($user_id, $user_id);
+                $data['user'] = $user;
+                
+                //Get dogs
+                $this->loadModel('Dog');
+                $dogs = $this->Dog->getUserDogs($user_id);
+                $data['dogs'] = $dogs;
+                
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userID);
+                $data['count_followers'] = $count_followers;
+
+                $data['count_inbox'] = 0;
+                
+            } else {
+                $response = REQUEST_FAILED;
             }
+            
+        } else {
+            $response = REQUEST_FAILED;
         }
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
-        $data['count_notifications'] = $count_notifications;
-
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($userID);
-        $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
