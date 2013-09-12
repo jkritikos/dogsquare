@@ -170,7 +170,7 @@ class User extends AppModel {
     
     
     function getOtherUserById($userId, $targetId){
-        $sql = "select u.name, p.path, count(uf.id) as following, ";
+        $sql = "select u.id, u.name, u.email, u.facebook_id, u.gender, p.path, p.thumb, count(uf.id) as following, ";
         $sql .= " (select count(id) from user_follows where follows_user = $targetId) as followers,";
         $sql .= " (select id from user_follows where follows_user = $targetId and user_id = $userId) as followed";
         $sql .= " from users u";
@@ -179,8 +179,13 @@ class User extends AppModel {
         $sql .= " where u.id=$targetId";
         $rs = $this->query($sql);
         
-        $obj['name'] = $name = $rs[0]['u']['name'];
+        $obj['id'] = $rs[0]['u']['id'];
+        $obj['name'] = $rs[0]['u']['name'];
+        $obj['email'] = $rs[0]['u']['email'];
+        $obj['facebook_id'] = $rs[0]['u']['facebook_id'];
+        $obj['gender'] = $rs[0]['u']['gender'];
         $obj['photo'] = $rs[0]['p']['path'];
+        $obj['thumb'] = $rs[0]['p']['thumb'];
         $obj['following'] = $rs[0][0]['following'];
         $obj['followers'] = $rs[0][0]['followers'];
         $obj['followed'] = $rs[0][0]['followed'];

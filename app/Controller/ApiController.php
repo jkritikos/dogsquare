@@ -25,8 +25,11 @@ class ApiController extends AppController{
     }
 
     function login(){
+        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
         if(isset($_REQUEST['password'])) $password = $_REQUEST['password'];
+        
+        $response = null;
         
         if($email != '' && $password != ''){
             $this->loadModel('User');
@@ -56,6 +59,7 @@ class ApiController extends AppController{
 
                 $data['count_inbox'] = 0;
                 
+                $response = REQUEST_OK;
             } else {
                 $response = REQUEST_FAILED;
             }
