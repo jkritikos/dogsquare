@@ -113,45 +113,54 @@ class ApiController extends AppController{
         
         //handle photo if dog was created OK
         if($dogCreated && isset($_FILES['photo'])){
-            //$targetPath = FILE_PATH;
             
             //Check for valid extension
             $dateString = Security::hash(time().rand(1, 10), 'md5');
             $fileExtension = ".jpeg";
             $fileName = $dateString.$fileExtension;
-            //$filePath = FILE_PATH ."/". $fileName;
-           
             $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$fileName";
             
-            $this->log("API->addDog() uploadfile is $uploadfile" , LOG_DEBUG);
+            //Thumbnail
+            $filenameThumb = "thumb_".$dateString.$fileExtension;
+            $uploadfileThumb = UPLOAD_PATH . DOG_PATH . "/". "$filenameThumb";
+            
+            $this->log("API->addDog() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
             
             if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                $this->log("API->addDog() uploading succeeded" , LOG_DEBUG);
-                
-                //Save photo info to the db
-                $this->loadModel('Photo');
-                $obj = array();
-                $obj['Photo']['path'] = $fileName;
-                $obj['Photo']['user_id'] = $userID;
-                if($this->Photo->save($obj)){
-                    $photoID = $this->Photo->getLastInsertID();
+                if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                    $this->log("API->addDog() uploading succeeded" , LOG_DEBUG);
+
+                    //Save photo info to the db
+                    $this->loadModel('Photo');
+                    $obj = array();
+                    $obj['Photo']['path'] = $fileName;
+                    $obj['Photo']['thumb'] = $filenameThumb;
+                    $obj['Photo']['user_id'] = $userID;
                     
-                    $this->log("API->addDog() saved photo $photoID to db" , LOG_DEBUG);
-                    
-                    //Update dog with profile photo
-                    $dog['Dog']['id'] = $dogID;
-                    $dog['Dog']['photo_id'] = $photoID;
-                    if(!$this->Dog->save($dog)){
-                        $this->log("API->addDog() failed to set profile image for dog $dogID" , LOG_DEBUG);
-                        
+                    if($this->Photo->save($obj)){
+                        $photoID = $this->Photo->getLastInsertID();
+
+                        $this->log("API->addDog() saved photo $photoID to db" , LOG_DEBUG);
+
+                        //Update dog with profile photo
+                        $dog['Dog']['id'] = $dogID;
+                        $dog['Dog']['photo_id'] = $photoID;
+                        if(!$this->Dog->save($dog)){
+                            $this->log("API->addDog() failed to set profile image for dog $dogID" , LOG_DEBUG);
+
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                        } else {
+                            $response = REQUEST_OK;
+                        }
+
+                    } else {
+                        $this->log("API->addDog() saving photo to db failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
-                    } else {
-                        $response = REQUEST_OK;
                     }
-                    
                 } else {
-                    $this->log("API->addDog() saving photo to db failed" , LOG_DEBUG);
+                    $this->log("API->addDog() uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
                 }
