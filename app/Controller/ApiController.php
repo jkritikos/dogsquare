@@ -25,7 +25,6 @@ class ApiController extends AppController{
     }
 
     function login(){
-        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
         if(isset($_REQUEST['password'])) $password = $_REQUEST['password'];
         
@@ -49,12 +48,12 @@ class ApiController extends AppController{
                 
                 //Count unread notifications
                 $this->loadModel('UserNotification');
-                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
                 $data['count_notifications'] = $count_notifications;
 
                 //Count followers
                 $this->loadModel('UserFollows');
-                $count_followers = $this->UserFollows->countFollowers($userID);
+                $count_followers = $this->UserFollows->countFollowers($user_id);
                 $data['count_followers'] = $count_followers;
 
                 $data['count_inbox'] = 0;
@@ -139,7 +138,8 @@ class ApiController extends AppController{
                     
                     if($this->Photo->save($obj)){
                         $photoID = $this->Photo->getLastInsertID();
-
+                        
+                        $data['thumb'] = $filenameThumb;
                         $this->log("API->addDog() saved photo $photoID to db" , LOG_DEBUG);
 
                         //Update dog with profile photo
@@ -160,13 +160,13 @@ class ApiController extends AppController{
                         $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
                     }
                 } else {
-                    $this->log("API->addDog() uploading failed" , LOG_DEBUG);
+                    $this->log("API->addDog() thumb uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
                 }
                 
             } else {
-                $this->log("API->addDog() uploading failed" , LOG_DEBUG);
+                $this->log("API->addDog() photo uploading failed" , LOG_DEBUG);
                 $response = REQUEST_FAILED;
                 $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
             }
