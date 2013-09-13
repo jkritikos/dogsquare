@@ -743,6 +743,7 @@ class ApiController extends AppController{
     //Returns the users that are mutually followed for user $user_id
     function getMutualFollowers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
     }
     
     //Returns the unread notifications of the specified user
