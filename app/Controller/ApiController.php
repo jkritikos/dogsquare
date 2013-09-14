@@ -36,6 +36,11 @@ class ApiController extends AppController{
             
             if($user_id != null){
                 
+                //Dog breeds
+                $this->loadModel('DogBreed');
+                $breeds = $this->DogBreed->find('all');
+                $data['breeds'] = $breeds;
+                
                 //Get user
                 $this->loadModel('User');
                 $user = $this->User->getOtherUserById($user_id, $user_id);
@@ -55,6 +60,10 @@ class ApiController extends AppController{
                 $this->loadModel('UserFollows');
                 $count_followers = $this->UserFollows->countFollowers($user_id);
                 $data['count_followers'] = $count_followers;
+                
+                //Mutual followers
+                $mutual_followers = $this->UserFollows->getMutualFollowers($user_id);
+                $data['mutual_followers'] = $mutual_followers;
 
                 $data['count_inbox'] = 0;
                 
