@@ -565,8 +565,23 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
         
+        $list = json_decode(urldecode($list));
+        $listToString = '';
+        
+        for($i=0;$i<sizeof($list);$i++){
+            
+            if($list[$i] != ''){
+                if(sizeof($list) - 1 == $i){
+                    $listToString.= "'" . $list[$i] . "'";
+                }else{
+                    $listToString.= "'" . $list[$i] . "',";
+                }
+            }
+        }
+        
+        $this->log("API->areUsers() called to convert list to : $listToString", LOG_DEBUG);
         $this->loadModel('User');
-        $userData = $this->User->areUsers($list, $user_id);
+        $userData = $this->User->areUsers($listToString, $user_id);
         
         //Count unread notifications
         $this->loadModel('UserNotification');
