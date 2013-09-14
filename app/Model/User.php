@@ -10,6 +10,8 @@ class User extends AppModel {
     );
     
     function areUsers($emailList, $userId){
+        $this->log("User->areUsers() called with list $emailList", LOG_DEBUG);
+        
         $sql = "select u.name, u.email, u.id, ";
         $sql .= " (select uf.id from user_follows uf where uf.user_id = $userId and uf.follows_user=u.id) as followed";
         $sql .= " from users u where u.email in ($emailList)";
