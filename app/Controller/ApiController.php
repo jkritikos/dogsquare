@@ -938,7 +938,31 @@ class ApiController extends AppController{
     
     //Searches for users and places
     function search(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
         
+        $this->loadModel('User');
+        $userData = $this->User->search($name, null, null, $user_id);
+        
+        $this->loadModel('Place');
+        $placeData = $this->Place->search($name, null, null);
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
+        $data['response'] = REQUEST_OK;
+        $data['users'] = $userData;
+        $data['places'] = $placeData;
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     //Searches for nearby places
