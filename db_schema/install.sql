@@ -168,7 +168,7 @@ CREATE TABLE `dogfuel_rules` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `breed_id` int(11) not null,
  `user_id` int(11) not null,
- `walk_distance` int(2) not null,
+ `walk_distance` float not null,
  `playtime` int(11) not null,
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
@@ -266,6 +266,19 @@ CREATE TABLE `activity_coordinates` (
  `lat` float not null,
  `lon` float,
  `logtime` timestamp,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Feed table
+CREATE TABLE `feeds` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_from` int(11) not null,
+ `target_user_id` int(11),
+ `target_dog_id` int(11),
+ `type_id` int(4) not null,
+ `activity_id` int(11),
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
