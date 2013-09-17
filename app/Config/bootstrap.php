@@ -108,6 +108,9 @@ CakeLog::config('error', array(
 	'file' => 'error',
 ));
 
+//Default distance filter for nearby searches
+define("NEARBY_DISTANCE", 5);
+
 //User roles
 define("ROLE_ADMIN", "1");
 define("ROLE_USER", "2");
@@ -120,11 +123,17 @@ define("USER_PATH", "/users");
 define("DOG_PATH", "/dogs");
 define("PLACE_PATH", "/places");
 
+//Activity types
+define("ACTIVITY_WALK", 1);
+
 //Notification types
 define("NOTIFICATION_NEW_FOLLOWER", 1);
 define("NOTIFICATION_WALK_REQUEST", 2);
 define("NOTIFICATION_COMMENT_ACTIVITY", 3);
 define("NOTIFICATION_LIKE_ACTIVITY", 4);
+
+//Feed types
+define("FEED_NEW_WALK", 1);
 
 //API general
 define("REQUEST_OK", 1);
@@ -142,3 +151,6 @@ define("ERROR_USER_NOT_FOLLOWING", -8);
 define("ERROR_PLACE_CREATION", -9);
 define("ERROR_PLACE_PHOTO_UPLOAD", -10);
 define("ERROR_COMMENT_CREATION", -11);
+define("ERROR_ACTIVITY_CREATION", -12);
+define("ERROR_ACTIVITY_COORDINATE_CREATION", -13);
+define("ERROR_ACTIVITY_DOG_CREATION", -14);

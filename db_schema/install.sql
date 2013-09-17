@@ -275,8 +275,13 @@ CREATE TABLE `activity_coordinates` (
 CREATE TABLE `feeds` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `user_from` int(11) not null,
+ `user_from_name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
  `target_user_id` int(11),
+ `target_user_name` varchar(256) COLLATE utf8_unicode_ci,
  `target_dog_id` int(11),
+ `target_dog_name` varchar(256) COLLATE utf8_unicode_ci,
+ `target_place_id` int(11),
+ `target_place_name` varchar(256) COLLATE utf8_unicode_ci,
  `type_id` int(4) not null,
  `activity_id` int(11),
  `created` datetime DEFAULT NULL,

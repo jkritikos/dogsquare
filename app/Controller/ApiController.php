@@ -803,11 +803,104 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
-    function saveActivity(){
+    //Returns all the activity related data for the specified activity id
+    function getActivity(){
         
     }
     
+    //Saves an activity (properties, dogs, coordinates)
+    function saveActivity(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['coordinates'])) $coordinates = $_REQUEST['coordinates'];
+        if(isset($_REQUEST['dogs'])) $dogs = $_REQUEST['dogs'];
+        if(isset($_REQUEST['start_date'])) $start_date = $_REQUEST['start_date'];
+        if(isset($_REQUEST['start_time'])) $start_time = $_REQUEST['start_time'];
+        if(isset($_REQUEST['end_time'])) $end_time = $_REQUEST['end_time'];
+        if(isset($_REQUEST['duration'])) $duration = $_REQUEST['duration'];
+        if(isset($_REQUEST['temperature'])) $temperature = $_REQUEST['temperature'];
+        if(isset($_REQUEST['pace'])) $pace = $_REQUEST['pace'];
+        if(isset($_REQUEST['distance'])) $distance = $_REQUEST['distance'];
+        
+        $this->log("API->saveActivity() called for user $user_id with coordinates $coordinates" , LOG_DEBUG);
+        $coordinates = json_decode($coordinates, true);
+        $dogs = json_decode($dogs, true);
+        
+        $response = REQUEST_OK;
+        
+        //activity
+        $this->loadModel('Activity');
+        $obj['Activity']['user_id'] = $user_id;
+        $obj['Activity']['start_date'] = $start_date;
+        $obj['Activity']['start_time'] = $start_time;
+        $obj['Activity']['end_time'] = $end_time;
+        $obj['Activity']['type_id'] = ACTIVITY_WALK;
+        $obj['Activity']['temperature'] = $temperature;
+        $obj['Activity']['pace'] = $pace;
+        $obj['Activity']['distance'] = $distance;
+        
+        if($this->Activity->save($obj)){
+            
+            //coordinates
+            $activity_id = $this->Activity->getLastInsertID();
+            
+            $this->loadModel('ActivityCoordinate');
+            foreach($coordinates as $key => $val){
+
+                $this->ActivityCoordinate->create();
+                $obj2['ActivityCoordinate']['activity_id'] = $activity_id;
+                $obj2['ActivityCoordinate']['lat'] = $coordinates[$key]['lat'];
+                $obj2['ActivityCoordinate']['lon'] = $coordinates[$key]['lon'];
+                $obj2['ActivityCoordinate']['logtime'] = $coordinates[$key]['log_time'];
+                
+                if($this->ActivityCoordinate->save($obj2)){
+                    //carry on
+                    $this->log("API->saveActivity() saved coordinate ", LOG_DEBUG);
+                } else {
+                    $this->log("API->saveActivity() error saving coordinate ", LOG_DEBUG);
+                    $response = ERROR_ACTIVITY_COORDINATE_CREATION;
+                }
+            }
+            
+            //dogs
+            if($response == REQUEST_OK){
+                $this->loadModel('ActivityDog');
+                
+                foreach($dogs as $key => $val){
+                    $this->ActivityDog->create();
+                    $obj3['ActivityDog']['activity_id'] = $activity_id;
+                    $obj3['ActivityDog']['dog_id'] = $dogs[$key]['dog_id'];
+
+                    if($this->ActivityDog->save($obj3)){
+                        //carry on
+                        $this->log("API->saveActivity() saved dog ", LOG_DEBUG);
+                    } else {
+                        $this->log("API->saveActivity() error saving dog info ", LOG_DEBUG);
+                        $response = ERROR_ACTIVITY_DOG_CREATION;
+                    }
+                }
+            }
+        } else {
+            $response = ERROR_ACTIVITY_CREATION;
+        }
+        
+        $this->log("API->saveActivity() returns activity id $activity_id ", LOG_DEBUG);
+        
+        $data['activity_id'] = $activity_id;
+        $data['response'] = $response;  
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function getUser(){
+        
+    }
+    
+    //Returns the newsfeed for the specified user
+    function getFeed(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        
+        $this->loadMode('Feed');
+        
         
     }
     
@@ -943,7 +1036,39 @@ class ApiController extends AppController{
     
     //Searches for nearby places
     function getPlaces(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['lat'])) $lat = $_REQUEST['lat'];
+        if(isset($_REQUEST['lon'])) $lon = $_REQUEST['lon'];
         
+        $category_id = null;
+        if(isset($_REQUEST['category_id'])){
+            $category_id = $_REQUEST['category_id'];
+        }
+        
+        $this->loadModel('Place');
+        $places = $this->Place->getPlacesNearby($lat, $lon, $category_id);
+        $data['places'] = $places;
+        $response = is_array($places) ? REQUEST_OK : REQUEST_FAILED;
+        
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+        }
+        
+        $data['count_inbox'] = 0;
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     //Performs a checkin
