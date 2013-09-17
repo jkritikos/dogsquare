@@ -400,7 +400,10 @@ class ApiController extends AppController{
                             $photoID = $this->Photo->getLastInsertID();
 
                             $this->log("API->signup() saved photo $photoID to db" , LOG_DEBUG);
-
+                            
+                            $data['thumb'] = $filenameThumb;
+                            $data['photo'] = $fileName;
+                            
                             //Update user with profile photo
                             $user['User']['id'] = $userID;
                             $user['User']['photo_id'] = $photoID;
@@ -805,7 +808,36 @@ class ApiController extends AppController{
     
     //Returns all the activity related data for the specified activity id
     function getActivity(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
         
+        $this->log("API->getActivity() called for user $user_id and activity $activity_id" , LOG_DEBUG);
+        
+        $this->loadModel('Activity');
+        $activity = $this->Activity->getActivityById($user_id, $activity_id);
+        $dogs = $this->Activity->getActivityDogs($activity_id);
+        $coordinates = $this->Activity->getActivityCoordinates($activity_id);
+        $comments = $this->Activity->getActivityComments($activity_id);
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
+        $data['response'] = REQUEST_OK;
+        $data['activity'] = $activity;
+        $data['dogs'] = $dogs;
+        $data['coordinates'] = $coordinates;
+        $data['comments'] = $comments;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     //Saves an activity (properties, dogs, coordinates)
