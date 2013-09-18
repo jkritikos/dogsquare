@@ -514,44 +514,54 @@ class ApiController extends AppController{
         $response = null;
         $errorMessage = null;
         
-        //Save activity comment object
-        $this->loadModel('ActivityComment');
-        $com = array();
-        $com['ActivityComment']['user_id'] = $userId;
-        $com['ActivityComment']['comment'] = $comment;
-        $com['ActivityComment']['activity_id'] = $activityId;
-        $this->log("API->addActivityComment() called ", LOG_DEBUG);
-        if($this->ActivityComment->save($com)){
-            $this->loadModel('UserNotification');
-                
-            $not['UserNotification']['user_from'] = $userId;
-            $not['UserNotification']['activity_id'] = $activityId;
-            $not['UserNotification']['type_id'] = NOTIFICATION_COMMENT_ACTIVITY;
+        //Obtain activity info
+        $this->loadModel('Activity');
+        $activity_obj = $this->Activity->findById($activity_id);
+        
+        //Proceed if this is activity exists
+        if($activity_obj != null){
+            
+            //Save activity comment object
+            $this->loadModel('ActivityComment');
+            $com = array();
+            $com['ActivityComment']['user_id'] = $userId;
+            $com['ActivityComment']['comment'] = $comment;
+            $com['ActivityComment']['activity_id'] = $activityId;
+            $this->log("API->addActivityComment() called ", LOG_DEBUG);
+            if($this->ActivityComment->save($com)){
+                $this->loadModel('UserNotification');
 
-            if($this->UserNotification->save($not)){
-                $response = REQUEST_OK;
-                $commentId = $this->ActivityComment->getLastInsertID();
-            }else{
+                $not['UserNotification']['user_from'] = $userId;
+                $not['UserNotification']['activity_id'] = $activityId;
+                $not['UserNotification']['type_id'] = NOTIFICATION_COMMENT_ACTIVITY;
+
+                if($this->UserNotification->save($not)){
+                    $response = REQUEST_OK;
+                    $commentId = $this->ActivityComment->getLastInsertID();
+                }else{
+                    $response = REQUEST_FAILED;
+                }
+            } else {
                 $response = REQUEST_FAILED;
+                $errorMessage = ERROR_COMMENT_CREATION;
+            }
+
+            $this->log("API->addActivityComment() returns: response $response error $errorMessage" , LOG_DEBUG);
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userId);
+                $data['count_followers'] = $count_followers;
             }
         } else {
-            $response = REQUEST_FAILED;
-            $errorMessage = ERROR_COMMENT_CREATION;
-        }
-        
-        $this->log("API->addActivityComment() returns: response $response error $errorMessage" , LOG_DEBUG);
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($userId);
-            $data['count_followers'] = $count_followers;
+            $response = REQUEST_INVALID;
         }
         
         $data['count_inbox'] = 0;
@@ -886,7 +896,7 @@ class ApiController extends AppController{
                 
                 if($this->ActivityCoordinate->save($obj2)){
                     //carry on
-                    $this->log("API->saveActivity() saved coordinate ", LOG_DEBUG);
+                    //$this->log("API->saveActivity() saved coordinate ", LOG_DEBUG);
                 } else {
                     $this->log("API->saveActivity() error saving coordinate ", LOG_DEBUG);
                     $response = ERROR_ACTIVITY_COORDINATE_CREATION;
@@ -913,6 +923,40 @@ class ApiController extends AppController{
             }
         } else {
             $response = ERROR_ACTIVITY_CREATION;
+        }
+        
+        //Feed entry
+        if($response == REQUEST_OK){
+            $this->loadModel('User');
+            $this->loadModel('Feed');
+            
+            $user = $this->User->findById($user_id);
+            $user_name = $user['User']['name'];
+            $dog_names = "";
+
+            $activityDogs = $this->ActivityDog->findAllByActivityId($activity_id);
+            foreach($activityDogs as $key => $val){
+                $this->log("API->saveActivity() feed: found dog ".$activityDogs[$key]['Dog']['name'], LOG_DEBUG);
+                $dog_names .= $activityDogs[$key]['Dog']['name'] . ", ";
+            }
+
+            //remove trailing comma
+            $dog_names = substr($dog_names, 0, strlen($dog_names)-2);
+            
+            $feed['Feed']['user_from'] = $user_id;
+            $feed['Feed']['user_from_name'] = $user_name;
+            $feed['Feed']['activity_id'] = $activity_id;
+            $feed['Feed']['target_dog_name'] = $dog_names;
+            
+            
+            $feedOK = $this->Feed->save($feed);
+            
+            if(!$feedOK){
+                $this->log("API->saveActivity() error creating feed", LOG_DEBUG);
+                $response = ERROR_FEED_CREATION;
+            } else {
+                $this->log("API->saveActivity() saved feed ", LOG_DEBUG);
+            }
         }
         
         $this->log("API->saveActivity() returns activity id $activity_id ", LOG_DEBUG);
@@ -1142,36 +1186,61 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
         
-        $this->loadModel('ActivityLike');
-        $obj = array();
-        $obj['ActivityLike']['user_id'] = $user_id;
-        $obj['ActivityLike']['activity_id'] = $activity_id;
+        //Obtain activity info
+        $this->loadModel('Activity');
+        $activity_obj = $this->Activity->findById($activity_id);
         
-        if(!$this->ActivityLike->userLikesActivity($user_id, $activity_id)){
-            if($this->ActivityLike->save($obj)){
-                $response = REQUEST_OK;
+        //Only proceed if this activity exists
+        if($activity_obj != null){
+            
+            $this->loadModel('ActivityLike');
+            $obj = array();
+            $obj['ActivityLike']['user_id'] = $user_id;
+            $obj['ActivityLike']['activity_id'] = $activity_id;
+
+            if(!$this->ActivityLike->userLikesActivity($user_id, $activity_id)){
+                if($this->ActivityLike->save($obj)){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
             } else {
+                $response = REQUEST_INVALID;
+            }
+
+            //Create user notification
+            $this->loadModel('UserNotification');
+            $obj2['UserNotification']['user_from'] = $user_id;
+            $obj2['UserNotification']['user_id'] = $activity_obj['Activity']['user_id'];
+            $obj2['UserNotification']['activity_id'] = $activity_id;
+            $obj2['UserNotification']['type_id'] = NOTIFICATION_LIKE_ACTIVITY;
+
+            if($this->UserNotification->save($obj2)){
+                $response = REQUEST_OK;
+            } else{
                 $response = REQUEST_FAILED;
             }
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+            }
+
+            $data['count_inbox'] = 0;
+            
         } else {
             $response = REQUEST_INVALID;
         }
         
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-        }
-        
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
