@@ -975,9 +975,28 @@ class ApiController extends AppController{
     function getFeed(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         
-        $this->loadMode('Feed');
+        $this->loadModel('Feed');
+        $feed = $this->Feed->getFeed($user_id);
+        $response = REQUEST_OK;
         
+        $data['response'] = $response;  
+        $data['feed'] = $feed;
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        //Count inbox
+        $data['count_inbox'] = 0;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     function getDog(){
