@@ -56,6 +56,33 @@ class Dog extends AppModel {
         return $data;
     }
     
+    function getLikedUsers($dogId){
+        $sql = "select u.id, u.name, p.thumb";
+        $sql .= " from dog_likes dl";
+        $sql .= " inner join users u on (dl.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " where dl.dog_id = $dogId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['u']['id'];
+                $name = $rs[$i]['u']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $name;
+                $obj['User']['thumb'] = $thumb;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
+    
 }
 
 ?>

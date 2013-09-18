@@ -971,6 +971,58 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function getActivityLikedUsers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
+        
+        $this->loadModel('Activity');
+        $likedUsers = $this->Activity->getLikedUsers($activity_id);
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
+        $data['response'] = REQUEST_OK;
+        $data['users'] = $likedUsers;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+        
+    }
+    
+    function getDogLikedUsers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        
+        $this->loadModel('Dog');
+        $likedUsers = $this->Dog->getLikedUsers($dog_id);
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        $data['count_inbox'] = 0;
+        $data['response'] = REQUEST_OK;
+        $data['users'] = $likedUsers;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+        
+    }
+    
     //Saves an activity (properties, dogs, coordinates)
     function saveActivity(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];

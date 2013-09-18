@@ -85,7 +85,7 @@ class Activity extends AppModel {
     function getActivityCoordinates($activityId){
         $sql = "select ad.lat, ad.lon";
         $sql .= " from activity_coordinates ad ";
-        $sql .= " where ad.activity_id = $activityId";
+        $sql .= " where ad.activity_id = $activityId order by ad.id asc";
         $rs = $this->query($sql);
         
         $data = array();
@@ -94,8 +94,35 @@ class Activity extends AppModel {
                 $latitude = $rs[$i]['ad']['lat'];
                 $longitude = $rs[$i]['ad']['lon'];
 
-                $obj['coords']['latitude'] = $latitude;
-                $obj['coords']['longitude'] = $longitude;
+                $obj['latitude'] = $latitude;
+                $obj['longitude'] = $longitude;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
+    
+    function getLikedUsers($activityId){
+        $sql = "select u.id, u.name, p.thumb";
+        $sql .= " from activity_likes al";
+        $sql .= " inner join users u on (al.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " where al.activity_id = $activityId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['u']['id'];
+                $name = $rs[$i]['u']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $name;
+                $obj['User']['thumb'] = $thumb;
 
                 $data[] = $obj;
             }
