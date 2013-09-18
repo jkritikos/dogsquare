@@ -5,7 +5,11 @@ class UserInbox extends AppModel {
     
     function getUnreadMessages($user_id){
         
-    } 
+    }
+    
+    function countUnreadMessages($user_id){
+        return 0;
+    }
 }
 
 ?>

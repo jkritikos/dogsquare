@@ -18,10 +18,28 @@ class ApiController extends AppController{
     
     function hello(){
         
+        $json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
+        $obj = json_decode($json,true);
+        
+        $json2 = "[{\"lat\":37.333892822265625,\"lon\":-122.07197570800781,\"log_time\":1379496134374},{\"lat\":37.33382797241211,\"lon\":-122.07235717773438,\"log_time\":1379496135371},{\"lat\":37.33375930786133,\"lon\":-122.0727310180664,\"log_time\":1379496136369},{\"lat\":37.33369827270508,\"lon\":-122.0730972290039,\"log_time\":1379496137356},{\"lat\":37.33363723754883,\"lon\":-122.0734634399414,\"log_time\":1379496138355}]";
+        $obj2 = json_decode($json2,true);
+        
+        echo "<li> json: is array returns ". is_Array($obj);
+        echo "<li> json2: is array returns ". is_Array($obj2);
+        
+        foreach($obj2 as $key => $val){
+
+            echo "<li> lat " .$obj2[$key]['lat'];
+        }
+        
+        //var_dump(json_decode($json));
+        
+        phpinfo();
+        
         $data['test'] = 'edd';
         
         $this->layout = 'blank';
-        echo json_encode(compact('data', $data));
+        //echo json_encode(compact('data', $data));
     }
 
     function login(){
@@ -64,8 +82,11 @@ class ApiController extends AppController{
                 //Mutual followers
                 $mutual_followers = $this->UserFollows->getMutualFollowers($user_id);
                 $data['mutual_followers'] = $mutual_followers;
-
-                $data['count_inbox'] = 0;
+                
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
                 
                 $response = REQUEST_OK;
             } else {
@@ -91,7 +112,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
         if(isset($_REQUEST['mating'])) $mating = $_REQUEST['mating'];
         
-        $this->log("API->addDog() called for $name breed $breed and photo ".$_FILES['photo'] , LOG_DEBUG);
+        $this->log("API->addDog() called for user $userID with dog name $name breed $breed" , LOG_DEBUG);
         
         $dogCreated = false;
         $dogID = null;
@@ -197,9 +218,37 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($userID);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
+        //Feed entry
+        if($response == REQUEST_OK){
+            $this->loadModel('User');
+            $this->loadModel('Feed');
+            
+            $user = $this->User->findById($userID);
+            $user_name = $user['User']['name'];
+            
+            $feed['Feed']['user_from'] = $userID;
+            $feed['Feed']['user_from_name'] = $user_name;
+            $feed['Feed']['target_dog_id'] = $dogID;
+            $feed['Feed']['target_dog_name'] = $name;
+            $feed['Feed']['type_id'] = FEED_NEW_DOG;
+            
+            $feedOK = $this->Feed->save($feed);
+            
+            if(!$feedOK){
+                $this->log("API->addDog() error creating feed", LOG_DEBUG);
+                $response = ERROR_FEED_CREATION;
+            } else {
+                $this->log("API->addDog() saved feed ", LOG_DEBUG);
+            }
+        }
+        
         $data['response'] = $response;
         $data['dog_id'] = $dogID;
         $data['error'] = $errorMessage;
@@ -307,9 +356,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($userID);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['place_id'] = $placeID;
         $data['error'] = $errorMessage;
@@ -491,9 +544,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($userId);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['comment_id'] = $commentId;
         $data['error'] = $errorMessage;
@@ -559,12 +616,16 @@ class ApiController extends AppController{
                 $this->loadModel('UserFollows');
                 $count_followers = $this->UserFollows->countFollowers($userId);
                 $data['count_followers'] = $count_followers;
+                
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
             }
         } else {
             $response = REQUEST_INVALID;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         $data['comment_id'] = $commentId;
         $data['error'] = $errorMessage;
@@ -606,7 +667,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['results'] = $userData;
         
@@ -632,7 +697,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['users'] = $userData;
         $this->layout = 'blank';
@@ -679,9 +748,41 @@ class ApiController extends AppController{
             //Count followers
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
+        //Feed entry
+        if($response == REQUEST_OK){
+            $this->loadModel('User');
+            $this->loadModel('Feed');
+            
+            $user = $this->User->findById($user_id);
+            $user_name = $user['User']['name'];
+            
+            $userTarget = $this->User->findById($follow_user);
+            $target_user_id = $userTarget['User']['id'];
+            $target_user_name = $userTarget['User']['name'];
+            
+            $feed['Feed']['user_from'] = $user_id;
+            $feed['Feed']['user_from_name'] = $user_name;
+            $feed['Feed']['target_user_id'] = $target_user_id;
+            $feed['Feed']['target_user_name'] = $target_user_name;
+            $feed['Feed']['type_id'] = FEED_FRIEND_NEW_FOLLOWER;
+            
+            $feedOK = $this->Feed->save($feed);
+            
+            if(!$feedOK){
+                $this->log("API->followUser() error creating feed", LOG_DEBUG);
+                $response = ERROR_FEED_CREATION;
+            } else {
+                $this->log("API->followUser() saved feed ", LOG_DEBUG);
+            }
+        }
+        
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -718,9 +819,13 @@ class ApiController extends AppController{
             //Count followers
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -744,7 +849,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['users'] = $users;
         
@@ -769,7 +878,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['users'] = $users;
         
@@ -808,7 +921,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['notifications'] = $notifications;
         
@@ -839,7 +956,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['activity'] = $activity;
         $data['dogs'] = $dogs;
@@ -864,6 +985,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['distance'])) $distance = $_REQUEST['distance'];
         
         $this->log("API->saveActivity() called for user $user_id with coordinates $coordinates" , LOG_DEBUG);
+        
         $coordinates = json_decode($coordinates, true);
         $dogs = json_decode($dogs, true);
         
@@ -886,20 +1008,24 @@ class ApiController extends AppController{
             $activity_id = $this->Activity->getLastInsertID();
             
             $this->loadModel('ActivityCoordinate');
-            foreach($coordinates as $key => $val){
+            if(is_array($coordinates)){
+                foreach($coordinates as $key => $val){
 
-                $this->ActivityCoordinate->create();
-                $obj2['ActivityCoordinate']['activity_id'] = $activity_id;
-                $obj2['ActivityCoordinate']['lat'] = $coordinates[$key]['lat'];
-                $obj2['ActivityCoordinate']['lon'] = $coordinates[$key]['lon'];
-                $obj2['ActivityCoordinate']['logtime'] = $coordinates[$key]['log_time'];
-                
-                if($this->ActivityCoordinate->save($obj2)){
-                    //carry on
-                    //$this->log("API->saveActivity() saved coordinate ", LOG_DEBUG);
-                } else {
-                    $this->log("API->saveActivity() error saving coordinate ", LOG_DEBUG);
-                    $response = ERROR_ACTIVITY_COORDINATE_CREATION;
+                    $this->log("API->saveActivity() looping coordinate ".$coordinates[$key]['lat'], LOG_DEBUG);
+                    
+                    $this->ActivityCoordinate->create();
+                    $obj2['ActivityCoordinate']['activity_id'] = $activity_id;
+                    $obj2['ActivityCoordinate']['lat'] = $coordinates[$key]['lat'];
+                    $obj2['ActivityCoordinate']['lon'] = $coordinates[$key]['lon'];
+                    $obj2['ActivityCoordinate']['logtime'] = $coordinates[$key]['log_time'];
+
+                    if($this->ActivityCoordinate->save($obj2)){
+                        //carry on
+                        //$this->log("API->saveActivity() saved coordinate ", LOG_DEBUG);
+                    } else {
+                        $this->log("API->saveActivity() error saving coordinate ", LOG_DEBUG);
+                        $response = ERROR_ACTIVITY_COORDINATE_CREATION;
+                    }
                 }
             }
             
@@ -907,17 +1033,19 @@ class ApiController extends AppController{
             if($response == REQUEST_OK){
                 $this->loadModel('ActivityDog');
                 
-                foreach($dogs as $key => $val){
-                    $this->ActivityDog->create();
-                    $obj3['ActivityDog']['activity_id'] = $activity_id;
-                    $obj3['ActivityDog']['dog_id'] = $dogs[$key]['dog_id'];
+                if(is_array($dogs)){
+                    foreach($dogs as $key => $val){
+                        $this->ActivityDog->create();
+                        $obj3['ActivityDog']['activity_id'] = $activity_id;
+                        $obj3['ActivityDog']['dog_id'] = $dogs[$key]['dog_id'];
 
-                    if($this->ActivityDog->save($obj3)){
-                        //carry on
-                        $this->log("API->saveActivity() saved dog ", LOG_DEBUG);
-                    } else {
-                        $this->log("API->saveActivity() error saving dog info ", LOG_DEBUG);
-                        $response = ERROR_ACTIVITY_DOG_CREATION;
+                        if($this->ActivityDog->save($obj3)){
+                            //carry on
+                            $this->log("API->saveActivity() saved dog ", LOG_DEBUG);
+                        } else {
+                            $this->log("API->saveActivity() error saving dog info ", LOG_DEBUG);
+                            $response = ERROR_ACTIVITY_DOG_CREATION;
+                        }
                     }
                 }
             }
@@ -947,7 +1075,7 @@ class ApiController extends AppController{
             $feed['Feed']['user_from_name'] = $user_name;
             $feed['Feed']['activity_id'] = $activity_id;
             $feed['Feed']['target_dog_name'] = $dog_names;
-            
+            $feed['Feed']['type_id'] = FEED_NEW_WALK;
             
             $feedOK = $this->Feed->save($feed);
             
@@ -993,7 +1121,9 @@ class ApiController extends AppController{
         $data['count_followers'] = $count_followers;
         
         //Count inbox
-        $data['count_inbox'] = 0;
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1016,7 +1146,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['dog'] = $dog;
         
@@ -1041,7 +1175,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['place'] = $place;
         
@@ -1069,7 +1207,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['user'] = $otherUser;
         $data['dogs'] = $dogs;
@@ -1108,9 +1250,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1145,7 +1291,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['users'] = $userData;
         $data['places'] = $placeData;
@@ -1181,9 +1331,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1252,10 +1406,12 @@ class ApiController extends AppController{
                 $this->loadModel('UserFollows');
                 $count_followers = $this->UserFollows->countFollowers($user_id);
                 $data['count_followers'] = $count_followers;
+                
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
             }
-
-            $data['count_inbox'] = 0;
-            
         } else {
             $response = REQUEST_INVALID;
         }
@@ -1297,9 +1453,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1338,9 +1498,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1378,9 +1542,13 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1419,9 +1587,41 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
+        //Feed entry
+        if($response == REQUEST_OK){
+            $this->loadModel('User');
+            $this->loadModel('Feed');
+            $this->loadModel('Dog');
+            
+            $user = $this->User->findById($user_id);
+            $user_name = $user['User']['name'];
+            
+            $dogObject = $this->Dog->findById($dog_id);
+            $dog_name = $dogObject['Dog']['name'];
+            
+            $feed['Feed']['user_from'] = $user_id;
+            $feed['Feed']['user_from_name'] = $user_name;
+            $feed['Feed']['target_dog_id'] = $dog_id;
+            $feed['Feed']['target_dog_name'] = $dog_name;
+            $feed['Feed']['type_id'] = FEED_FRIEND_LIKE_DOG;
+            
+            $feedOK = $this->Feed->save($feed);
+            
+            if(!$feedOK){
+                $this->log("API->likeDog() error creating feed", LOG_DEBUG);
+                $response = ERROR_FEED_CREATION;
+            } else {
+                $this->log("API->likeDog() saved feed ", LOG_DEBUG);
+            }
+        }
+        
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1459,16 +1659,18 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
         }
         
-        $data['count_inbox'] = 0;
         $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
-    
-    
 }
 
 ?>

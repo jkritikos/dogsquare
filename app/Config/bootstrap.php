@@ -134,6 +134,11 @@ define("NOTIFICATION_LIKE_ACTIVITY", 4);
 
 //Feed types
 define("FEED_NEW_WALK", 1);
+define("FEED_NEW_DOG", 2);
+define("FEED_FRIEND_NEW_FOLLOWER", 3);
+define("FEED_FRIEND_LIKE_DOG", 4);
+define("FEED_FRIEND_LIKE_ACTIVITY", 5);
+define("FEED_FRIEND_COMMENT_ACTIVITY", 6);
 
 //API general
 define("REQUEST_OK", 1);
