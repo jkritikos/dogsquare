@@ -5,7 +5,7 @@ class DataController extends AppController {
     //Loads the dog breeds data
     function breeds(){
         $targetPath = $_SERVER["DOCUMENT_ROOT"];
-        $uploadfile = $targetPath ."/". "test.txt";
+        $uploadfile = $targetPath ."/". "breeds6.txt";
         
         $this->loadModel('DogBreed');
         $this->loadModel('DogfuelRule');
@@ -22,7 +22,7 @@ class DataController extends AppController {
             //skip the header line
             if($linePointer <= 2){
                 echo "<li>DataController->load() skipping header line $linePointer";
-                //continue;
+                continue;
             }
             
             echo "<pre>";var_dump($lineData);echo "</pre>";
@@ -62,7 +62,6 @@ class DataController extends AppController {
             } else {
                 echo "<li>Error saving $breed";
             }
-            
         }
         
         fclose($file);
@@ -72,7 +71,7 @@ class DataController extends AppController {
     //Loads the places data
     function places(){
         $targetPath = $_SERVER["DOCUMENT_ROOT"];
-        $uploadfile = $targetPath ."/". "places.txt";
+        $uploadfile = $targetPath ."/". "places2.txt";
         
         $this->loadModel('Place');
         $this->loadModel('DogfuelRule');

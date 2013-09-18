@@ -9,6 +9,21 @@ class User extends AppModel {
         )
     );
     
+    function getProfilePhoto($user_id){
+        $sql = "select p.path, p.thumb from photos p inner join users u on (u.photo_id = p.id) where u.id=$user_id";
+        
+        $rs = $this->query($sql);
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $data['photo'] = $rs[$i]['p']['path'];
+                $data['thumb'] = $rs[$i]['p']['thumb'];
+            }
+        }
+        
+        return $data;
+    }
+    
     function areUsers($emailList, $userId){
         $this->log("User->areUsers() called with list $emailList", LOG_DEBUG);
         

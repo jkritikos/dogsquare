@@ -1278,14 +1278,18 @@ class ApiController extends AppController{
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
         if(isset($_REQUEST['message'])) $message = $_REQUEST['message'];
         
+        $this->log("API->sendMessage() called with sender $user_id to user $target_id with message $message", LOG_DEBUG);
+        
         $this->loadModel('UserInbox');
         $obj = array();
         $obj['UserInbox']['user_from'] = $user_id;
         $obj['UserInbox']['user_to'] = $target_id;
         $obj['UserInbox']['message'] = $message;
         
+        $message_id = null;
         if($this->UserInbox->save($obj)){
             $response = REQUEST_OK;
+            $message_id = $this->UserInbox->getLastInsertID();
         } else {
             $response = REQUEST_FAILED;
         }
@@ -1309,7 +1313,10 @@ class ApiController extends AppController{
             $data['count_inbox'] = $count_inbox;
         }
         
+        $this->log("API->sendMessage() returns message_id $message_id", LOG_DEBUG);
+        
         $data['response'] = $response;
+        $data['message_id'] = $message_id;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1320,6 +1327,33 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         
         $this->loadModel('UserInbox');
+        $messages = $this->UserInbox->getUnreadMessages($user_id);
+        
+        $response = REQUEST_OK;
+        
+        $data['response'] = $response;
+        $data['messages'] = $messages;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function photo(){
+        $thumb = 1;
+        
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['thumb'])) $thumb = $_REQUEST['thumb'];
+        
+        $this->loadModel('User');
+        $photo = $this->User->getProfilePhoto($user_id);
+        
+        if($thumb){
+            $url = "/uploaded_files/users/".$photo['thumb'];
+        } else {
+            $url = "/uploaded_files/users/".$photo['photo'];
+        }
+        
+        $this->redirect($url);
     }
     
     //Searches for users and places
