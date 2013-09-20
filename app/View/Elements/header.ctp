@@ -8,7 +8,7 @@ $classUsers = "";
 $classReports = "";
 $classDashboard = "";
 
-$this->log("header.ctp active tab is $activeTab role is $role", LOG_DEBUG);
+$this->log("header.ctp active tab is $activeTab", LOG_DEBUG);
 
 if($activeTab == 'configurations'){
     $classConfiguration = "class=\"active\"";

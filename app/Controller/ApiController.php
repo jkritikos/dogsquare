@@ -379,7 +379,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['facebook_id'])) $facebook_id = $_REQUEST['facebook_id'];
 	if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
         
-        $this->log("API->signup() called for $name and photo ".$_FILES['photo'] , LOG_DEBUG);
+        $this->log("API->signup() called for $name", LOG_DEBUG);
         
         $userCreated = false;
         $userID = null;

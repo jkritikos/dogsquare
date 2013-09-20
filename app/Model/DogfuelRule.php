@@ -7,7 +7,7 @@ class DogfuelRule extends AppModel {
 	 function getDogfuelAll(){
 	 	$sql= "select dr.id, dr.walk_distance, dr.playtime, dr.active, db.name, dr.breed_id";
 		$sql .= " from dogfuel_rules dr, dog_breeds db";
-		$sql .= " where dr.breed_id = db.id";
+		$sql .= " where dr.breed_id = db.id order by db.id";
 		
 		$rs = $this->query($sql);
 		

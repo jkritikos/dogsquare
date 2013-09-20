@@ -5,7 +5,7 @@ class DataController extends AppController {
     //Loads the dog breeds data
     function breeds(){
         $targetPath = $_SERVER["DOCUMENT_ROOT"];
-        $uploadfile = $targetPath ."/". "breeds6.txt";
+        $uploadfile = $targetPath ."/". "breeds.txt";
         
         $this->loadModel('DogBreed');
         $this->loadModel('DogfuelRule');

@@ -181,7 +181,7 @@ class User extends AppModel {
             $result = null;
 	}
 
-	$this->log("User->validateAdminCredentials() returns $result", LOG_DEBUG);
+	$this->log("User->validateAdminCredentials() returns", LOG_DEBUG);
 	return $result;
     }
     
