@@ -1329,10 +1329,55 @@ class ApiController extends AppController{
         $this->loadModel('UserInbox');
         $messages = $this->UserInbox->getUnreadMessages($user_id);
         
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        //Count inbox
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $response = REQUEST_OK;
         
         $data['response'] = $response;
         $data['messages'] = $messages;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //sets messages to read
+    function setMessagesRead(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
+        
+        $list = json_decode(urldecode($list));
+        
+        if(!empty($list)){
+        
+            $listToString = implode(",", $list);
+
+            $this->log("API->setMessagesRead() uses stringList: $listToString", LOG_DEBUG);
+
+            $this->loadModel('UserInbox');
+            $return = $this->UserInbox->setMessagesToRead($listToString);
+            $this->log("API->setMessagesRead() returns $return", LOG_DEBUG);
+            if($return > 0){
+                $response = REQUEST_OK;
+            }else{
+                $response = REQUEST_FAILED;
+            }
+        }else {
+            $response = REQUEST_OK;
+        }
+          
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
