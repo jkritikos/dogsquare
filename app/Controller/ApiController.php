@@ -904,6 +904,65 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Sends a walk request to the specified user
+    function walkRequest(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        
+        //send a message with the default walk request text
+        $this->loadModel('UserInbox');
+        $obj = array();
+        $obj['UserInbox']['user_from'] = $user_id;
+        $obj['UserInbox']['user_to'] = $target_id;
+        $obj['UserInbox']['message'] = WALK_REQUEST_MSG;
+        
+        $message_id = null;
+        if($this->UserInbox->save($obj)){
+            $response = REQUEST_OK;
+            $message_id = $this->UserInbox->getLastInsertID();
+            
+            $this->loadModel('UserNotification');
+                
+            $obj2['UserNotification']['user_from'] = $user_id;
+            $obj2['UserNotification']['user_id'] = $target_id;
+            $obj2['UserNotification']['type_id'] = NOTIFICATION_WALK_REQUEST;
+
+            if($this->UserNotification->save($obj2)){
+                $response = REQUEST_OK;
+            }else{
+                $response = REQUEST_FAILED;
+            }
+            
+        } else {
+            $response = REQUEST_FAILED;
+        }
+        
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+        }
+        
+        $data['response'] = $response;
+        $data['message_id'] = $message_id;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Returns the unread notifications of the specified user
     function getNotifications(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
@@ -1239,6 +1298,7 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Returns all the required data for the specified user $target_id
     function getOtherUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
@@ -1263,6 +1323,10 @@ class ApiController extends AppController{
         $this->loadModel('UserInbox');
         $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
         $data['count_inbox'] = $count_inbox;
+        
+        //Check if mutual followrs
+        $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $target_id);
+        $data['mutual_follower'] = $mutual_follower;
         
         $data['response'] = REQUEST_OK;
         $data['user'] = $otherUser;

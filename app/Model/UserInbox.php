@@ -29,8 +29,8 @@ class UserInbox extends AppModel {
         $sql = "update user_inbox ui set ui.read = 1 where id in ($list)";
         $rs = $this->query($sql);
         
-        $db =& ConnectionManager::getDataSource($this->useDbConfig);
-        return $db->lastAffected();
+        $rows = $this->getAffectedRows();
+        return $rows;
     }
     
     function countUnreadMessages($user_id){

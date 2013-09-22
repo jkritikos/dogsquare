@@ -3,6 +3,22 @@
 class UserFollows extends AppModel {
     var $name = 'UserFollows';
     
+    //Returns true if user $id is mutual follower with user $followingId, false otherwise
+    function isMutualFollower($id, $followingId){
+        $sql = "select 1 as follows from user_follows uf inner join user_follows uf2 on (uf.user_id=uf2.follows_user) where uf.user_id=$id and uf.follows_user=$followingId and uf2.user_id=$followingId and uf2.follows_user=$id";
+        
+        $response = false;
+        $rs = $this->query($sql);
+        foreach($rs as $i => $values){
+            if($rs[$i][0]['follows'] != null){
+                $response = true;
+            }
+        }
+        
+        $this->log("UserFollows->isMutualFollower() returns $response for id $id and followingId $followingId", LOG_DEBUG);
+        return $response;
+    }
+    
     //Returns true if user $id is following user $followingId, false otherwise
     function isUserFollowing($id, $followingId){
         $sql = "select uf.id from user_follows uf where user_id=$id and follows_user=$followingId";
