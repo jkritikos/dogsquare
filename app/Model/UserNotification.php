@@ -41,7 +41,16 @@ class UserNotification extends AppModel {
             }
         }
         
+        $this->log("API->countUnreadNotifications() returns is $count", LOG_DEBUG);
         return $count;
+    }
+    
+    function setNotificationToRead($notficationId){
+        $sql = "update user_notifications un set un.read = 1 where un.id = $notficationId";
+        $rs = $this->query($sql);
+        
+        $rows = $this->getAffectedRows();
+        return $rows;
     }
      
 }

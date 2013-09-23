@@ -1431,7 +1431,7 @@ class ApiController extends AppController{
 
             $this->loadModel('UserInbox');
             $return = $this->UserInbox->setMessagesToRead($listToString);
-            $this->log("API->setMessagesRead() returns $return", LOG_DEBUG);
+            $this->log("API->setMessagesRead() affected rows are $return", LOG_DEBUG);
             if($return > 0){
                 $response = REQUEST_OK;
             }else{
@@ -1440,6 +1440,61 @@ class ApiController extends AppController{
         }else {
             $response = REQUEST_OK;
         }
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        if($response == REQUEST_OK){
+            //Count inbox
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //sets notification to read
+    function setNotificationRead(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['notification'])) $notificationId = $_REQUEST['notification'];
+        
+        $this->log("API->setNotificationRead() sets to read notification: $notificationId", LOG_DEBUG);
+
+        $this->loadModel('UserNotification');
+        $return = $this->UserNotification->setNotificationToRead($notificationId);
+        $this->log("API->setNotificationRead() affected rows are $return", LOG_DEBUG);
+        
+        if($return > 0){
+            $response = REQUEST_OK;
+        }else{
+            $response = REQUEST_FAILED;
+        }
+        
+        if($response == REQUEST_OK){
+            //Count unread notifications
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+        }
+        
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
           
         $data['response'] = $response;
         
