@@ -5,7 +5,7 @@ class DataController extends AppController {
     //Loads the dog breeds data
     function breeds(){
         $targetPath = $_SERVER["DOCUMENT_ROOT"];
-        $uploadfile = $targetPath ."/". "breed.txt";
+        $uploadfile = $targetPath ."/". "jason.txt";
         
         $this->loadModel('DogBreed');
         $this->loadModel('DogfuelRule');
@@ -20,7 +20,7 @@ class DataController extends AppController {
             $lineData = explode("\t", $line);
             
             //skip the header line
-            if($linePointer <= 2){
+            if($linePointer <= 1){
                 echo "<li>DataController->load() skipping header line $linePointer";
                 continue;
             }
@@ -35,14 +35,14 @@ class DataController extends AppController {
             $play = trim($lineData[5]);
             $kennel = trim($lineData[6]);
             
-            echo "<li>DataController->load() looping for line $linePointer - breed $breed walk $walk play $play";
+            //echo "<li>DataController->load() looping for line $linePointer - breed $breed walk $walk play $play";
             
             $this->DogBreed->create();
             $obj['DogBreed']['name'] = $breed;
             $obj['DogBreed']['origin'] = $origin;
             $obj['DogBreed']['weight_from'] = $weight_min;
             $obj['DogBreed']['weight_to'] = $weight_max;
-            $obj['DogBreed']['kennel_club'] = $kennel;
+            //$obj['DogBreed']['kennel_club'] = $kennel;
             
             if($this->DogBreed->save($obj)){
                 $breeID = $this->DogBreed->getLastInsertID();

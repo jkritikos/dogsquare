@@ -1,0 +1,1 @@
+Breed	Origin	Minimum Weight(Kg)	Maximum weight(Kg)	Recommended Daily Walk(klm)	Recommended Daily Play(mins)	American Kennel ClubGerman Pinscher	Germany	11	16	6	45	Working GroupAlaskan Malamute	US	36	43	6	45	
