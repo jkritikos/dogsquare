@@ -58,9 +58,9 @@ class User extends AppModel {
     }
     
     function search($name,$email,$status, $userId){
-        $sql = "select u.name, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created,";
+        $sql = "select u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created,";
         $sql .= " (select uf.id from user_follows uf where uf.user_id = $userId and uf.follows_user=u.id) as followed";
-        $sql .= " from users u where 1=1";
+        $sql .= " from users u inner join photos p on (u.photo_id=p.id) where 1=1";
 
 	if($name != ''){
             $sql .= " and u.name like '%$name%' order by u.name";
@@ -84,12 +84,14 @@ class User extends AppModel {
 		$email = $rs[$i]['u']['email'];
 		$created = $rs[$i]['0']['created'];
                 $followed = $rs[$i]['0']['followed'];
+                $thumb = $rs[$i]['p']['thumb'];
                 
 		$obj['User']['name'] = $name;
 		$obj['User']['email'] = $email;
 		$obj['User']['created'] = $created;
 		$obj['User']['id'] = $id;
                 $obj['User']['followed'] = $followed;
+                $obj['User']['thumb'] = $thumb;
 
 		$data[] = $obj;
             }

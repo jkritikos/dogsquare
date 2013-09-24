@@ -59,6 +59,11 @@ class ApiController extends AppController{
                 $breeds = $this->DogBreed->find('all');
                 $data['breeds'] = $breeds;
                 
+                //Place Categories
+                $this->loadModel('PlaceCategory');
+                $categories = $this->PlaceCategory->find('all');
+                $data['categories'] = $categories;
+                
                 //Get user
                 $this->loadModel('User');
                 $user = $this->User->getOtherUserById($user_id, $user_id);
@@ -221,7 +226,7 @@ class ApiController extends AppController{
             
             //Count inbox
             $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $count_inbox = $this->UserInbox->countUnreadMessages($userID);
             $data['count_inbox'] = $count_inbox;
         }
         
@@ -359,7 +364,7 @@ class ApiController extends AppController{
             
             //Count inbox
             $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $count_inbox = $this->UserInbox->countUnreadMessages($userID);
             $data['count_inbox'] = $count_inbox;
         }
         
@@ -547,7 +552,7 @@ class ApiController extends AppController{
             
             //Count inbox
             $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $count_inbox = $this->UserInbox->countUnreadMessages($userId);
             $data['count_inbox'] = $count_inbox;
         }
         
@@ -565,7 +570,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['comment'])) $comment = $_REQUEST['comment'];
         if(isset($_REQUEST['activity_id'])) $activityId = $_REQUEST['activity_id'];
         
-        $this->log("API->addActivityComment() called for palce: $activityId from user: $userId", LOG_DEBUG);
+        $this->log("API->addActivityComment() called for activity: $activityId from user: $userId", LOG_DEBUG);
         
         $commentId = null;
         $response = null;
@@ -573,7 +578,7 @@ class ApiController extends AppController{
         
         //Obtain activity info
         $this->loadModel('Activity');
-        $activity_obj = $this->Activity->findById($activity_id);
+        $activity_obj = $this->Activity->findById($activityId);
         
         //Proceed if this is activity exists
         if($activity_obj != null){
@@ -619,7 +624,7 @@ class ApiController extends AppController{
                 
                 //Count inbox
                 $this->loadModel('UserInbox');
-                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $count_inbox = $this->UserInbox->countUnreadMessages($userId);
                 $data['count_inbox'] = $count_inbox;
             }
         } else {
@@ -1275,6 +1280,7 @@ class ApiController extends AppController{
         
         $this->loadModel('Place');
         $place = $this->Place->getPlaceById($place_id);
+        $comments = $this->Place->getPlaceComments($place_id);
         
         //Count unread notifications
         $this->loadModel('UserNotification');
@@ -1293,6 +1299,7 @@ class ApiController extends AppController{
         
         $data['response'] = REQUEST_OK;
         $data['place'] = $place;
+        $data['comments'] = $comments;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));

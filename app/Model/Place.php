@@ -102,6 +102,37 @@ class Place extends AppModel {
 
         return $data;
    }
+   
+   function getPlaceComments($placeId){
+        $sql = "select pc.id, pc.comment, pc.user_id, u.name, pc.created";
+        $sql .= " from place_comments pc";
+        $sql .= " inner join users u on (pc.user_id=u.id)";
+        $sql .= " where pc.place_id = $placeId order by pc.created desc";
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['pc']['id'];
+                $comment = $rs[$i]['pc']['comment'];
+                $userId = $rs[$i]['pc']['user_id'];
+                $userName = $rs[$i]['u']['name'];
+                
+                $date = $rs[$i]['pc']['created'];
+                $timestamp = strtotime($date);
+
+                $obj['comm']['id'] = $id;
+                $obj['comm']['text'] = $comment;
+                $obj['comm']['user_id'] = $userId;
+                $obj['comm']['name'] = $userName;
+                $obj['comm']['date'] = $timestamp;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
 }
 
 ?>
