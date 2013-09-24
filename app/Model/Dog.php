@@ -5,7 +5,7 @@ class Dog extends AppModel {
      
     
     function getDogById($dogId){
-        $sql = "SELECT d.id, d.name, db.name, d.age, d.gender, d.weight, p.path, dl.id, count(dl.id) as likes";
+        $sql = "SELECT d.id, d.name, db.name, d.mating, d.age, d.gender, d.weight, p.path, dl.id, count(dl.id) as likes";
         $sql .= " FROM dogs d";
         $sql .= " LEFT OUTER JOIN dog_breeds db on (d.breed_id = db.id)";
         $sql .= " LEFT OUTER JOIN photos p on (d.photo_id = p.id)";
@@ -16,6 +16,7 @@ class Dog extends AppModel {
         $obj['id'] = $rs[0]['d']['id'];
         $obj['name'] = $name = $rs[0]['d']['name'];
         $obj['dog_breed'] = $rs[0]['db']['name'];
+        $obj['mating'] = $rs[0]['d']['mating'];
         $obj['age'] = $rs[0]['d']['age'];
         $obj['gender'] = $rs[0]['d']['gender'];
         $obj['weight'] = $rs[0]['d']['weight'];
