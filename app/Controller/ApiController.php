@@ -1326,6 +1326,9 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
+        $mutualFollower = $this->UserFollows->isMutualFollower($user_id, $target_id);
+        $data['mutual_follower'] = $mutualFollower;
+        
         //Count inbox
         $this->loadModel('UserInbox');
         $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
