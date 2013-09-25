@@ -263,8 +263,8 @@ CREATE TABLE `activity_dogs` (
 CREATE TABLE `activity_coordinates` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `activity_id` int(11) not null,
- `lat` float not null,
- `lon` float,
+ `lat` varchar(128),
+ `lon` varchar(128),
  `logtime` timestamp,
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
