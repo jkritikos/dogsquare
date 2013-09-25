@@ -2,7 +2,21 @@
 
 class Dog extends AppModel {
     var $name = 'Dog';
-     
+    
+    function getProfilePhoto($dog_id){
+        $sql = "select p.path, p.thumb from photos p inner join dogs d on (d.photo_id = p.id) where d.id=$dog_id";
+        
+        $rs = $this->query($sql);
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $data['photo'] = $rs[$i]['p']['path'];
+                $data['thumb'] = $rs[$i]['p']['thumb'];
+            }
+        }
+        
+        return $data;
+    }
     
     function getDogById($dogId){
         $sql = "SELECT d.id, d.name, db.name, d.mating, d.age, d.gender, d.weight, p.path, dl.id, count(dl.id) as likes";

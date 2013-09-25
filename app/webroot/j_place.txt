@@ -1,0 +1,358 @@
+Name	AREA	Category	Photo	Latitude	Longitude
+Pet City	Psyxiko	Pet Shop	1.jpg	38,00615	23,7837
+Pet City	Glyfada	Pet Shop		37,86504	23,75504
+Pet City	Kifissia	Pet Shop		38,1015	23,81321
+Pet City	Marousi	Pet Shop		38,04497	23,77767
+Pet City	Marousi	Pet Shop		38,04468	23,81009
+Pet City	Vrilissia	Pet Shop		38,05312	23,81438
+Pet City	Xaidari	Pet Shop		38,0053	23,66428
+Pet City	Vari	Pet Shop		37,82869	23,80334
+Pet City	Xalandri	Pet Shop		38,01772	23,80165
+Pet City	Xalandri	Pet Shop		38,02866	23,81379
+Pet City	Nea Smyrni	Pet Shop		37,95095	23,69344
+Pet City	Argyroupoli	Pet Shop		37,90596	23,75375
+Pet City	Ilioupoli	Pet Shop		38,09042	23,82012
+Pet City	Paiania	Pet Shop		37,95533	23,85223
+Pet City	Gerakas	Pet Shop		38,01175	23,85484
+Pet City	Nea Iwnia	Pet Shop		38,04261	23,75363
+Pet City	Ilion	Pet Shop		38,03148	23,71141
+Pet City	Anw Patisia	Pet Shop		38,02209	23,73874
+Pet City	Peireas	Pet Shop		37,97762	23,66354
+Pet City	Peiraias	Pet Shop		37,96252	23,59825
+Pet City	Agia Paraskevi	Pet Shop		38,01242	23,81644
+Pet City	Xolargos	Pet Shop		38,00265	23,7986
+Pet City	Hrakleio	Pet Shop		38,05361	23,76829
+Pet City	Petroupoli	Pet Shop		38,03596	23,69421
+Pet City	Peristeri	Pet Shop		38,02385	23,69486
+Pet City	Markopoulo	Pet Shop		37,88758	23,94238
+Pet City	Loutsa	Pet Shop		37,93743	24,00187
+Pet City	Pefki	Pet Shop		38,06252	23,79466
+Pet City	Anw Glyfada	Pet Shop		37,88948	23,76112
+Pet City	Kifissia	Pet Shop		38,07678	23,8147
+Pet City	Koropi	Pet Shop		37,8259	23,80398
+Pet City	Alimos	Pet Shop		37,90739	23,71659
+Pet City	Porto Rafti	Pet Shop		37,88645	23,93897
+PuppiesPark	Marousi	Pet Socialize Training		38,04447	23,82394
+Zoobazaar	Athens	Pet Shop		37,96025	23,73158
+Zoofilos petshop	Athens	Pet Shop		37,98321	23,73763
+Pet Stories	Athens	Pet Shop		37,99474	23,7253
+Pet Shop Farma	Athens	Pet Shop		38,00648	23,73068
+Pet Shop Iwanna's	Athens	Pet Shop		38,00059	23,73342
+The Pet Shop	Athens	Pet Shop		37,93717	23,75046
+Petland	Athens	Pet Shop		37,99743	23,73657
+Petnet	Athens	Pet Shop		37,97978	23,74657
+puupy Love	Athens	Pet Shop		37,98372	23,72931
+Fellow Pet	Athens	Pet Shop		37,9791	23,74216
+Leo's Corner	Athens	Pet Shop		37,957	23,73428
+Amazon	Athens	Pet Shop		37,99156	23,74856
+Pets &Friends	Athens	Pet Shop		37,94068	23,71324
+Pets &Friends	Athens	Pet Shop		37,95507	23,71689
+Ktiniatriki Agora	Agia Paraskevi	Pet Shop		38,00078	23,78711
+Cats Dogs	Agia Paraskevi	Pet Shop		38,00484	23,82249
+Argyriou	Agia Paraskevi	Pet Shop		38,00573	23,82841
+Pet Bazar	Agia Paraskevi	Pet Shop		38,01053	23,83402
+Pet Life	Agia Paraskevi	Pet Shop		37,98634	23,85083
+Courcell	Agia Paraskevi	Pet Shop		37,96655	23,8512
+First Pet Shop	Agia Paraskevi	Pet Shop		38,0188	23,82418
+Stefanitsis	Agia Paraskevi	Pet Shop		38,00816	23,81346
+Happy Feet	Agia Paraskevi	Pet Shop		38,00864	23,82638
+Cats N Dogs	Agia Paraskevi	Pet Shop		38,03662	23,79894
+Lubi Animal Center	Xalandri	Pet Shop		38,000965	23,78933
+Zoofilia	Xalandri	Pet Shop		38,01695	23,79466
+Mavridou	Xalandri	Pet Shop		38,02856	23,79557
+Sonia's	Xalandri	Pet Shop		38,03113	23,81863
+Marko	Xalandri	Pet Shop		38,02133	23,79863
+Moutzouris	Xalandri	Pet Shop		38,01291	23,7965
+Amazonios	Xalandri	Pet Shop		38,02213	23,79835
+Bourantzis	Xalandri	Pet Shop		38,01263	23,79897
+Koletis	Xalandri	Pet Shop		38,025	23,80841
+Valana's	Xalandri	Pet Shop		38,02985	23,81787
+Puppy Land	Psyxiko	Pet Shop		38,0058	23,76576
+Pets.Gr	Neo Psyxiko	Pet Shop		38,00059	23,77728
+Bark Avenue	Neo Psyxiko	Pet Shop		38,01179	23,7818
+Lydia	Neo Psyxiko	Pet Shop		38,00769	23,78051
+Pet Love	Neo Psyxiko	Pet Shop		38,00603	23,77718
+Zougla	Xolargos	Pet Shop		38,00017	23,79277
+Pet Net	Xolargos	Pet Shop		38,00565	23,79589
+Promopet	Kifissia	Pet Shop		38,08085	23,81456
+Gigas	Kifissia	Pet Shop		38,0664	23,81795
+ChinChinHaus	Kifissia	Pet Shop		38,0877	23,79165
+Athens Dog Training Club	Kifissia	Pet Shop		38,06873	23,81385
+The Pet Shop	Kifissia	Pet Shop		38,0659	23,80528
+Figaro	Kifissia	Pet Shop		38,09318	23,7954
+Plouto	Kifissia	Pet Shop		38,07148	23,81184
+Douvos	Kifissia	Pet Shop		38,1015	23,81321
+Dog Spa	Kifissia	Pet Shop		38,07591	23,80762
+Tropic Island	Kalithea	Pet Shop		37,95602	23,70068
+Pet Center	Kalithea	Pet Shop		37,95418	23,70289
+Filozoos	Kalithea	Pet Shop		38,04203	23,69536
+Bon Apetit	Kalithea	Pet Shop		37,94439	23,69261
+Kokalono Pet Art	Kalithea	Pet Shop		37,95947	23,70307
+A Pet Iseis	Kalithea	Pet Shop		37,95566	23,69876
+Pet Park	Kalithea	Pet Shop		37,95718	23,70664
+Pet Center	Kalithea	Pet Shop		37,95848	23,71209
+Folia Ton Zoon	Kalithea	Pet Shop		37,9574	23,70897
+Akouna Matata	Kalithea	Pet Shop		37,94969	23,70428
+Jinx's 	Kalithea	Pet Shop		37,94747	23,69421
+Spiliotis	Ilion	Pet Shop		38,03538	23,69476
+Kartsonaki	Ilion	Pet Shop		38,03072	23,71646
+Amazonio	Ilion	Pet Shop		38,01866	23,70865
+o Kosmos Ton Poulion Kai Ton Zoon	Ilion	Pet Shop		38,03369	23,70962
+Voula	Ilion	Pet Shop		38,02475	23,71085
+Karalis	Ilion	Pet Shop		38,04499	23,72432
+Magic 	Ilion	Pet Shop		38,03938	23,6987
+Pet Boom	Ilion	Pet Shop		38,03391	23,69591
+Pet World	Ilion	Pet Shop		38,02606	23,69677
+To Skiouraki	Ilion	Pet Shop		38,04291	23,70155
+Tom & Jerry	Ilion	Pet Shop		38,04414	23,70921
+Spiliotis	Ilion	Pet Shop		38,03199	23,70898
+Dellis	Peristeri	Pet Shop		38,03025	23,68539
+Skylakia.GR	Peristeri	Pet Shop		38,02921	23,68361
+Waterland	Peristeri	Pet Shop		38,01427	23,96266
+Apostolopoulos	Peristeri	Pet Shop		38,0083	23,69517
+Digenopoulos	Peristeri	Pet Shop		38,02436	23,67899
+Macao	Peristeri	Pet Shop		38,01047	23,70017
+Zoofilia	Peristeri	Pet Shop		38,01098	23,69168
+Amarylis	Peristeri	Pet Shop		38,01607	23,37827
+Frantzis	Peristeri	Pet Shop		38,01128	23,6522
+Dareli	Peristeri	Pet Shop		38,00412	23,69252
+Kivotos	Peristeri	Pet Shop		38,0196	23,68041
+Zookipos	Peristeri	Pet Shop		38,01415	23,67447
+Dogs 4 Living	Peristeri	Pet Shop		38,02671	23,68849
+My Pet	Ilioupoli	Pet Shop		37,94425	23,74808
+Mikros Amazonios	Ilioupoli	Pet Shop		37,92956	23,74973
+The Zoo's Station	Ilioupoli	Pet Shop		37,92862	23,76045
+Pet Corner	Ilioupoli	Pet Shop		37,94649	23,75812
+Teacher's Pet	Ilioupoli	Pet Shop		37,93958	23,7561
+Sun Shield	Ilioupoli	Pet Shop		37,93774	23,74263
+For Pets	Ilioupoli	Pet Shop		37,93967	23,75919
+Koutsomanolis	Ilioupoli	Pet Shop		37,93086	23,75692
+Kourtis	Ilioupoli	Pet Shop		37,9367	23,75803
+Franko Sofia	ilioupoli	Pet Shop		37,92258	23,7507
+Zoomania	Glyfada	Pet Shop		37,86639	23,76778
+Zouzounia	Glyfada	Pet Shop		37,86949	23,76585
+Manos	Glyfada	Pet Shop		37,86084	23,7537
+Bubble Bath	Glyfada	Pet Shop		37,88347	23,76493
+Happy Pet	Glyfada	Pet Shop		37,87101	23,76462
+PPFI	Glyfada	Pet Shop		37,86717	23,74476
+Dogs & Cats	Glyfada	Pet Shop		37,85973	23,76168
+Supet	Glyfada	Pet Shop		37,88299	23,76283
+Tsakas	Glyfada	Pet Shop		37,89342	23,77028
+Eshopkatoikidio.GR	Glyfada	Pet Shop		37,88251	23,75495
+Puppy Love	Glyfada	Pet Shop		37,87215	23,75232
+Four Feet 	Glyfada	Pet Shop		37,94062	23,75179
+Petpalladium	Palaio Faliro	Pet Shop		37,92458	23,70365
+Kougianou	Palaio Faliro	Pet Shop		37,93149	23,70194
+Pet Taxi	Palaio Faliro	Pet Shop		37,93159	23,69665
+Pet Workx	Palaio Faliro	Pet Shop		37,92833	23,69374
+Pet Planet	Palaio Faliro	Pet Shop		37,93201	23,69623
+Lefteris	Palaio Faliro	Pet Shop		37,93844	23,70335
+Makri	Palaio Faliro	Pet Shop		37,92918	23,68925
+Alatis	Palaio Faliro	Pet Shop		37,9393	23,70676
+Pet Story	Palaio Faliro	Pet Shop		37,95295	23,73501
+O Kipos	Palaio Faliro	Pet Shop		37,93211	23,69185
+Pets4ever.GR	Palaio Faliro	Pet Shop		37,91903	23,70083
+Pet fiba	Aigalew	Pet Shop		38,01085	23,64758
+Martinos	Aigalew	Pet Shop		37,99099	23,68402
+Steki	Aigalew	Pet Shop		37,99223	23,67271
+Zalonis	Aigalew	Pet Shop		37,99193	23,68318
+Pet Boom	Aigalew	Pet Shop		37,99216	23,677
+Amazon	Aigalew	Pet Shop		37,98578	23,67421
+One Stop	Aigalew	Pet Shop		37,99752	23,68849
+Rigas	Aigalew	Pet Shop		37,98644	23,6704
+O Petros	Aigalew	Pet Shop		37,99227	23,68258
+Pet Way	Aigalew	Pet Shop		37,98999	23,68185
+Kougioumtzoglou	Nea Iwnia	Pet Shop		38,03461	23,75902
+Idefix	Nea Iwnia	Pet Shop		38,0415	23,75301
+Pet Friends	Nea Iwnia	Pet Shop		38,04261	23,75363
+Snoopy	Nea Iwnia	Pet Shop		38,04587	23,75121
+Gianakaki	Nea Iwnia	Pet Shop		38,03256	23,75048
+Avra Farm	Nea Iwnia	Pet Shop		38,03048	23,74789
+Hungry Pets	Nea Iwnia	Pet Shop		38,03588	23,76932
+Perfettp	Nea Iwnia	Pet Shop		38,04515	23,75505
+Droopy	Nea Iwnia	Pet Shop		38,03692	23,76961
+Pet & Friends	Nea Smyrni	Pet Shop		37,94079	23,71327
+Zoobazaar	Nea Smyrni	Pet Shop		37,95997	23,72815
+Frou Frou	Nea Smyrni	Pet Shop		37,93825	23,7162
+Sofia's	Nea Smyrni	Pet Shop		37,93817	23,71616
+Tsino's Nest	Nea Smyrni	Pet Shop		37,94534	23,71337
+Pet Habbit	Nea Smyrni	Pet Shop		37,94148	23,7091
+Pack Leader	Nea Smyrni	Pet Shop		37,95108	23,71839
+Zoolosophy	Nea Smyrni	Pet Shop		37,93864	23,71619
+Pet Star	Nea Smyrni	Pet Shop		37,94633	23,71114
+Animal's Point	Nea Smyrni	Pet Shop		37,93898	23,71297
+Rot Family	Nea Smyrni	Pet Shop		37,94597	23,67025
+Amigos	Zografou	Pet Shop		37,97243	23,76589
+Spiliotis	Zografou	Pet Shop		37,98013	23,75868
+Pirioxos	Zografou	Pet Shop		37,97548	23,76663
+Spiliotis	Zografou	Pet Shop		37,97569	23,76298
+Free Willy	Zografou	Pet Shop		37,98078	23,76606
+Kanellis	Zografou	Pet Shop		37,00272	23,81343
+Petit Monde	Zografou	Pet Shop		37,98098	23,7632
+Tsoukala	Zografou	Pet Shop		37,97736	23,76736
+Rot Family	Zografou	Pet Shop		37,97668	23,7747
+Lupo	Kaisariani	Pet Shop		37,9686	23,75778
+Tranining Camp	Kaisariani	Training Camp		37,96544	23,76681
+Training Camp	Kaisariani	Training Camp		37,96799	23,75697
+Spiliotis Pet Care	Kaisariani	Pet Shop		37,97119	23,75096
+Skopeto	Kaisariani	Pet Shop		37,96521	23,75856
+Zoo Park	Kaisariani	Pet Shop		37,96656	23,76966
+Artemis	Kaisariani	Pet Shop		37,96724	23,76459
+Amico	Kaisariani	Pet Shop		37,969	23,7552
+Animal.Gr	Marousi	Pet Shop		38,05685	23,80997
+Dionisopoulos	Marousi	Pet Shop		38,05909	23,79831
+Labros	Marousi	Pet Shop		38,06209	23,80341
+Pantos	Marousi	Pet Shop		38,05917	23,7724
+To Katoikidio	Marousi	Pet Shop		38,05436	23,80818
+Doggy Style 	Marousi	Pet Hair Dressing		38,05496	23,80917
+Dog Talk	Marousi	Pet Shop		38,05316	23,81073
+TaTamanidis	Melissia	Pet Shop		38,05265	23,83874
+Posh Pets	Melissia	Pet Shop		38,06103	23,84007
+Magic 	Melissia	Pet Shop		38,03665	23,82591
+GR Pet	Melissia	Pet Shop		38,06564	23,84225
+Goufas	Melissia	Pet Shop		38,06558	23,84082
+Pet Home	Melissia	Pet Shop		38,06149	23,83657
+Zamani	Melissia	Pet Shop		38,05331	23,84115
+Pantazi	Melissia	Pet Shop		38,06324	23,58963
+Aliverti	Hrakleio	Pet Shop		38,05045	23,76459
+Pet Boom	Hrakleio	Pet Shop		38,05012	23,75198
+My PetShop	Hrakleio	Pet Shop		38,06144	23,77449
+Zoupina	Hrakleio	Pet Shop		38,04729	23,76236
+Doggy Style	Hrakleio	Pet Shop		38,04606	23,77133
+Statheropoulos	Hrakleio	Pet Shop		38,04431	23,76188
+The Zoo's Station	Kalamaki	Pet Shop		37,91549	23,71719
+The Pet World	Kalamaki	Pet Shop		37,9139	23,71122
+Pet Shop	Kalamaki	Pet Shop		37,91615	23,71793
+Papanikolaou	Kalamaki	Pet Shop		37,99221	23,69157
+Tropic Zoo	Kalamaki	Pet Shop		37,99221	23,69157
+Minwas	Petroupoli	Pet Shop		38,03377	23,67902
+Dog.gr	Petroupoli	Pet Shop		38,04807	23,68258
+Koutra	Petroupoli	Pet Shop		38,03811	23,69222
+Pet Club	Petroupoli	Pet Shop		38,04146	23,69549
+Golden Champion	Petroupoli	Pet Shop		38,04396	23,68047
+Tweety	Xaidari	Pet Shop		38,01317	23,65346
+Power	Xaidari	Pet Shop		38,0053	23,66428
+Dias	Xaidari	Pet Shop		38,01193	23,65359
+Pet Stop	Vari	Pet Shop		37,83396	23,80393
+Pet Store	Vari	Pet Shop		37,83398	23,80391
+Pet Gallery	Vari	Pet Shop		37,8205	23,7985
+Pet Shop Mania	Galatsi	Pet Shop		38,01979	23,75661
+Pet Shop	Galatsi	Pet Shop		38,02118	23,7501
+Pet Shop	Galatsi	Pet Shop		38,01601	23,75146
+Petflirt	Galatsi	Pet Shop		38,01544	23,75053
+Pet Shop	Galatsi	Pet Shop		38,0159	23,74012
+Kanellos Kennel	Pallini	Pet Shop		37,99045	23,87775
+Pallini Kennels Pet Resort	Pallini	Pet Shop		38,00351	23,88352
+Doganis	Pallini	Pet Shop		37,9889	23,85041
+Ragousi	Nea Erythraia	Pet Shop		38,08875	23,82036
+Douvos	Nea Erythraia	Pet Shop		38,09842	23,81054
+Pet's Beauty Salon	Nea Erythraia	Beauty Salon		38,10095	23,81859
+Agios Modestos Hospital	Nea Erythraia	Hospital		38,10363	23,83058
+Stavraki	Nea Erythraia	Pet Shop		38,10405	23,82141
+Makis Zoo	Vrilissia	Pet Shop		38,04125	23,83199
+Oikopet	Vrilissia	Pet Shop		38,03306	23,83345
+Pet Shop	Vrilissia	Pet Shop		38,04396	23,84411
+Theodorakopoulos Stefanos	Agioi Anargyroi	Pet Shop		38,04603	23,74182
+Fytas-Kyriazi	Agioi Anargyroi	Pet Shop		38,0033	23,72937
+Papadakis	Agioi Anargyroi	Pet Shop		38,0517	23,72993
+Filozwiki Gwnia	Agioi Anargyroi	Pet Shop		38,04544	23,74073
+Pet Shop	Agioi Anargyroi	Pet Shop		38,03619	23,72398
+Grooming Center	Agioi Anargyroi	Pet Shop		38,02954	23,72372
+Elliniki Filozwiki Etaireia	Nea Xalkidona	Pet Shop		38,02574	23,72871
+Pet World	Nea Xalkidona	Pet Shop		38,02865	23,73023
+Pet Shop	Nea Xalkidona	Pet Shop		38,02587	23,72851
+Pet4U.gr	Nea Xalkidona	Pet Shop		38,02855	23,73041
+Xrysomallis	Argyroupoli	Pet Shop		37,90792	23,75273
+Gouvras	Argyroupoli	Pet Shop		37,91553	23,75476
+Douvli	Argyroupoli	Pet Shop		37,93218	23,70044
+Pet Shop	Argyroupoli	Pet Shop		37,90038	23,7532
+Stellas	Vyronas	Pet Shop		37,9589	23,76179
+Hellas Aquarium	Vyronas	Pet Shop		37,95933	23,7513
+Loulaki	Vyronas	Pet Shop		37,95828	23,75356
+Tsakalos	Vyronas	Pet Shop		37,95687	23,76372
+Lubi	Liosia	Pet Shop		38,07011	23,70378
+Liosis	Liosia	Pet Shop		38,07857	23,70322
+Vasileiou	Liosia	Pet Shop		38,08722	23,70569
+Atlantic Pet	Lykovrisi	Pet Shop		38,06886	23,77689
+Bulltrade	Lykovrisi	Pet Shop		38,0719	23,78515
+Animals Club	Lykovrisi	Pet Shop		38,07062	23,78428
+Zwotrofes Stavrou	Gerakas	Pet Shop		38,01058	23,84482
+Pappas Pet Center	Paiania	Pet Shop		37,93852	23,8759
+Araxwvitis	Paiania	Pet Shop		37,95533	23,85223
+Access Group	Paiania	Pet Shop		37,96806	23,90618
+Animalitos	Pefki	Pet Shop		37,99119	23,80173
+Pet Fantasy	Peiraias	Pet Shop		37,94283	23,65095
+Xatzigeorgiou	Peiraias	Pet Shop		37,94677	23,64527
+AigHis	Peiraias	Pet Shop		37,9426	23,6476
+Voutsinos	Peiraias	Pet Shop		37,93298	23,64202
+Iatriki Zoon	Peiraias	Dog Hospital		37,93259	23,64482
+Skylou Gata	Peiraias	Pet Shop		37,9509	23,6411
+Sai Ioanna	Peiraias	Pet Shop		37,94678	23,6436
+Pet Land	Peiraias	Pet Shop		37,9281	23,63868
+Argos	Peiraias	Pet Shop		37,9322	23,64314
+Cosmozoo	Peiraias	Pet Shop		37,9396	23,64402
+Pet Smart	Peiraias	Pet Shop		37,9509	23,6411
+Pet Star Sarantos	Peiraias	Pet Shop		37,9417	23,6483
+New	Peiraias	Pet Shop		37,95728	23,63508
+Ydatinos Kosmos	Peiraias	Pet Shop		37,95338	23,63858
+Flora's Pet Salon	Peiraias	Pet Shop		37,93632	23,6451
+My Pet It	Peiraias	Pet Shop		37,9453	23,65214
+Pet Land	Peiraias	Pet Shop		37,93636	23,64055
+To Spiti twn Zwwn	Peiraias	Pet Shop		37,93045	23,63506
+Lyberopoulos	Peiraias	Pet Shop		37,94717	23,64365
+					
+Zoobazaar	Athens			ok	
+Zoofilos petshop	Athens				
+Pet Stories	Athens				
+Pet Shop Farma	Athens				
+Pet Shop Iwanna's	Athens				
+The Pet Shop	Athens				
+Petland	Athens				
+Petnet	Athens				
+puupy Love	Athens				
+Fellow Pet	Athens				
+Leo's Corner	Athens				
+Amazon	Athens				
+Pets &Friends	Athens				
+Pets &Friends	Athens				
+					
+					
+Gerostathos	Athens			37,97273	23,71039
+Africa	Athens			38,00679	23,74936
+Pet Club	Athens			37,99331	23,76854
+Fanaras	Athens			37,99503	23,75035
+Mpimpita	Athens			37,99789	23,74164
+Magic Pet	Athens			37,98099	23,72757
+Zwaki				38,02209	23,73874
+Pet Flower				37,95234	23,72654
+Panou				38,00315	23,74928
+Pet Care				37,978	23,70603
+Papatheodorou				38,00196	23,73727
+Gournelou				38,01245	23,77467
+Giwva				37,98939	23,73735
+Tsipa				37,99555	23,72451
+Liatsi				37,97793	23,74901
+O Kosmos Twn Zwwn				38,00673	23,73127
+Reptilia Nostra				37,98582	23,76293
+Petsfarma				38,00345	23,80792
+Oikositon				37,98815	23,7125
+Positive Dogs				37,99911	23,75216
+Kaderines.GR				37,97171	23,71021
+Pet Planet				37,96277	23,7215
+Petstar				37,96403	23,7479
+Petshop 				38,0013	23,73763
+Mporek				38,01486	23,73347
+Lycapetus				37,98276	23,75146
+Pantazis				37,96326	23,7465
+Petcare Spiliotis				38,00807	23,72966
+Efi's				37,98612	23,73957
+Goufi				37,98372	23,72931
+Nega's Corner				38,00131	23,72772
+Pet On Line				38,02002	23,73116
+Mini Farm				37,999	23,72487
+Aqua Oasis				37,98502	23,72274
+Pet Needs				38,00898	23,7313
+koliopoulos				37,98789	23,73529
+Papaiwannou				37,98551	23,74044
+Greta				37,98997	23,76817
+Petoccino				38,02314	23,74016
