@@ -24,6 +24,42 @@ class Activity extends AppModel {
         return $obj;
     }
     
+    function getActivitiesByUser($userId){
+        $sql = "select a.id, UNIX_TIMESTAMP(a.start_date) as start_date, UNIX_TIMESTAMP(a.start_time) as start_time, UNIX_TIMESTAMP(a.end_time) as end_time, d.name, d.id, p.thumb";
+        $sql .= " from activities a";
+        $sql .= " inner join activity_dogs ad on (a.id = ad.activity_id)";
+        $sql .= " inner join dogs d on (ad.dog_id = d.id)";
+        $sql .= " inner join photos p on (d.photo_id = p.id)";
+        $sql .= " where a.user_id = $userId";
+        $sql .= " order by a.start_date desc";
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $activityId = $rs[$i]['a']['id'];
+                $startDate = $rs[$i][0]['start_date'];
+                $startTime = $rs[$i][0]['start_time'];
+                $endTime = $rs[$i][0]['end_time'];
+                $name = $rs[$i]['d']['name'];
+                $dogId = $rs[$i]['d']['id'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['Activity']['id'] = $activityId;
+                $obj['Activity']['start_date'] = $startDate;
+                $obj['Activity']['start_time'] = $startTime;
+                $obj['Activity']['end_time'] = $endTime;
+                $obj['Activity']['name'] = $name;
+                $obj['Activity']['dog_id'] = $dogId;
+                $obj['Activity']['dog_thumb'] = $thumb;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
+    
     
     function getActivityDogs($activityId){
         $sql = "select d.id, d.name, p.thumb";

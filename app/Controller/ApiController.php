@@ -54,6 +54,10 @@ class ApiController extends AppController{
             
             if($user_id != null){
                 
+                $this->loadModel('Activity');
+                $activities = $this->Activity->getActivitiesByUser($user_id);
+                $data['activities'] = $activities;
+                
                 //Dog breeds
                 $this->loadModel('DogBreed');
                 $breeds = $this->DogBreed->find('all');
