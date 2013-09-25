@@ -54,9 +54,13 @@ class ApiController extends AppController{
             
             if($user_id != null){
                 
-                //Dog breeds
+                //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
+                //Dog breeds 
                 $this->loadModel('DogBreed');
-                $breeds = $this->DogBreed->find('all');
+                //$breeds = $this->DogBreed->find('all');
+                $breeds = $this->DogBreed->find('all', array(
+                    'conditions' => array('DogBreed.active' => '1')
+                ));
                 $data['breeds'] = $breeds;
                 
                 //Place Categories
@@ -1512,6 +1516,7 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Redirects to the requested user profile image (thumb or normal)
     function photo(){
         $thumb = 1;
         
@@ -1525,6 +1530,25 @@ class ApiController extends AppController{
             $url = "/uploaded_files/users/".$photo['thumb'];
         } else {
             $url = "/uploaded_files/users/".$photo['photo'];
+        }
+        
+        $this->redirect($url);
+    }
+    
+    //Redirects to the requested dog profile image (thumb or normal)
+    function photo_dog(){
+        $thumb = 1;
+        
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['thumb'])) $thumb = $_REQUEST['thumb'];
+        
+        $this->loadModel('Dog');
+        $photo = $this->Dog->getProfilePhoto($dog_id);
+        
+        if($thumb){
+            $url = "/uploaded_files/dogs/".$photo['thumb'];
+        } else {
+            $url = "/uploaded_files/dogs/".$photo['photo'];
         }
         
         $this->redirect($url);

@@ -63,7 +63,7 @@ class DATABASE_CONFIG {
 		'password' => '',
 		'database' => 'dogsquare',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8',
 	);
 
 	public $test = array(
