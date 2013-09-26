@@ -54,11 +54,6 @@ class ApiController extends AppController{
             
             if($user_id != null){
                 
-                $this->loadModel('Activity');
-                $activities = $this->Activity->getActivitiesByUser($user_id);
-                $data['activities'] = $activities;
-                
-                
                 //Dog breeds 
                 //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
                 $this->loadModel('DogBreed');
