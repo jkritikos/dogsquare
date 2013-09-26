@@ -5,7 +5,7 @@ class Activity extends AppModel {
     
     //Returns a list of the activities by this user.
     function getActivityList($user_id){
-        $sql = "select a.id, p.thumb, UNIX_TIMESTAMP(a.created) created, group_concat(d.name) dogs from activities a ";
+        $sql = "select a.id, p.thumb, UNIX_TIMESTAMP(a.created) created, group_concat(d.name separator ', ') dogs from activities a ";
         $sql .= "inner join activity_dogs ad on (a.id = ad.activity_id) inner join dogs d ";
         $sql .= "on (d.id = ad.dog_id) inner join photos p on (p.id = d.photo_id) group by a.id";
         
