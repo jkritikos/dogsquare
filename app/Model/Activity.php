@@ -31,7 +31,7 @@ class Activity extends AppModel {
         $sql .= " inner join dogs d on (ad.dog_id = d.id)";
         $sql .= " inner join photos p on (d.photo_id = p.id)";
         $sql .= " where a.user_id = $userId";
-        $sql .= " order by a.start_date desc";
+        $sql .= " order by a.start_time asc";
         $rs = $this->query($sql);
         
         $data = array();
