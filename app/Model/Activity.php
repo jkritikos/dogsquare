@@ -2,7 +2,29 @@
 
 class Activity extends AppModel {
     var $name = 'Activity';
-     
+    
+    //Returns a list of the activities by this user.
+    function getActivityList($user_id){
+        $sql = "select a.id, p.thumb, UNIX_TIMESTAMP(a.created) created, group_concat(d.name) dogs from activities a ";
+        $sql .= "inner join activity_dogs ad on (a.id = ad.activity_id) inner join dogs d ";
+        $sql .= "on (d.id = ad.dog_id) inner join photos p on (p.id = d.photo_id) group by a.id";
+        
+        $rs = $this->query($sql);
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['Activity']['id'] = $rs[$i]['a']['id'];
+                $obj['Activity']['thumb'] = $rs[$i]['p']['thumb'];
+                $obj['Activity']['created'] = $rs[$i][0]['created'];
+                $obj['Activity']['dogs'] = $rs[$i][0]['dogs'];
+                
+                $data[] = $obj;
+            }
+        }
+        
+        return $data;
+    }
+    
     function getActivityById($userId, $activityId){
         $sql = "select a.id, a.type_id, a.temperature, a.pace, a.distance, ";
         $sql .= " (select al2.id from activity_likes al2 where al2.activity_id = $activityId and al2.user_id = $userId) as liked,";

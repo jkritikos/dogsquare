@@ -1220,8 +1220,39 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Returns the data required for the current user's profile
     function getUser(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         
+        //user data
+        $this->loadModel('User');
+        $otherUser = $this->User->getOtherUserById($user_id, $user_id);
+        
+        //activities list
+        $this->loadModel('Activity');
+        $activities = $this->Activity->getActivityList($user_id);
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
+        $data['response'] = REQUEST_OK;
+        $data['user'] = $otherUser;
+        $data['activities'] = $activities;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     //Returns the newsfeed for the specified user
@@ -1334,9 +1365,6 @@ class ApiController extends AppController{
         $this->loadModel('UserFollows');
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
-        
-        $mutualFollower = $this->UserFollows->isMutualFollower($user_id, $target_id);
-        $data['mutual_follower'] = $mutualFollower;
         
         //Count inbox
         $this->loadModel('UserInbox');
