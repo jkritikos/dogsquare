@@ -534,6 +534,11 @@ class ApiController extends AppController{
             
             $response = REQUEST_OK;
             $commentId = $this->PlaceComment->getLastInsertID();
+            
+            $date = $this->PlaceComment->find('first', array(
+                                        'conditions'=>array('id'=>$commentId),
+                                        'fields'=>array('created')
+                                      ));
         } else {
             $response = REQUEST_FAILED;
             $errorMessage = ERROR_COMMENT_CREATION;
@@ -563,6 +568,7 @@ class ApiController extends AppController{
         $data['response'] = $response;
         $data['comment_id'] = $commentId;
         $data['error'] = $errorMessage;
+        $data['date'] = strtotime($date['PlaceComment']['created']);
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -604,6 +610,11 @@ class ApiController extends AppController{
                 if($this->UserNotification->save($not)){
                     $response = REQUEST_OK;
                     $commentId = $this->ActivityComment->getLastInsertID();
+                    
+                    $date = $this->ActivityComment->find('first', array(
+                                        'conditions'=>array('id'=>$commentId),
+                                        'fields'=>array('created')
+                                      ));
                 }else{
                     $response = REQUEST_FAILED;
                 }
@@ -638,6 +649,7 @@ class ApiController extends AppController{
         $data['response'] = $response;
         $data['comment_id'] = $commentId;
         $data['error'] = $errorMessage;
+        $data['date'] = strtotime($date['ActivityComment']['created']);
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
