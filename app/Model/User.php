@@ -124,12 +124,32 @@ class User extends AppModel {
         return $hash;
     }
     
-    /*Creates a security token for the specified user id*/
-    function generateToken($userID){
-        $input = "t0k3n!$userID";
-        return Security::hash($input, 'md5');
+    //Validates the specified credentials and checks for an active user
+    function authorise($userID, $token){
+        $response = false;
+        
+        $user = $this->findById($userID);
+        if($user != null){
+            if($user['User']['active'] == 1){
+                $passwordHash = $user['User']['password'];
+                $tokenInput = "t0k3n!$userID@$passwordHash";
+                $newToken = Security::hash($tokenInput, 'md5');
+                if($newToken == $token){
+                    $response = true;
+                }
+            }
+        }
+        
+        $this->log("User->authorise() returns $response for user $userID", LOG_DEBUG);
+        return $response;
     }
     
+    /*Creates a security token for the specified user id*/
+    function generateToken($userID,$clearPassword){
+        $password = $this->hashPassword($clearPassword);
+        $input = "t0k3n!$userID@$password";
+        return Security::hash($input, 'md5');
+    }
     
     /*Checks whether the specified email/password combination is valid.
     Returns the user id on success, null otherwise*/

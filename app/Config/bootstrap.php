@@ -145,6 +145,7 @@ define("FEED_FRIEND_COMMENT_ACTIVITY", 6);
 
 //API general
 define("REQUEST_OK", 1);
+define("REQUEST_UNAUTHORISED", -100);
 define("REQUEST_FAILED", -1);
 define("REQUEST_INVALID", 100);
 

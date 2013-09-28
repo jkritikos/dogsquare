@@ -288,3 +288,13 @@ CREATE TABLE `feeds` (
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#badges table
+CREATE TABLE `badges` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `title` varchar(128) COLLATE utf8_unicode_ci,
+ `description` varchar(1024) COLLATE utf8_unicode_ci,
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

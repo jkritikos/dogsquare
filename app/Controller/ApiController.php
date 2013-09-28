@@ -54,6 +54,10 @@ class ApiController extends AppController{
             
             if($user_id != null){
                 
+                //Generate token
+                $token = $this->User->generateToken($user_id,$password);
+                $data['token'] = $token;
+                 
                 //Dog breeds 
                 //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
                 $this->loadModel('DogBreed');
@@ -99,13 +103,12 @@ class ApiController extends AppController{
                 
                 $response = REQUEST_OK;
             } else {
-                $response = REQUEST_FAILED;
+                $response = REQUEST_UNAUTHORISED;
             }
             
         } else {
             $response = REQUEST_FAILED;
         }
-        
         
         $data['response'] = $response;
         $this->layout = 'blank';
@@ -1262,31 +1265,55 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function getBadges(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        $this->loadModel('UserBadge');
+        $badges = $this->UserBadge->getUserBadges($user_id);
+        
+        $data['badges'] = $badges;
+        $data['response'] = REQUEST_OK;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Returns the newsfeed for the specified user
     function getFeed(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('Feed');
-        $feed = $this->Feed->getFeed($user_id);
-        $response = REQUEST_OK;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+        
+            $this->loadModel('Feed');
+            $feed = $this->Feed->getFeed($user_id);
+            $response = REQUEST_OK;
+
+            $data['feed'] = $feed;
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
         $data['response'] = $response;  
-        $data['feed'] = $feed;
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
-
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
