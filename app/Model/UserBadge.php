@@ -15,7 +15,10 @@ class UserBadge extends AppModel {
                 $id = $rs[$i]['b']['id'];
                 $value = $rs[$i]['ub']['user_id'] != null ? true : false;
                 
-                $data[$id] = $value;
+                $obj['id'] = $id;
+                $obj['flag'] = $value;
+                
+                $data[] = $obj; 
             }
         }
         
