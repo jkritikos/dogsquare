@@ -277,7 +277,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['longitude'])) $longitude = $_REQUEST['longitude'];
         if(isset($_REQUEST['latitude'])) $latitude = $_REQUEST['latitude'];
         
-        $this->log("API->addPlace() called for $name and with photo ".$_FILES['photo'] , LOG_DEBUG);
+        $this->log("API->addPlace() called for $name", LOG_DEBUG);
         
         $placeCreated = false;
         $placeID = null;
@@ -309,40 +309,49 @@ class ApiController extends AppController{
             $dateString = Security::hash(time().rand(1, 10), 'md5');
             $fileExtension = ".jpeg";
             $fileName = $dateString.$fileExtension;
-           
             $uploadfile = UPLOAD_PATH.PLACE_PATH."/". "$fileName";
             
-            $this->log("API->addPlace() uploadfile is $uploadfile" , LOG_DEBUG);
+            //Thumbnail
+            $filenameThumb = "thumb_".$dateString.$fileExtension;
+            $uploadfileThumb = UPLOAD_PATH . PLACE_PATH . "/". "$filenameThumb";
+            
+            $this->log("API->addPlace() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
             
             if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                $this->log("API->addPlace() uploading succeeded" , LOG_DEBUG);
-                
-                //Save photo info to the db
-                $this->loadModel('Photo');
-                $obj = array();
-                $obj['Photo']['path'] = $fileName;
-                $obj['Photo']['user_id'] = $userID;
-                if($this->Photo->save($obj)){
-                    $photoID = $this->Photo->getLastInsertID();
-                    
-                    $this->log("API->addPlace() saved photo $photoID to db" , LOG_DEBUG);
-                    
-                    //Update place with profile photo
-                    $place['Place']['id'] = $placeID;
-                    $place['Place']['photo_id'] = $photoID;
-                    if(!$this->Place->save($place)){
-                        $this->log("API->addPlace() failed to set profile image for dog $placeID" , LOG_DEBUG);
-                        
+                if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                    $this->log("API->addPlace() uploading succeeded" , LOG_DEBUG);
+
+                    //Save photo info to the db
+                    $this->loadModel('Photo');
+                    $obj = array();
+                    $obj['Photo']['path'] = $fileName;
+                    $obj['Photo']['user_id'] = $userID;
+                    if($this->Photo->save($obj)){
+                        $photoID = $this->Photo->getLastInsertID();
+
+                        $this->log("API->addPlace() saved photo $photoID to db" , LOG_DEBUG);
+
+                        //Update place with profile photo
+                        $place['Place']['id'] = $placeID;
+                        $place['Place']['photo_id'] = $photoID;
+                        if(!$this->Place->save($place)){
+                            $this->log("API->addPlace() failed to set profile image for place $placeID" , LOG_DEBUG);
+
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
+                        } else {
+                            $response = REQUEST_OK;
+                        }
+
+                    } else {
+                        $this->log("API->addPlace() saving photo to db failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
-                    } else {
-                        $response = REQUEST_OK;
                     }
-                    
                 } else {
-                    $this->log("API->addPlace() saving photo to db failed" , LOG_DEBUG);
+                    $this->log("API->addPlace() thumb uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
-                    $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                    $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
                 }
                 
             } else {
