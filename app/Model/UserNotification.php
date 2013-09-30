@@ -45,11 +45,12 @@ class UserNotification extends AppModel {
         return $count;
     }
     
-    function setNotificationToRead($notficationId){
-        $sql = "update user_notifications un set un.read = 1 where un.id = $notficationId";
+    function setNotificationsToRead($list){
+        $sql = "update user_notifications un set un.read = 1 where un.id in ($list)";
         $rs = $this->query($sql);
         
         $rows = $this->getAffectedRows();
+        
         return $rows;
     }
      

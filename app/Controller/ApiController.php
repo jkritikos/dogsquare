@@ -1553,21 +1553,31 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
-    //sets notification to read
-    function setNotificationRead(){
+    //sets notifications to read
+    function setNotificationsRead(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
-        if(isset($_REQUEST['notification'])) $notificationId = $_REQUEST['notification'];
+        if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
         
-        $this->log("API->setNotificationRead() sets to read notification: $notificationId", LOG_DEBUG);
+        $this->log("API->setNotificationRead() sets to read notifications with id: $list", LOG_DEBUG);
 
-        $this->loadModel('UserNotification');
-        $return = $this->UserNotification->setNotificationToRead($notificationId);
-        $this->log("API->setNotificationRead() affected rows are $return", LOG_DEBUG);
+        $list = json_decode(urldecode($list));
         
-        if($return > 0){
+        if(!empty($list)){
+        
+            $listToString = implode(",", $list);
+
+            $this->log("API->setNotificationRead() uses stringList: $listToString", LOG_DEBUG);
+
+            $this->loadModel('UserNotification');
+            $return = $this->UserNotification->setNotificationsToRead($listToString);
+            $this->log("API->setNotificationsRead() affected rows are $return", LOG_DEBUG);
+            if($return > 0){
+                $response = REQUEST_OK;
+            }else{
+                $response = REQUEST_FAILED;
+            }
+        }else {
             $response = REQUEST_OK;
-        }else{
-            $response = REQUEST_FAILED;
         }
         
         if($response == REQUEST_OK){

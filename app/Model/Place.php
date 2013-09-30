@@ -67,7 +67,7 @@ class Place extends AppModel {
    
     //Returns the nearby places for the specified coordinates
     function getPlacesNearby($lat, $lon, $categoryId=null){
-        $sql = "select p.name, p.lat, p.lon, p.id, ph.thumb,";
+        $sql = "select p.name, p.lat, p.lon, p.id, ph.thumb, c.name, ";
         $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(p.lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(p.lat) * pi()/180) * POWER(SIN(($lon - p.lon) * pi()/180 / 2), 2) )) as distance ";
         $sql .= "from places p left join photos ph on (ph.id = p.photo_id) ";
         $sql .= "left join place_categories c on (p.category_id=c.id) ";
@@ -96,6 +96,7 @@ class Place extends AppModel {
                 $data[$i]['lat'] = $rs[$i]['p']['lat'];
                 $data[$i]['lon'] = $rs[$i]['p']['lon'];
                 $data[$i]['thumb'] = $rs[$i]['ph']['thumb'];
+                $data[$i]['category'] = $rs[$i]['c']['name'];
                 
             }
 	}
