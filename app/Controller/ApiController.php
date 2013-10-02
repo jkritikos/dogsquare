@@ -274,6 +274,95 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function addPhoto(){
+        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        
+        $this->log("API->addPhoto() called for user $userID" , LOG_DEBUG);
+        
+        $response = null;
+        $errorMessage = null;
+        
+        //handle photo 
+        if(isset($_FILES['photo'])){
+            
+            //Check for valid extension
+            $dateString = Security::hash(time().rand(1, 10), 'md5');
+            $fileExtension = ".jpeg";
+            $fileName = $dateString.$fileExtension;
+            $uploadfile = UPLOAD_PATH.USER_PATH."/". "$fileName";
+            
+            //Thumbnail
+            $filenameThumb = "thumb_".$dateString.$fileExtension;
+            $uploadfileThumb = UPLOAD_PATH . USER_PATH . "/". "$filenameThumb";
+            
+            $this->log("API->addPhoto() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
+            
+            if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                    $this->log("API->addPhoto() uploading succeeded" , LOG_DEBUG);
+
+                    //Save photo info to the db
+                    $this->loadModel('Photo');
+                    $obj = array();
+                    $obj['Photo']['path'] = $fileName;
+                    $obj['Photo']['thumb'] = $filenameThumb;
+                    $obj['Photo']['user_id'] = $userID;
+                    $obj['Photo']['type_id'] = 3;
+                    
+                    if($this->Photo->save($obj)){
+                        $photoID = $this->Photo->getLastInsertID();
+                        
+                        $response = REQUEST_OK;
+                        $this->log("API->addPhoto() saved photo $photoID to db" , LOG_DEBUG);
+                    } else {
+                        $this->log("API->addPhoto() saving photo to db failed" , LOG_DEBUG);
+                        $response = REQUEST_FAILED;
+                        $errorMessage = ERROR_PHOTO_UPLOAD;
+                    }
+                } else {
+                    $this->log("API->addPhoto() thumb uploading failed" , LOG_DEBUG);
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_PHOTO_UPLOAD;
+                }
+                
+            } else {
+                $this->log("API->addPhoto() photo uploading failed" , LOG_DEBUG);
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_PHOTO_UPLOAD;
+            }
+        } else {
+            $this->log("API->addPhoto() no photo found" , LOG_DEBUG);
+        }
+       
+        $this->log("API->addPhoto() returns: response $response error $errorMessage" , LOG_DEBUG);
+        
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+        
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($userID);
+            $data['count_followers'] = $count_followers;
+            
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($userID);
+            $data['count_inbox'] = $count_inbox;
+        }
+        
+        $data['response'] = $response;
+        $data['photo_id'] = $photoID;
+        $data['error'] = $errorMessage;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Creates a new place
     function addPlace(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
@@ -1125,7 +1214,11 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['users'] = $likedUsers;
         
@@ -1151,9 +1244,42 @@ class ApiController extends AppController{
         $count_followers = $this->UserFollows->countFollowers($user_id);
         $data['count_followers'] = $count_followers;
         
-        $data['count_inbox'] = 0;
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
         $data['response'] = REQUEST_OK;
         $data['users'] = $likedUsers;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+        
+    }
+    
+    function getPhotos(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        
+        $this->loadModel('Photo');
+        $photos = $this->Photo->getUserPhotos($user_id);
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+        
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
+        $data['response'] = REQUEST_OK;
+        $data['photos'] = $photos;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
