@@ -151,6 +151,34 @@ class User extends AppModel {
         return Security::hash($input, 'md5');
     }
     
+    //Checks whether the specified facebook id / password combi is valid. 
+    //Returns the user id on success, null otherwise
+    function validateDummyFacebookCredentials($facebook_id, $pwd){
+        $this->log("User->validateDummyFacebookCredentials() called with facebook_id $facebook_id and password $pwd", LOG_DEBUG);
+        $id = null;
+        
+        //try to login
+        $currentUser = $this->findAllByFacebookId($facebook_id);
+	if($currentUser != null){
+            //if the account is active
+            if($currentUser[0]['User']['active'] == '1'){
+                $userHash = Security::hash($pwd, 'md5');
+
+		//and the password is a match
+		if($currentUser[0]['User']['password'] == $userHash){
+                    $id = $currentUser[0]['User']['id'];
+		} else {
+                    $id = null;
+		}
+            }
+        } else {
+            $id = null;
+	}
+        
+        $this->log("User->validateDummyFacebookCredentials() returns $id", LOG_DEBUG);
+        return $id;
+    }
+    
     /*Checks whether the specified email/password combination is valid.
     Returns the user id on success, null otherwise*/
     function validateClientCredentials($email, $password){

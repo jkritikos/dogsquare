@@ -45,69 +45,74 @@ class ApiController extends AppController{
     function login(){
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
         if(isset($_REQUEST['password'])) $password = $_REQUEST['password'];
+        if(isset($_REQUEST['facebook_id'])) $facebook_id = $_REQUEST['facebook_id'];
+        if(isset($_REQUEST['f'])) $fb_dummy_pwd = $_REQUEST['f'];
         
         $response = null;
         
+        $this->loadModel('User');
+        
+        //Retrieve user id based on actual dogsquare or dummy FB credentials
         if($email != '' && $password != ''){
-            $this->loadModel('User');
             $user_id = $this->User->validateClientCredentials($email, $password);
-            
-            if($user_id != null){
-                
-                //Generate token
-                $token = $this->User->generateToken($user_id,$password);
-                $data['token'] = $token;
-                 
-                //Dog breeds 
-                //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
-                $this->loadModel('DogBreed');
-                //$breeds = $this->DogBreed->find('all');
-                $breeds = $this->DogBreed->find('all', array(
-                    'conditions' => array('DogBreed.active' => '1')
-                ));
-                $data['breeds'] = $breeds;
-                
-                //Place Categories
-                $this->loadModel('PlaceCategory');
-                $categories = $this->PlaceCategory->find('all');
-                $data['categories'] = $categories;
-                
-                //Get user
-                $this->loadModel('User');
-                $user = $this->User->getOtherUserById($user_id, $user_id);
-                $data['user'] = $user;
-                
-                //Get dogs
-                $this->loadModel('Dog');
-                $dogs = $this->Dog->getUserDogs($user_id);
-                $data['dogs'] = $dogs;
-                
-                //Count unread notifications
-                $this->loadModel('UserNotification');
-                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-                $data['count_notifications'] = $count_notifications;
-
-                //Count followers
-                $this->loadModel('UserFollows');
-                $count_followers = $this->UserFollows->countFollowers($user_id);
-                $data['count_followers'] = $count_followers;
-                
-                //Mutual followers
-                $mutual_followers = $this->UserFollows->getMutualFollowers($user_id);
-                $data['mutual_followers'] = $mutual_followers;
-                
-                //Count inbox
-                $this->loadModel('UserInbox');
-                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-                $data['count_inbox'] = $count_inbox;
-                
-                $response = REQUEST_OK;
-            } else {
-                $response = REQUEST_UNAUTHORISED;
-            }
-            
+        } else if($facebook_id != '' && $fb_dummy_pwd != ''){
+            $user_id = $this->User->validateDummyFacebookCredentials($facebook_id, $fb_dummy_pwd);
         } else {
-            $response = REQUEST_FAILED;
+            $user_id = null;
+        }
+            
+        if($user_id != null){
+                
+            //Generate token
+            $token = $this->User->generateToken($user_id,$password);
+            $data['token'] = $token;
+
+            //Dog breeds 
+            //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
+            $this->loadModel('DogBreed');
+            //$breeds = $this->DogBreed->find('all');
+            $breeds = $this->DogBreed->find('all', array(
+                'conditions' => array('DogBreed.active' => '1')
+            ));
+            $data['breeds'] = $breeds;
+
+            //Place Categories
+            $this->loadModel('PlaceCategory');
+            $categories = $this->PlaceCategory->find('all');
+            $data['categories'] = $categories;
+
+            //Get user
+            $this->loadModel('User');
+            $user = $this->User->getOtherUserById($user_id, $user_id);
+            $data['user'] = $user;
+
+            //Get dogs
+            $this->loadModel('Dog');
+            $dogs = $this->Dog->getUserDogs($user_id);
+            $data['dogs'] = $dogs;
+                
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Mutual followers
+            $mutual_followers = $this->UserFollows->getMutualFollowers($user_id);
+            $data['mutual_followers'] = $mutual_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -438,7 +443,8 @@ class ApiController extends AppController{
             if($this->User->save($user)){
                 $userCreated = true;
                 $userID = $this->User->getLastInsertID();
-                $securityToken = $this->User->generateToken($userID);
+                $securityToken = $this->User->generateToken($userID, $password);
+                $response = REQUEST_OK;
             } else {
                 $response = REQUEST_FAILED;
                 $errorMessage = ERROR_USER_CREATION;
@@ -505,6 +511,45 @@ class ApiController extends AppController{
                     $this->log("API->signup() uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                }
+            } else if($userCreated && !isset($_FILES['photo'])){
+                //For FB registrations we need to create a dummy profile photo, pointing to the FB profile photo
+                if($facebook_id != null){
+                    
+                    $fb_path = "http://graph.facebook.com/$facebook_id/picture?height=320&width=320";
+                    $fb_thumb = "http://graph.facebook.com/$facebook_id/picture?height=60&width=60";
+                    
+                    //Save photo info to the db
+                    $this->loadModel('Photo');
+                    $obj = array();
+                    $obj['Photo']['path'] = $fb_path;
+                    $obj['Photo']['thumb'] = $fb_thumb;
+                    $obj['Photo']['user_id'] = $userID;
+                    
+                    if($this->Photo->save($obj)){
+                        $photoID = $this->Photo->getLastInsertID();
+                        
+                        $this->log("API->signup() saved dummy photo $photoID for facebook user $facebook_id to db" , LOG_DEBUG);
+                        $data['thumb'] = $fb_thumb;
+                        $data['photo'] = $fb_path;
+                        
+                        //Update user with profile photo
+                        $user['User']['id'] = $userID;
+                        $user['User']['photo_id'] = $photoID;
+                        if(!$this->User->save($user)){
+                            $this->log("API->signup() failed to set dummy FB profile image for user $userID" , LOG_DEBUG);
+
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                        } else {
+                            $response = REQUEST_OK;
+                        }
+                        
+                    } else {
+                         $this->log("API->signup() saving dummy photo for facebook user $facebook_id to db failed" , LOG_DEBUG);
+                        $response = REQUEST_FAILED;
+                        $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                    }
                 }
             } else {
                 $this->log("API->signup() no photo found" , LOG_DEBUG);
