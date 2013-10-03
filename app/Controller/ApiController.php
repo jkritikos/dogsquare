@@ -183,6 +183,7 @@ class ApiController extends AppController{
                     $obj['Photo']['path'] = $fileName;
                     $obj['Photo']['thumb'] = $filenameThumb;
                     $obj['Photo']['user_id'] = $userID;
+                    $obj['Photo']['type_id'] = DOG_PHOTO_TYPE;
                     
                     if($this->Photo->save($obj)){
                         $photoID = $this->Photo->getLastInsertID();
@@ -308,7 +309,7 @@ class ApiController extends AppController{
                     $obj['Photo']['path'] = $fileName;
                     $obj['Photo']['thumb'] = $filenameThumb;
                     $obj['Photo']['user_id'] = $userID;
-                    $obj['Photo']['type_id'] = 3;
+                    $obj['Photo']['type_id'] = GALLERY_PHOTO_TYPE;
                     
                     if($this->Photo->save($obj)){
                         $photoID = $this->Photo->getLastInsertID();
@@ -421,6 +422,7 @@ class ApiController extends AppController{
                     $obj = array();
                     $obj['Photo']['path'] = $fileName;
                     $obj['Photo']['user_id'] = $userID;
+                    $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
                     if($this->Photo->save($obj)){
                         $photoID = $this->Photo->getLastInsertID();
 
@@ -566,6 +568,7 @@ class ApiController extends AppController{
                         $obj['Photo']['path'] = $fileName;
                         $obj['Photo']['thumb'] = $filenameThumb;
                         $obj['Photo']['user_id'] = $userID;
+                        $obj['Photo']['type_id'] = USER_PHOTO_TYPE;
                         if($this->Photo->save($obj)){
                             $photoID = $this->Photo->getLastInsertID();
 
@@ -1888,6 +1891,50 @@ class ApiController extends AppController{
     
     //Performs a checkin
     function checkin(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        
+        $this->log("API->checkin() called for user: $user_id to check on place with id: $place_id", LOG_DEBUG);
+        
+        $checkinID = null;
+        $response = null;
+        $errorMessage = null;
+        
+        //Save checkin object
+        $this->loadModel('PlaceCheckin');
+        $checkin = array();
+        $checkin['PlaceCheckin']['user_id'] = $user_id;
+        $checkin['PlaceCheckin']['place_id'] = $place_id;
+        
+        if($this->PlaceCheckin->save($checkin)){
+            $response = REQUEST_OK;
+            $checkinID = $this->PlaceCheckin->getLastInsertID();
+        } else {
+            $response = REQUEST_FAILED;
+            $errorMessage = ERROR_CHECKIN_CREATION;
+        }
+        
+        //Count unread notifications
+        $this->loadModel('UserNotification');
+        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+        $data['count_notifications'] = $count_notifications;
+
+        //Count followers
+        $this->loadModel('UserFollows');
+        $count_followers = $this->UserFollows->countFollowers($user_id);
+        $data['count_followers'] = $count_followers;
+
+        //Count inbox
+        $this->loadModel('UserInbox');
+        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+        $data['count_inbox'] = $count_inbox;
+        
+        $data['response'] = $response;
+        $data['checkin_id'] = $checkinID;
+        $data['error'] = $errorMessage;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
         
     }
     
