@@ -134,6 +134,8 @@ class User extends AppModel {
                 $passwordHash = $user['User']['password'];
                 $tokenInput = "t0k3n!$userID@$passwordHash";
                 $newToken = Security::hash($tokenInput, 'md5');
+                
+                $this->log("User->authorise() for user $userID comparing user token $token with server token $newToken", LOG_DEBUG);
                 if($newToken == $token){
                     $response = true;
                 }

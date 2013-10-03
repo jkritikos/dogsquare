@@ -55,16 +55,17 @@ class ApiController extends AppController{
         //Retrieve user id based on actual dogsquare or dummy FB credentials
         if($email != '' && $password != ''){
             $user_id = $this->User->validateClientCredentials($email, $password);
+            //Generate token
+            $token = $this->User->generateToken($user_id,$password);
         } else if($facebook_id != '' && $fb_dummy_pwd != ''){
             $user_id = $this->User->validateDummyFacebookCredentials($facebook_id, $fb_dummy_pwd);
+            //Generate token
+            $token = $this->User->generateToken($user_id,$fb_dummy_pwd);
         } else {
             $user_id = null;
         }
             
         if($user_id != null){
-                
-            //Generate token
-            $token = $this->User->generateToken($user_id,$password);
             $data['token'] = $token;
 
             //Dog breeds 
