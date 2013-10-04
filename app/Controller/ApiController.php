@@ -1859,10 +1859,27 @@ class ApiController extends AppController{
             $category_id = $_REQUEST['category_id'];
         }
         
+        
         $this->loadModel('Place');
-        $places = $this->Place->getPlacesNearby($lat, $lon, $category_id);
-        $data['places'] = $places;
-        $response = is_array($places) ? REQUEST_OK : REQUEST_FAILED;
+        
+        //Determine what we are searching for
+        if($category_id == MAP_FILTER_RECENTLY_OPEN){
+            //Return places from ALL categories that were created in the past X days
+            $places = $this->Place->getRecentlyOpenedPlacesNearby($lat, $lon, MAP_FILTER_RECENTLY_OPEN_DAYS);
+        } else if($category_id == MAP_FILTER_MATING){
+            //Returns dogs that have the mating flag and have done an activity within 30km from your coordinates. (only compare the starting point of the activity)
+            $dogs = $this->Place->getMatingDogsNearby($lat, $lon);
+        } else if($category_id == MAP_FILTER_SAME_BREED){
+            //Same as above but instead of the mating flag, we check for the breed - should be same as the breeds of the current user's dogs 
+            $dogs = $this->Place->getSameBreedDogsNearby($lat, $lon, $user_id);
+        } else {
+            $places = $this->Place->getPlacesNearby($lat, $lon, $category_id);
+            $data['places'] = $places;
+            $response = is_array($places) ? REQUEST_OK : REQUEST_FAILED;
+        }
+        
+        
+        
         
         //Load additional data with this request
         if($response == REQUEST_OK){

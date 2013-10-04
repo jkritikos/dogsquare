@@ -143,6 +143,19 @@ define("FEED_FRIEND_LIKE_DOG", 4);
 define("FEED_FRIEND_LIKE_ACTIVITY", 5);
 define("FEED_FRIEND_COMMENT_ACTIVITY", 6);
 
+//Map filter types
+define("MAP_FILTER_PARK", 1);
+define("MAP_FILTER_HOMELESS", 2);
+define("MAP_FILTER_CRUELTY", 3);
+define("MAP_FILTER_PETSHOP", 4);
+define("MAP_FILTER_VETERINARY", 5);
+define("MAP_FILTER_DOG_HOSPITAL", 6);
+define("MAP_FILTER_RECENTLY_OPEN", 7);
+define("MAP_FILTER_MATING", 8);
+define("MAP_FILTER_SAME_BREED", 9);
+//Map filter additional properties
+define("MAP_FILTER_RECENTLY_OPEN_DAYS", 100);
+
 //API general
 define("REQUEST_OK", 1);
 define("REQUEST_UNAUTHORISED", -100);
