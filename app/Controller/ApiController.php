@@ -1307,6 +1307,7 @@ class ApiController extends AppController{
     function getPhotos(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
         
         //Authorise user
         $this->loadModel('User');
@@ -1314,7 +1315,7 @@ class ApiController extends AppController{
         if($authorised){
         
             $this->loadModel('Photo');
-            $photos = $this->Photo->getUserPhotos($user_id);
+            $photos = $this->Photo->getUserPhotos($target_id);
 
             //Count unread notifications
             $this->loadModel('UserNotification');
@@ -1658,6 +1659,10 @@ class ApiController extends AppController{
         $this->loadModel('Dog');
         $dogs = $this->Dog->getUserDogs($target_id);
         
+        //activities list
+        $this->loadModel('Activity');
+        $activities = $this->Activity->getActivityList($target_id);
+        
         //Count unread notifications
         $this->loadModel('UserNotification');
         $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
@@ -1680,6 +1685,7 @@ class ApiController extends AppController{
         $data['response'] = REQUEST_OK;
         $data['user'] = $otherUser;
         $data['dogs'] = $dogs;
+        $data['activities'] = $activities;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
