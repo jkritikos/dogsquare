@@ -308,3 +308,16 @@ CREATE TABLE `user_badges` (
   `modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `user_passport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(128) COLLATE utf8_unicode_ci,
+  `description` varchar(1024) COLLATE utf8_unicode_ci,
+  `due_date` datetime,
+  `completed` int(1),
+  `active` int(1),
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
