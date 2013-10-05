@@ -244,6 +244,8 @@ CREATE TABLE `activities` (
  `distance` float,
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
+ `start_lat` varchar(128),
+ `start_lon` varchar(128),
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
