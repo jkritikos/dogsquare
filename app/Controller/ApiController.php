@@ -1137,27 +1137,39 @@ class ApiController extends AppController{
     //Returns the unread notifications of the specified user
     function getNotifications(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
         $this->log("API->getNotifications() called for user $user_id" , LOG_DEBUG);
         
-        $this->loadModel('UserNotification');
-        $notifications = $this->UserNotification->getUnreadNotifications($user_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('UserNotification');
+            $notifications = $this->UserNotification->getUnreadNotifications($user_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['notifications'] = $notifications;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['notifications'] = $notifications;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1167,35 +1179,46 @@ class ApiController extends AppController{
     function getActivity(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->getActivity() called for user $user_id and activity $activity_id" , LOG_DEBUG);
         
-        $this->loadModel('Activity');
-        $activity = $this->Activity->getActivityById($user_id, $activity_id);
-        $dogs = $this->Activity->getActivityDogs($activity_id);
-        $coordinates = $this->Activity->getActivityCoordinates($activity_id);
-        $comments = $this->Activity->getActivityComments($activity_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('Activity');
+            $activity = $this->Activity->getActivityById($user_id, $activity_id);
+            $dogs = $this->Activity->getActivityDogs($activity_id);
+            $coordinates = $this->Activity->getActivityCoordinates($activity_id);
+            $comments = $this->Activity->getActivityComments($activity_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['activity'] = $activity;
+            $data['dogs'] = $dogs;
+            $data['coordinates'] = $coordinates;
+            $data['comments'] = $comments;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['activity'] = $activity;
-        $data['dogs'] = $dogs;
-        $data['coordinates'] = $coordinates;
-        $data['comments'] = $comments;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1204,27 +1227,38 @@ class ApiController extends AppController{
     function getActivityLikedUsers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('Activity');
-        $likedUsers = $this->Activity->getLikedUsers($activity_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('Activity');
+            $likedUsers = $this->Activity->getLikedUsers($activity_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['users'] = $likedUsers;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['users'] = $likedUsers;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1234,27 +1268,36 @@ class ApiController extends AppController{
     function getDogLikedUsers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('Dog');
-        $likedUsers = $this->Dog->getLikedUsers($dog_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+        if($authorised){
+            $this->loadModel('Dog');
+            $likedUsers = $this->Dog->getLikedUsers($dog_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['users'] = $likedUsers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $data['response'] = REQUEST_OK;
+            $data['users'] = $likedUsers;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1263,27 +1306,38 @@ class ApiController extends AppController{
     
     function getPhotos(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('Photo');
-        $photos = $this->Photo->getUserPhotos($user_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('Photo');
+            $photos = $this->Photo->getUserPhotos($user_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['photos'] = $photos;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['photos'] = $photos;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1419,33 +1473,41 @@ class ApiController extends AppController{
     //Returns the data required for the current user's profile
     function getUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        //user data
+        //Authorise user
         $this->loadModel('User');
-        $otherUser = $this->User->getOtherUserById($user_id, $user_id);
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //activities list
-        $this->loadModel('Activity');
-        $activities = $this->Activity->getActivityList($user_id);
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            //user data
+            $otherUser = $this->User->getOtherUserById($user_id, $user_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['user'] = $otherUser;
-        $data['activities'] = $activities;
+            //activities list
+            $this->loadModel('Activity');
+            $activities = $this->Activity->getActivityList($user_id);
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $data['response'] = REQUEST_OK;
+            $data['user'] = $otherUser;
+            $data['activities'] = $activities;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1508,27 +1570,36 @@ class ApiController extends AppController{
     function getDog(){
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('Dog');
-        $dog = $this->Dog->getDogById($dog_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('Dog');
+            $dog = $this->Dog->getDogById($dog_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['dog'] = $dog;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $data['response'] = REQUEST_OK;
+            $data['dog'] = $dog;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1537,29 +1608,40 @@ class ApiController extends AppController{
     function getPlace(){
         if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('Place');
-        $place = $this->Place->getPlaceById($place_id);
-        $comments = $this->Place->getPlaceComments($place_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('Place');
+            $place = $this->Place->getPlaceById($place_id);
+            $comments = $this->Place->getPlaceComments($place_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['place'] = $place;
+            $data['comments'] = $comments;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['place'] = $place;
-        $data['comments'] = $comments;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1608,26 +1690,76 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
         if(isset($_REQUEST['message'])) $message = $_REQUEST['message'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->sendMessage() called with sender $user_id to user $target_id with message $message", LOG_DEBUG);
         
-        $this->loadModel('UserInbox');
-        $obj = array();
-        $obj['UserInbox']['user_from'] = $user_id;
-        $obj['UserInbox']['user_to'] = $target_id;
-        $obj['UserInbox']['message'] = $message;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        $message_id = null;
-        if($this->UserInbox->save($obj)){
+            $this->loadModel('UserInbox');
+            $obj = array();
+            $obj['UserInbox']['user_from'] = $user_id;
+            $obj['UserInbox']['user_to'] = $target_id;
+            $obj['UserInbox']['message'] = $message;
+
+            $message_id = null;
+            if($this->UserInbox->save($obj)){
+                $response = REQUEST_OK;
+                $message_id = $this->UserInbox->getLastInsertID();
+            } else {
+                $response = REQUEST_FAILED;
+            }
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+
+            $this->log("API->sendMessage() returns message_id $message_id", LOG_DEBUG);
+
             $response = REQUEST_OK;
-            $message_id = $this->UserInbox->getLastInsertID();
+            $data['message_id'] = $message_id;
+            
         } else {
-            $response = REQUEST_FAILED;
+            $response = REQUEST_UNAUTHORISED;
         }
         
-        //Load additional data with this request
-        if($response == REQUEST_OK){
+        $data['response'] = $response;
         
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Gets all unread messages
+    function getMessages(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+        
+            $this->loadModel('UserInbox');
+            $messages = $this->UserInbox->getUnreadMessages($user_id);
+
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
@@ -1637,47 +1769,18 @@ class ApiController extends AppController{
             $this->loadModel('UserFollows');
             $count_followers = $this->UserFollows->countFollowers($user_id);
             $data['count_followers'] = $count_followers;
-            
+
             //Count inbox
-            $this->loadModel('UserInbox');
             $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
             $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['messages'] = $messages;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
-        $this->log("API->sendMessage() returns message_id $message_id", LOG_DEBUG);
-        
         $data['response'] = $response;
-        $data['message_id'] = $message_id;
-        
-        $this->layout = 'blank';
-        echo json_encode(compact('data', $data));
-    }
-    
-    //Gets all unread messages
-    function getMessages(){
-        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
-        
-        $this->loadModel('UserInbox');
-        $messages = $this->UserInbox->getUnreadMessages($user_id);
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
-
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $response = REQUEST_OK;
-        
-        $data['response'] = $response;
-        $data['messages'] = $messages;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1687,41 +1790,50 @@ class ApiController extends AppController{
     function setMessagesRead(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $list = json_decode(urldecode($list));
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        if(!empty($list)){
-        
-            $listToString = implode(",", $list);
+            $list = json_decode(urldecode($list));
 
-            $this->log("API->setMessagesRead() uses stringList: $listToString", LOG_DEBUG);
+            if(!empty($list)){
 
-            $this->loadModel('UserInbox');
-            $return = $this->UserInbox->setMessagesToRead($listToString);
-            $this->log("API->setMessagesRead() affected rows are $return", LOG_DEBUG);
-            if($return > 0){
+                $listToString = implode(",", $list);
+
+                $this->log("API->setMessagesRead() uses stringList: $listToString", LOG_DEBUG);
+
+                $this->loadModel('UserInbox');
+                $return = $this->UserInbox->setMessagesToRead($listToString);
+                $this->log("API->setMessagesRead() affected rows are $return", LOG_DEBUG);
+                if($return > 0){
+                    $response = REQUEST_OK;
+                }else{
+                    $response = REQUEST_FAILED;
+                }
+            }else {
                 $response = REQUEST_OK;
-            }else{
-                $response = REQUEST_FAILED;
             }
-        }else {
-            $response = REQUEST_OK;
-        }
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        if($response == REQUEST_OK){
-            //Count inbox
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            if($response == REQUEST_OK){
+                //Count inbox
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -1734,45 +1846,55 @@ class ApiController extends AppController{
     function setNotificationsRead(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->log("API->setNotificationRead() sets to read notifications with id: $list", LOG_DEBUG);
-
-        $list = json_decode(urldecode($list));
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        if(!empty($list)){
-        
-            $listToString = implode(",", $list);
+            $this->log("API->setNotificationRead() sets to read notifications with id: $list", LOG_DEBUG);
 
-            $this->log("API->setNotificationRead() uses stringList: $listToString", LOG_DEBUG);
+            $list = json_decode(urldecode($list));
 
-            $this->loadModel('UserNotification');
-            $return = $this->UserNotification->setNotificationsToRead($listToString);
-            $this->log("API->setNotificationsRead() affected rows are $return", LOG_DEBUG);
-            if($return > 0){
+            if(!empty($list)){
+
+                $listToString = implode(",", $list);
+
+                $this->log("API->setNotificationRead() uses stringList: $listToString", LOG_DEBUG);
+
+                $this->loadModel('UserNotification');
+                $return = $this->UserNotification->setNotificationsToRead($listToString);
+                $this->log("API->setNotificationsRead() affected rows are $return", LOG_DEBUG);
+                if($return > 0){
+                    $response = REQUEST_OK;
+                }else{
+                    $response = REQUEST_FAILED;
+                }
+            } else {
                 $response = REQUEST_OK;
-            }else{
-                $response = REQUEST_FAILED;
             }
-        }else {
-            $response = REQUEST_OK;
-        }
-        
-        if($response == REQUEST_OK){
-            //Count unread notifications
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-        }
-        
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
 
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-          
+            if($response == REQUEST_OK){
+                //Count unread notifications
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+            }
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
         $data['response'] = $response;
         
         $this->layout = 'blank';
@@ -1821,31 +1943,42 @@ class ApiController extends AppController{
     function search(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
+        //Authorise user
         $this->loadModel('User');
-        $userData = $this->User->search($name, null, null, $user_id);
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        $this->loadModel('Place');
-        $placeData = $this->Place->search($name, null, null);
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $userData = $this->User->search($name, null, null, $user_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            $this->loadModel('Place');
+            $placeData = $this->Place->search($name, null, null);
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+            
+            $data['users'] = $userData;
+            $data['places'] = $placeData;
+            $response = REQUEST_OK;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
+        $data['response'] = $response;
         
-        $data['response'] = REQUEST_OK;
-        $data['users'] = $userData;
-        $data['places'] = $placeData;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
@@ -1924,45 +2057,55 @@ class ApiController extends AppController{
     function checkin(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->checkin() called for user: $user_id to check on place with id: $place_id", LOG_DEBUG);
         
-        $checkinID = null;
-        $response = null;
-        $errorMessage = null;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Save checkin object
-        $this->loadModel('PlaceCheckin');
-        $checkin = array();
-        $checkin['PlaceCheckin']['user_id'] = $user_id;
-        $checkin['PlaceCheckin']['place_id'] = $place_id;
-        
-        if($this->PlaceCheckin->save($checkin)){
-            $response = REQUEST_OK;
-            $checkinID = $this->PlaceCheckin->getLastInsertID();
+            $checkinID = null;
+            $response = null;
+            $errorMessage = null;
+
+            //Save checkin object
+            $this->loadModel('PlaceCheckin');
+            $checkin = array();
+            $checkin['PlaceCheckin']['user_id'] = $user_id;
+            $checkin['PlaceCheckin']['place_id'] = $place_id;
+
+            if($this->PlaceCheckin->save($checkin)){
+                $response = REQUEST_OK;
+                $checkinID = $this->PlaceCheckin->getLastInsertID();
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_CHECKIN_CREATION;
+            }
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $data['checkin_id'] = $checkinID;
+            $data['error'] = $errorMessage;
         } else {
-            $response = REQUEST_FAILED;
-            $errorMessage = ERROR_CHECKIN_CREATION;
+            $response = REQUEST_UNAUTHORISED;
         }
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
-
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
         $data['response'] = $response;
-        $data['checkin_id'] = $checkinID;
-        $data['error'] = $errorMessage;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1978,40 +2121,102 @@ class ApiController extends AppController{
     function likeActivity(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        //Obtain activity info
-        $this->loadModel('Activity');
-        $activity_obj = $this->Activity->findById($activity_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Only proceed if this activity exists
-        if($activity_obj != null){
-            
-            $this->loadModel('ActivityLike');
-            $obj = array();
-            $obj['ActivityLike']['user_id'] = $user_id;
-            $obj['ActivityLike']['activity_id'] = $activity_id;
+            //Obtain activity info
+            $this->loadModel('Activity');
+            $activity_obj = $this->Activity->findById($activity_id);
 
-            if(!$this->ActivityLike->userLikesActivity($user_id, $activity_id)){
-                if($this->ActivityLike->save($obj)){
+            //Only proceed if this activity exists
+            if($activity_obj != null){
+
+                $this->loadModel('ActivityLike');
+                $obj = array();
+                $obj['ActivityLike']['user_id'] = $user_id;
+                $obj['ActivityLike']['activity_id'] = $activity_id;
+
+                if(!$this->ActivityLike->userLikesActivity($user_id, $activity_id)){
+                    if($this->ActivityLike->save($obj)){
+                        $response = REQUEST_OK;
+                    } else {
+                        $response = REQUEST_FAILED;
+                    }
+                } else {
+                    $response = REQUEST_INVALID;
+                }
+
+                //Create user notification
+                $this->loadModel('UserNotification');
+                $obj2['UserNotification']['user_from'] = $user_id;
+                $obj2['UserNotification']['user_id'] = $activity_obj['Activity']['user_id'];
+                $obj2['UserNotification']['activity_id'] = $activity_id;
+                $obj2['UserNotification']['type_id'] = NOTIFICATION_LIKE_ACTIVITY;
+
+                if($this->UserNotification->save($obj2)){
+                    $response = REQUEST_OK;
+                } else{
+                    $response = REQUEST_FAILED;
+                }
+
+                //Load additional data with this request
+                if($response == REQUEST_OK){
+
+                    //Count unread notifications
+                    $this->loadModel('UserNotification');
+                    $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                    $data['count_notifications'] = $count_notifications;
+
+                    //Count followers
+                    $this->loadModel('UserFollows');
+                    $count_followers = $this->UserFollows->countFollowers($user_id);
+                    $data['count_followers'] = $count_followers;
+
+                    //Count inbox
+                    $this->loadModel('UserInbox');
+                    $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                    $data['count_inbox'] = $count_inbox;
+                }
+            } else {
+                $response = REQUEST_INVALID;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Deletes a like for an activity
+    function unlikeActivity(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+        
+            $this->loadModel('ActivityLike');
+
+            if($this->ActivityLike->userLikesActivity($user_id, $activity_id)){
+                $rows = $this->ActivityLike->deleteLike($user_id, $activity_id);
+
+                if($rows > 0){
                     $response = REQUEST_OK;
                 } else {
                     $response = REQUEST_FAILED;
                 }
             } else {
                 $response = REQUEST_INVALID;
-            }
-
-            //Create user notification
-            $this->loadModel('UserNotification');
-            $obj2['UserNotification']['user_from'] = $user_id;
-            $obj2['UserNotification']['user_id'] = $activity_obj['Activity']['user_id'];
-            $obj2['UserNotification']['activity_id'] = $activity_id;
-            $obj2['UserNotification']['type_id'] = NOTIFICATION_LIKE_ACTIVITY;
-
-            if($this->UserNotification->save($obj2)){
-                $response = REQUEST_OK;
-            } else{
-                $response = REQUEST_FAILED;
             }
 
             //Load additional data with this request
@@ -2026,58 +2231,14 @@ class ApiController extends AppController{
                 $this->loadModel('UserFollows');
                 $count_followers = $this->UserFollows->countFollowers($user_id);
                 $data['count_followers'] = $count_followers;
-                
+
                 //Count inbox
                 $this->loadModel('UserInbox');
                 $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
                 $data['count_inbox'] = $count_inbox;
             }
         } else {
-            $response = REQUEST_INVALID;
-        }
-        
-        $data['response'] = $response;
-        
-        $this->layout = 'blank';
-        echo json_encode(compact('data', $data));
-    }
-    
-    //Deletes a like for an activity
-    function unlikeActivity(){
-        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
-        if(isset($_REQUEST['activity_id'])) $activity_id = $_REQUEST['activity_id'];
-        
-        $this->loadModel('ActivityLike');
-        
-        if($this->ActivityLike->userLikesActivity($user_id, $activity_id)){
-            $rows = $this->ActivityLike->deleteLike($user_id, $activity_id);
-            
-            if($rows > 0){
-                $response = REQUEST_OK;
-            } else {
-                $response = REQUEST_FAILED;
-            }
-        } else {
-            $response = REQUEST_INVALID;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -2090,39 +2251,48 @@ class ApiController extends AppController{
     function likePlace(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('PlaceLike');
-        $obj = array();
-        $obj['PlaceLike']['user_id'] = $user_id;
-        $obj['PlaceLike']['place_id'] = $place_id;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        if(!$this->PlaceLike->userLikesPlace($user_id, $place_id)){
-            if($this->PlaceLike->save($obj)){
-                $response = REQUEST_OK;
+            $this->loadModel('PlaceLike');
+            $obj = array();
+            $obj['PlaceLike']['user_id'] = $user_id;
+            $obj['PlaceLike']['place_id'] = $place_id;
+
+            if(!$this->PlaceLike->userLikesPlace($user_id, $place_id)){
+                if($this->PlaceLike->save($obj)){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
             } else {
-                $response = REQUEST_FAILED;
+                $response = REQUEST_INVALID;
+            }
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
             }
         } else {
-            $response = REQUEST_INVALID;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -2135,38 +2305,47 @@ class ApiController extends AppController{
     function unlikePlace(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('PlaceLike');
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
         
-        if($this->PlaceLike->userLikesPlace($user_id, $place_id)){
-            $rows = $this->PlaceLike->deleteLike($user_id, $place_id);
-            
-            if($rows > 0){
-                $response = REQUEST_OK;
+        if($authorised){
+            $this->loadModel('PlaceLike');
+
+            if($this->PlaceLike->userLikesPlace($user_id, $place_id)){
+                $rows = $this->PlaceLike->deleteLike($user_id, $place_id);
+
+                if($rows > 0){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
             } else {
-                $response = REQUEST_FAILED;
+                $response = REQUEST_INVALID;
+            }
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
             }
         } else {
-            $response = REQUEST_INVALID;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -2179,67 +2358,77 @@ class ApiController extends AppController{
     function likeDog(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('DogLike');
-        $obj = array();
-        $obj['DogLike']['user_id'] = $user_id;
-        $obj['DogLike']['dog_id'] = $dog_id;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        if(!$this->DogLike->userLikesDog($user_id, $dog_id)){
-            if($this->DogLike->save($obj)){
-                $response = REQUEST_OK;
+        
+            $this->loadModel('DogLike');
+            $obj = array();
+            $obj['DogLike']['user_id'] = $user_id;
+            $obj['DogLike']['dog_id'] = $dog_id;
+
+            if(!$this->DogLike->userLikesDog($user_id, $dog_id)){
+                if($this->DogLike->save($obj)){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
             } else {
-                $response = REQUEST_FAILED;
+                $response = REQUEST_INVALID;
+            }
+        
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        
+            //Feed entry
+            if($response == REQUEST_OK){
+                $this->loadModel('User');
+                $this->loadModel('Feed');
+                $this->loadModel('Dog');
+
+                $user = $this->User->findById($user_id);
+                $user_name = $user['User']['name'];
+
+                $dogObject = $this->Dog->findById($dog_id);
+                $dog_name = $dogObject['Dog']['name'];
+
+                $feed['Feed']['user_from'] = $user_id;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_dog_id'] = $dog_id;
+                $feed['Feed']['target_dog_name'] = $dog_name;
+                $feed['Feed']['type_id'] = FEED_FRIEND_LIKE_DOG;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->likeDog() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->likeDog() saved feed ", LOG_DEBUG);
+                }
             }
         } else {
-            $response = REQUEST_INVALID;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
-        }
-        
-        //Feed entry
-        if($response == REQUEST_OK){
-            $this->loadModel('User');
-            $this->loadModel('Feed');
-            $this->loadModel('Dog');
-            
-            $user = $this->User->findById($user_id);
-            $user_name = $user['User']['name'];
-            
-            $dogObject = $this->Dog->findById($dog_id);
-            $dog_name = $dogObject['Dog']['name'];
-            
-            $feed['Feed']['user_from'] = $user_id;
-            $feed['Feed']['user_from_name'] = $user_name;
-            $feed['Feed']['target_dog_id'] = $dog_id;
-            $feed['Feed']['target_dog_name'] = $dog_name;
-            $feed['Feed']['type_id'] = FEED_FRIEND_LIKE_DOG;
-            
-            $feedOK = $this->Feed->save($feed);
-            
-            if(!$feedOK){
-                $this->log("API->likeDog() error creating feed", LOG_DEBUG);
-                $response = ERROR_FEED_CREATION;
-            } else {
-                $this->log("API->likeDog() saved feed ", LOG_DEBUG);
-            }
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -2252,38 +2441,48 @@ class ApiController extends AppController{
     function unlikeDog(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('DogLike');
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
         
-        if($this->DogLike->userLikesDog($user_id, $dog_id)){
-            $rows = $this->DogLike->deleteLike($user_id, $dog_id);
-            
-            if($rows > 0){
-                $response = REQUEST_OK;
+        if($authorised){
+        
+            $this->loadModel('DogLike');
+
+            if($this->DogLike->userLikesDog($user_id, $dog_id)){
+                $rows = $this->DogLike->deleteLike($user_id, $dog_id);
+
+                if($rows > 0){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
             } else {
-                $response = REQUEST_FAILED;
+                $response = REQUEST_INVALID;
+            }
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
             }
         } else {
-            $response = REQUEST_INVALID;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
