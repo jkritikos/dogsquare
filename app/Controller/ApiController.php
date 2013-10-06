@@ -129,148 +129,159 @@ class ApiController extends AppController{
         if(isset($_REQUEST['weight'])) $weight = $_REQUEST['weight'];
         if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
         if(isset($_REQUEST['mating'])) $mating = $_REQUEST['mating'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->addDog() called for user $userID with dog name $name breed $breed" , LOG_DEBUG);
         
-        $dogCreated = false;
-        $dogID = null;
-        $response = null;
-        $errorMessage = null;
-        $securityToken = null;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Save dog object
-        $this->loadModel('Dog');
-        $dog = array();
-        $dog['Dog']['breed_id'] = $breed;
-        $dog['Dog']['owner_id'] = $userID;
-        $dog['Dog']['name'] = $name;
-        $dog['Dog']['gender'] = $gender;
-        $dog['Dog']['mating'] = $mating;
-        $dog['Dog']['weight'] = $weight;
-        $dog['Dog']['age'] = $age;
-        $this->log("API->addDog() called ", LOG_DEBUG);
-        if($this->Dog->save($dog)){
-            
-            $dogCreated = true;
-            $dogID = $this->Dog->getLastInsertID();
-        } else {
-            $response = REQUEST_FAILED;
-            $errorMessage = ERROR_DOG_CREATION;
-        }
+            $dogCreated = false;
+            $dogID = null;
+            $response = null;
+            $errorMessage = null;
+            $securityToken = null;
+
+            //Save dog object
+            $this->loadModel('Dog');
+            $dog = array();
+            $dog['Dog']['breed_id'] = $breed;
+            $dog['Dog']['owner_id'] = $userID;
+            $dog['Dog']['name'] = $name;
+            $dog['Dog']['gender'] = $gender;
+            $dog['Dog']['mating'] = $mating;
+            $dog['Dog']['weight'] = $weight;
+            $dog['Dog']['age'] = $age;
+            $this->log("API->addDog() called ", LOG_DEBUG);
+            if($this->Dog->save($dog)){
+
+                $dogCreated = true;
+                $dogID = $this->Dog->getLastInsertID();
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_DOG_CREATION;
+            }
         
-        //handle photo if dog was created OK
-        if($dogCreated && isset($_FILES['photo'])){
-            
-            //Check for valid extension
-            $dateString = Security::hash(time().rand(1, 10), 'md5');
-            $fileExtension = ".jpeg";
-            $fileName = $dateString.$fileExtension;
-            $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$fileName";
-            
-            //Thumbnail
-            $filenameThumb = "thumb_".$dateString.$fileExtension;
-            $uploadfileThumb = UPLOAD_PATH . DOG_PATH . "/". "$filenameThumb";
-            
-            $this->log("API->addDog() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
-            
-            if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
-                    $this->log("API->addDog() uploading succeeded" , LOG_DEBUG);
+            //handle photo if dog was created OK
+            if($dogCreated && isset($_FILES['photo'])){
 
-                    //Save photo info to the db
-                    $this->loadModel('Photo');
-                    $obj = array();
-                    $obj['Photo']['path'] = $fileName;
-                    $obj['Photo']['thumb'] = $filenameThumb;
-                    $obj['Photo']['user_id'] = $userID;
-                    $obj['Photo']['type_id'] = DOG_PHOTO_TYPE;
-                    
-                    if($this->Photo->save($obj)){
-                        $photoID = $this->Photo->getLastInsertID();
-                        
-                        $data['thumb'] = $filenameThumb;
-                        $this->log("API->addDog() saved photo $photoID to db" , LOG_DEBUG);
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = ".jpeg";
+                $fileName = $dateString.$fileExtension;
+                $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$fileName";
 
-                        //Update dog with profile photo
-                        $dog['Dog']['id'] = $dogID;
-                        $dog['Dog']['photo_id'] = $photoID;
-                        if(!$this->Dog->save($dog)){
-                            $this->log("API->addDog() failed to set profile image for dog $dogID" , LOG_DEBUG);
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                $uploadfileThumb = UPLOAD_PATH . DOG_PATH . "/". "$filenameThumb";
 
+                $this->log("API->addDog() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
+
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->addDog() uploading succeeded" , LOG_DEBUG);
+
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
+                        $obj['Photo']['user_id'] = $userID;
+                        $obj['Photo']['type_id'] = DOG_PHOTO_TYPE;
+
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+
+                            $data['thumb'] = $filenameThumb;
+                            $this->log("API->addDog() saved photo $photoID to db" , LOG_DEBUG);
+
+                            //Update dog with profile photo
+                            $dog['Dog']['id'] = $dogID;
+                            $dog['Dog']['photo_id'] = $photoID;
+                            if(!$this->Dog->save($dog)){
+                                $this->log("API->addDog() failed to set profile image for dog $dogID" , LOG_DEBUG);
+
+                                $response = REQUEST_FAILED;
+                                $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                            } else {
+                                $response = REQUEST_OK;
+                            }
+
+                        } else {
+                            $this->log("API->addDog() saving photo to db failed" , LOG_DEBUG);
                             $response = REQUEST_FAILED;
                             $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
-                        } else {
-                            $response = REQUEST_OK;
                         }
-
                     } else {
-                        $this->log("API->addDog() saving photo to db failed" , LOG_DEBUG);
+                        $this->log("API->addDog() thumb uploading failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
                     }
+
                 } else {
-                    $this->log("API->addDog() thumb uploading failed" , LOG_DEBUG);
+                    $this->log("API->addDog() photo uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
                 }
-                
             } else {
-                $this->log("API->addDog() photo uploading failed" , LOG_DEBUG);
-                $response = REQUEST_FAILED;
-                $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                $this->log("API->addDog() no photo found" , LOG_DEBUG);
             }
-        } else {
-            $this->log("API->addDog() no photo found" , LOG_DEBUG);
-        }
-       
-        $this->log("API->addDog() returns: response $response error $errorMessage" , LOG_DEBUG);
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
-            $data['count_notifications'] = $count_notifications;
 
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($userID);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($userID);
-            $data['count_inbox'] = $count_inbox;
-        }
+            $this->log("API->addDog() returns: response $response error $errorMessage" , LOG_DEBUG);
         
-        //Feed entry
-        if($response == REQUEST_OK){
-            $this->loadModel('User');
-            $this->loadModel('Feed');
-            
-            $user = $this->User->findById($userID);
-            $user_name = $user['User']['name'];
-            
-            $feed['Feed']['user_from'] = $userID;
-            $feed['Feed']['user_from_name'] = $user_name;
-            $feed['Feed']['target_dog_id'] = $dogID;
-            $feed['Feed']['target_dog_name'] = $name;
-            $feed['Feed']['type_id'] = FEED_NEW_DOG;
-            
-            $feedOK = $this->Feed->save($feed);
-            
-            if(!$feedOK){
-                $this->log("API->addDog() error creating feed", LOG_DEBUG);
-                $response = ERROR_FEED_CREATION;
-            } else {
-                $this->log("API->addDog() saved feed ", LOG_DEBUG);
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userID);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($userID);
+                $data['count_inbox'] = $count_inbox;
             }
+
+            //Feed entry
+            if($response == REQUEST_OK){
+                $this->loadModel('User');
+                $this->loadModel('Feed');
+
+                $user = $this->User->findById($userID);
+                $user_name = $user['User']['name'];
+
+                $feed['Feed']['user_from'] = $userID;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_dog_id'] = $dogID;
+                $feed['Feed']['target_dog_name'] = $name;
+                $feed['Feed']['type_id'] = FEED_NEW_DOG;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->addDog() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->addDog() saved feed ", LOG_DEBUG);
+                }
+            }
+
+            
+            $data['dog_id'] = $dogID;
+            $data['error'] = $errorMessage;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
-        $data['dog_id'] = $dogID;
-        $data['error'] = $errorMessage;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -278,88 +289,98 @@ class ApiController extends AppController{
     
     function addPhoto(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->addPhoto() called for user $userID" , LOG_DEBUG);
         
-        $response = null;
-        $errorMessage = null;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //handle photo 
-        if(isset($_FILES['photo'])){
-            
-            //Check for valid extension
-            $dateString = Security::hash(time().rand(1, 10), 'md5');
-            $fileExtension = ".jpeg";
-            $fileName = $dateString.$fileExtension;
-            $uploadfile = UPLOAD_PATH.USER_PATH."/". "$fileName";
-            
-            //Thumbnail
-            $filenameThumb = "thumb_".$dateString.$fileExtension;
-            $uploadfileThumb = UPLOAD_PATH . USER_PATH . "/". "$filenameThumb";
-            
-            $this->log("API->addPhoto() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
-            
-            if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
-                    $this->log("API->addPhoto() uploading succeeded" , LOG_DEBUG);
+            $response = null;
+            $errorMessage = null;
 
-                    //Save photo info to the db
-                    $this->loadModel('Photo');
-                    $obj = array();
-                    $obj['Photo']['path'] = $fileName;
-                    $obj['Photo']['thumb'] = $filenameThumb;
-                    $obj['Photo']['user_id'] = $userID;
-                    $obj['Photo']['type_id'] = GALLERY_PHOTO_TYPE;
-                    
-                    if($this->Photo->save($obj)){
-                        $photoID = $this->Photo->getLastInsertID();
-                        
-                        $response = REQUEST_OK;
-                        $this->log("API->addPhoto() saved photo $photoID to db" , LOG_DEBUG);
+            //handle photo 
+            if(isset($_FILES['photo'])){
+
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = ".jpeg";
+                $fileName = $dateString.$fileExtension;
+                $uploadfile = UPLOAD_PATH.USER_PATH."/". "$fileName";
+
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                $uploadfileThumb = UPLOAD_PATH . USER_PATH . "/". "$filenameThumb";
+
+                $this->log("API->addPhoto() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
+
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->addPhoto() uploading succeeded" , LOG_DEBUG);
+
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
+                        $obj['Photo']['user_id'] = $userID;
+                        $obj['Photo']['type_id'] = GALLERY_PHOTO_TYPE;
+
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+
+                            $response = REQUEST_OK;
+                            $this->log("API->addPhoto() saved photo $photoID to db" , LOG_DEBUG);
+                        } else {
+                            $this->log("API->addPhoto() saving photo to db failed" , LOG_DEBUG);
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_PHOTO_UPLOAD;
+                        }
                     } else {
-                        $this->log("API->addPhoto() saving photo to db failed" , LOG_DEBUG);
+                        $this->log("API->addPhoto() thumb uploading failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_PHOTO_UPLOAD;
                     }
+
                 } else {
-                    $this->log("API->addPhoto() thumb uploading failed" , LOG_DEBUG);
+                    $this->log("API->addPhoto() photo uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_PHOTO_UPLOAD;
                 }
-                
             } else {
-                $this->log("API->addPhoto() photo uploading failed" , LOG_DEBUG);
-                $response = REQUEST_FAILED;
-                $errorMessage = ERROR_PHOTO_UPLOAD;
+                $this->log("API->addPhoto() no photo found" , LOG_DEBUG);
             }
-        } else {
-            $this->log("API->addPhoto() no photo found" , LOG_DEBUG);
-        }
-       
-        $this->log("API->addPhoto() returns: response $response error $errorMessage" , LOG_DEBUG);
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
-            $data['count_notifications'] = $count_notifications;
 
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($userID);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($userID);
-            $data['count_inbox'] = $count_inbox;
+            $this->log("API->addPhoto() returns: response $response error $errorMessage" , LOG_DEBUG);
+        
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userID);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($userID);
+                $data['count_inbox'] = $count_inbox;
+            }
+
+            $data['photo_id'] = $photoID;
+            $data['error'] = $errorMessage;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
-        $data['photo_id'] = $photoID;
-        $data['error'] = $errorMessage;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -372,118 +393,128 @@ class ApiController extends AppController{
         if(isset($_REQUEST['category_id'])) $categoryId = $_REQUEST['category_id'];
         if(isset($_REQUEST['longitude'])) $longitude = $_REQUEST['longitude'];
         if(isset($_REQUEST['latitude'])) $latitude = $_REQUEST['latitude'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->addPlace() called for $name", LOG_DEBUG);
         
-        $placeCreated = false;
-        $placeID = null;
-        $response = null;
-        $errorMessage = null;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Save place object
-        $this->loadModel('Place');
-        $place = array();
-        $place['Place']['user_id'] = $userID;
-        $place['Place']['name'] = $name;
-        $place['Place']['category_id'] = $categoryId;
-        $place['Place']['lon'] = $longitude;
-        $place['Place']['lat'] = $latitude;
+            $placeCreated = false;
+            $placeID = null;
+            $response = null;
+            $errorMessage = null;
+
+            //Save place object
+            $this->loadModel('Place');
+            $place = array();
+            $place['Place']['user_id'] = $userID;
+            $place['Place']['name'] = $name;
+            $place['Place']['category_id'] = $categoryId;
+            $place['Place']['lon'] = $longitude;
+            $place['Place']['lat'] = $latitude;
+
+            if($this->Place->save($place)){
+
+                $placeCreated = true;
+                $placeID = $this->Place->getLastInsertID();
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_PLACE_CREATION;
+            }
         
-        if($this->Place->save($place)){
-            
-            $placeCreated = true;
-            $placeID = $this->Place->getLastInsertID();
-        } else {
-            $response = REQUEST_FAILED;
-            $errorMessage = ERROR_PLACE_CREATION;
-        }
-        
-        //handle photo if place was created OK
-        if($placeCreated && isset($_FILES['photo'])){
-            
-            //Check for valid extension
-            $dateString = Security::hash(time().rand(1, 10), 'md5');
-            $fileExtension = ".jpeg";
-            $fileName = $dateString.$fileExtension;
-            $uploadfile = UPLOAD_PATH.PLACE_PATH."/". "$fileName";
-            
-            //Thumbnail
-            $filenameThumb = "thumb_".$dateString.$fileExtension;
-            $uploadfileThumb = UPLOAD_PATH . PLACE_PATH . "/". "$filenameThumb";
-            
-            $this->log("API->addPlace() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
-            
-            if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
-                if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
-                    $this->log("API->addPlace() uploading succeeded" , LOG_DEBUG);
+            //handle photo if place was created OK
+            if($placeCreated && isset($_FILES['photo'])){
 
-                    //Save photo info to the db
-                    $this->loadModel('Photo');
-                    $obj = array();
-                    $obj['Photo']['path'] = $fileName;
-                    $obj['Photo']['user_id'] = $userID;
-                    $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
-                    if($this->Photo->save($obj)){
-                        $photoID = $this->Photo->getLastInsertID();
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = ".jpeg";
+                $fileName = $dateString.$fileExtension;
+                $uploadfile = UPLOAD_PATH.PLACE_PATH."/". "$fileName";
 
-                        $this->log("API->addPlace() saved photo $photoID to db" , LOG_DEBUG);
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                $uploadfileThumb = UPLOAD_PATH . PLACE_PATH . "/". "$filenameThumb";
 
-                        //Update place with profile photo
-                        $place['Place']['id'] = $placeID;
-                        $place['Place']['photo_id'] = $photoID;
-                        if(!$this->Place->save($place)){
-                            $this->log("API->addPlace() failed to set profile image for place $placeID" , LOG_DEBUG);
+                $this->log("API->addPlace() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
 
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->addPlace() uploading succeeded" , LOG_DEBUG);
+
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['user_id'] = $userID;
+                        $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+
+                            $this->log("API->addPlace() saved photo $photoID to db" , LOG_DEBUG);
+
+                            //Update place with profile photo
+                            $place['Place']['id'] = $placeID;
+                            $place['Place']['photo_id'] = $photoID;
+                            if(!$this->Place->save($place)){
+                                $this->log("API->addPlace() failed to set profile image for place $placeID" , LOG_DEBUG);
+
+                                $response = REQUEST_FAILED;
+                                $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
+                            } else {
+                                $response = REQUEST_OK;
+                            }
+
+                        } else {
+                            $this->log("API->addPlace() saving photo to db failed" , LOG_DEBUG);
                             $response = REQUEST_FAILED;
                             $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
-                        } else {
-                            $response = REQUEST_OK;
                         }
-
                     } else {
-                        $this->log("API->addPlace() saving photo to db failed" , LOG_DEBUG);
+                        $this->log("API->addPlace() thumb uploading failed" , LOG_DEBUG);
                         $response = REQUEST_FAILED;
                         $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
                     }
+
                 } else {
-                    $this->log("API->addPlace() thumb uploading failed" , LOG_DEBUG);
+                    $this->log("API->addPlace() uploading failed" , LOG_DEBUG);
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
                 }
-                
             } else {
-                $this->log("API->addPlace() uploading failed" , LOG_DEBUG);
-                $response = REQUEST_FAILED;
-                $errorMessage = ERROR_PLACE_PHOTO_UPLOAD;
+                $this->log("API->addPlace() no photo found" , LOG_DEBUG);
             }
-        } else {
-            $this->log("API->addPlace() no photo found" , LOG_DEBUG);
-        }
-       
-        $this->log("API->addPlace() returns: response $response error $errorMessage" , LOG_DEBUG);
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
-            $data['count_notifications'] = $count_notifications;
 
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($userID);
-            $data['count_followers'] = $count_followers;
+            $this->log("API->addPlace() returns: response $response error $errorMessage" , LOG_DEBUG);
+        
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userID);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($userID);
+                $data['count_inbox'] = $count_inbox;
+            }
             
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($userID);
-            $data['count_inbox'] = $count_inbox;
+            $data['place_id'] = $placeID;
+            $data['error'] = $errorMessage;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
-        $data['place_id'] = $placeID;
-        $data['error'] = $errorMessage;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -666,59 +697,70 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $userId = $_REQUEST['user_id'];
         if(isset($_REQUEST['comment'])) $comment = $_REQUEST['comment'];
         if(isset($_REQUEST['place_id'])) $placeId = $_REQUEST['place_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->addPlaceComment() called for palce: $placeId from user: $userId", LOG_DEBUG);
         
-        $commentId = null;
-        $response = null;
-        $errorMessage = null;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Save place comment object
-        $this->loadModel('PlaceComment');
-        $com = array();
-        $com['PlaceComment']['user_id'] = $userId;
-        $com['PlaceComment']['comment'] = $comment;
-        $com['PlaceComment']['place_id'] = $placeId;
-        $this->log("API->addPlaceComment() called ", LOG_DEBUG);
-        if($this->PlaceComment->save($com)){
-            
-            $response = REQUEST_OK;
-            $commentId = $this->PlaceComment->getLastInsertID();
-            
-            $date = $this->PlaceComment->find('first', array(
-                                        'conditions'=>array('id'=>$commentId),
-                                        'fields'=>array('created')
-                                      ));
-        } else {
-            $response = REQUEST_FAILED;
-            $errorMessage = ERROR_COMMENT_CREATION;
-        }
-        
-        $this->log("API->addPlaceComment() returns: response $response error $errorMessage" , LOG_DEBUG);
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
-            $data['count_notifications'] = $count_notifications;
+            $commentId = null;
+            $response = null;
+            $errorMessage = null;
 
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($userId);
-            $data['count_followers'] = $count_followers;
+            //Save place comment object
+            $this->loadModel('PlaceComment');
+            $com = array();
+            $com['PlaceComment']['user_id'] = $userId;
+            $com['PlaceComment']['comment'] = $comment;
+            $com['PlaceComment']['place_id'] = $placeId;
+            $this->log("API->addPlaceComment() called ", LOG_DEBUG);
+            if($this->PlaceComment->save($com)){
+
+                $response = REQUEST_OK;
+                $commentId = $this->PlaceComment->getLastInsertID();
+
+                $date = $this->PlaceComment->find('first', array(
+                                            'conditions'=>array('id'=>$commentId),
+                                            'fields'=>array('created')
+                                          ));
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_COMMENT_CREATION;
+            }
+
+            $this->log("API->addPlaceComment() returns: response $response error $errorMessage" , LOG_DEBUG);
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userId);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($userId);
+                $data['count_inbox'] = $count_inbox;
+            }
             
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($userId);
-            $data['count_inbox'] = $count_inbox;
+            $data['comment_id'] = $commentId;
+            $data['error'] = $errorMessage;
+            $data['date'] = strtotime($date['PlaceComment']['created']);
+            
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
-        $data['comment_id'] = $commentId;
-        $data['error'] = $errorMessage;
-        $data['date'] = strtotime($date['PlaceComment']['created']);
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -729,77 +771,88 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $userId = $_REQUEST['user_id'];
         if(isset($_REQUEST['comment'])) $comment = $_REQUEST['comment'];
         if(isset($_REQUEST['activity_id'])) $activityId = $_REQUEST['activity_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->addActivityComment() called for activity: $activityId from user: $userId", LOG_DEBUG);
         
-        $commentId = null;
-        $response = null;
-        $errorMessage = null;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Obtain activity info
-        $this->loadModel('Activity');
-        $activity_obj = $this->Activity->findById($activityId);
-        
-        //Proceed if this is activity exists
-        if($activity_obj != null){
-            
-            //Save activity comment object
-            $this->loadModel('ActivityComment');
-            $com = array();
-            $com['ActivityComment']['user_id'] = $userId;
-            $com['ActivityComment']['comment'] = $comment;
-            $com['ActivityComment']['activity_id'] = $activityId;
-            $this->log("API->addActivityComment() called ", LOG_DEBUG);
-            if($this->ActivityComment->save($com)){
-                $this->loadModel('UserNotification');
+            $commentId = null;
+            $response = null;
+            $errorMessage = null;
 
-                $not['UserNotification']['user_from'] = $userId;
-                $not['UserNotification']['activity_id'] = $activityId;
-                $not['UserNotification']['type_id'] = NOTIFICATION_COMMENT_ACTIVITY;
+            //Obtain activity info
+            $this->loadModel('Activity');
+            $activity_obj = $this->Activity->findById($activityId);
 
-                if($this->UserNotification->save($not)){
-                    $response = REQUEST_OK;
-                    $commentId = $this->ActivityComment->getLastInsertID();
-                    
-                    $date = $this->ActivityComment->find('first', array(
-                                        'conditions'=>array('id'=>$commentId),
-                                        'fields'=>array('created')
-                                      ));
-                }else{
+            //Proceed if this is activity exists
+            if($activity_obj != null){
+
+                //Save activity comment object
+                $this->loadModel('ActivityComment');
+                $com = array();
+                $com['ActivityComment']['user_id'] = $userId;
+                $com['ActivityComment']['comment'] = $comment;
+                $com['ActivityComment']['activity_id'] = $activityId;
+                $this->log("API->addActivityComment() called ", LOG_DEBUG);
+                if($this->ActivityComment->save($com)){
+                    $this->loadModel('UserNotification');
+
+                    $not['UserNotification']['user_from'] = $userId;
+                    $not['UserNotification']['activity_id'] = $activityId;
+                    $not['UserNotification']['type_id'] = NOTIFICATION_COMMENT_ACTIVITY;
+
+                    if($this->UserNotification->save($not)){
+                        $response = REQUEST_OK;
+                        $commentId = $this->ActivityComment->getLastInsertID();
+
+                        $date = $this->ActivityComment->find('first', array(
+                                            'conditions'=>array('id'=>$commentId),
+                                            'fields'=>array('created')
+                                          ));
+                    }else{
+                        $response = REQUEST_FAILED;
+                    }
+                } else {
                     $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_COMMENT_CREATION;
+                }
+
+                $this->log("API->addActivityComment() returns: response $response error $errorMessage" , LOG_DEBUG);
+
+                //Load additional data with this request
+                if($response == REQUEST_OK){
+
+                    //Count unread notifications
+                    $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
+                    $data['count_notifications'] = $count_notifications;
+
+                    //Count followers
+                    $this->loadModel('UserFollows');
+                    $count_followers = $this->UserFollows->countFollowers($userId);
+                    $data['count_followers'] = $count_followers;
+
+                    //Count inbox
+                    $this->loadModel('UserInbox');
+                    $count_inbox = $this->UserInbox->countUnreadMessages($userId);
+                    $data['count_inbox'] = $count_inbox;
                 }
             } else {
-                $response = REQUEST_FAILED;
-                $errorMessage = ERROR_COMMENT_CREATION;
+                $response = REQUEST_INVALID;
             }
-
-            $this->log("API->addActivityComment() returns: response $response error $errorMessage" , LOG_DEBUG);
-
-            //Load additional data with this request
-            if($response == REQUEST_OK){
-
-                //Count unread notifications
-                $count_notifications = $this->UserNotification->countUnreadNotifications($userId);
-                $data['count_notifications'] = $count_notifications;
-
-                //Count followers
-                $this->loadModel('UserFollows');
-                $count_followers = $this->UserFollows->countFollowers($userId);
-                $data['count_followers'] = $count_followers;
-                
-                //Count inbox
-                $this->loadModel('UserInbox');
-                $count_inbox = $this->UserInbox->countUnreadMessages($userId);
-                $data['count_inbox'] = $count_inbox;
-            }
+            
+            $data['comment_id'] = $commentId;
+            $data['error'] = $errorMessage;
+            $data['date'] = strtotime($date['ActivityComment']['created']);
+            
         } else {
-            $response = REQUEST_INVALID;
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
-        $data['comment_id'] = $commentId;
-        $data['error'] = $errorMessage;
-        $data['date'] = strtotime($date['ActivityComment']['created']);
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -809,42 +862,53 @@ class ApiController extends AppController{
     function areUsers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $list = json_decode(urldecode($list));
-        $listToString = '';
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        for($i=0;$i<sizeof($list);$i++){
-            
-            if($list[$i] != ''){
-                if(sizeof($list) - 1 == $i){
-                    $listToString.= "'" . $list[$i] . "'";
-                }else{
-                    $listToString.= "'" . $list[$i] . "',";
+            $list = json_decode(urldecode($list));
+            $listToString = '';
+
+            for($i=0;$i<sizeof($list);$i++){
+
+                if($list[$i] != ''){
+                    if(sizeof($list) - 1 == $i){
+                        $listToString.= "'" . $list[$i] . "'";
+                    }else{
+                        $listToString.= "'" . $list[$i] . "',";
+                    }
                 }
             }
+
+            $this->log("API->areUsers() called to convert list to : $listToString", LOG_DEBUG);
+            $this->loadModel('User');
+            $userData = $this->User->areUsers($listToString, $user_id);
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['results'] = $userData;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
-        $this->log("API->areUsers() called to convert list to : $listToString", LOG_DEBUG);
-        $this->loadModel('User');
-        $userData = $this->User->areUsers($listToString, $user_id);
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
-
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['results'] = $userData;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -853,28 +917,38 @@ class ApiController extends AppController{
     function searchUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        
+        //Authorise user
         $this->loadModel('User');
-        $userData = $this->User->search($name, null, null, $user_id);
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $userData = $this->User->search($name, null, null, $user_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['users'] = $userData;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
+        $data['response'] = $response;
         
-        $data['response'] = REQUEST_OK;
-        $data['users'] = $userData;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
@@ -883,75 +957,84 @@ class ApiController extends AppController{
     function followUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('UserFollows');
-        $obj = array();
-        $obj['UserFollows']['user_id'] = $user_id;
-        $obj['UserFollows']['follows_user'] = $follow_user;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
-            if($this->UserFollows->save($obj)){
-                $this->loadModel('UserNotification');
-                
-                $obj2['UserNotification']['user_from'] = $user_id;
-                $obj2['UserNotification']['user_id'] = $follow_user;
-                $obj2['UserNotification']['type_id'] = NOTIFICATION_NEW_FOLLOWER;
-                
-                if($this->UserNotification->save($obj2)){
-                    $response = REQUEST_OK;
-                }else{
+            $this->loadModel('UserFollows');
+            $obj = array();
+            $obj['UserFollows']['user_id'] = $user_id;
+            $obj['UserFollows']['follows_user'] = $follow_user;
+
+            if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
+                if($this->UserFollows->save($obj)){
+                    $this->loadModel('UserNotification');
+
+                    $obj2['UserNotification']['user_from'] = $user_id;
+                    $obj2['UserNotification']['user_id'] = $follow_user;
+                    $obj2['UserNotification']['type_id'] = NOTIFICATION_NEW_FOLLOWER;
+
+                    if($this->UserNotification->save($obj2)){
+                        $response = REQUEST_OK;
+                    }else{
+                        $response = REQUEST_FAILED;
+                    }
+                } else {
                     $response = REQUEST_FAILED;
                 }
             } else {
-                $response = REQUEST_FAILED;
+                $response = ERROR_USER_ALREADY_FOLLOWING;
+            }
+        
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+
+            //Feed entry
+            if($response == REQUEST_OK){
+                $this->loadModel('User');
+                $this->loadModel('Feed');
+
+                $user = $this->User->findById($user_id);
+                $user_name = $user['User']['name'];
+
+                $userTarget = $this->User->findById($follow_user);
+                $target_user_id = $userTarget['User']['id'];
+                $target_user_name = $userTarget['User']['name'];
+
+                $feed['Feed']['user_from'] = $user_id;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_user_id'] = $target_user_id;
+                $feed['Feed']['target_user_name'] = $target_user_name;
+                $feed['Feed']['type_id'] = FEED_FRIEND_NEW_FOLLOWER;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->followUser() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->followUser() saved feed ", LOG_DEBUG);
+                }
             }
         } else {
-            $response = ERROR_USER_ALREADY_FOLLOWING;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
-
-            //Count followers
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
-        }
-        
-        //Feed entry
-        if($response == REQUEST_OK){
-            $this->loadModel('User');
-            $this->loadModel('Feed');
-            
-            $user = $this->User->findById($user_id);
-            $user_name = $user['User']['name'];
-            
-            $userTarget = $this->User->findById($follow_user);
-            $target_user_id = $userTarget['User']['id'];
-            $target_user_name = $userTarget['User']['name'];
-            
-            $feed['Feed']['user_from'] = $user_id;
-            $feed['Feed']['user_from_name'] = $user_name;
-            $feed['Feed']['target_user_id'] = $target_user_id;
-            $feed['Feed']['target_user_name'] = $target_user_name;
-            $feed['Feed']['type_id'] = FEED_FRIEND_NEW_FOLLOWER;
-            
-            $feedOK = $this->Feed->save($feed);
-            
-            if(!$feedOK){
-                $this->log("API->followUser() error creating feed", LOG_DEBUG);
-                $response = ERROR_FEED_CREATION;
-            } else {
-                $this->log("API->followUser() saved feed ", LOG_DEBUG);
-            }
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -964,37 +1047,46 @@ class ApiController extends AppController{
     function unfollowUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('UserFollows');
-        if($this->UserFollows->isUserFollowing($user_id, $follow_user)){
-            $rows = $this->UserFollows->deleteUserFollow($user_id, $follow_user);
-            
-            if($rows > 0){
-                $response = REQUEST_OK;
-            } else {
-                $response = REQUEST_FAILED;
-            }
-            
-        } else {
-            $response = ERROR_USER_NOT_FOLLOWING;
-        }
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
+            $this->loadModel('UserFollows');
+            if($this->UserFollows->isUserFollowing($user_id, $follow_user)){
+                $rows = $this->UserFollows->deleteUserFollow($user_id, $follow_user);
 
-            //Count followers
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+                if($rows > 0){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
+
+            } else {
+                $response = ERROR_USER_NOT_FOLLOWING;
+            }
+
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -1007,26 +1099,38 @@ class ApiController extends AppController{
     function getFollowers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('UserFollows');
-        $users = $this->UserFollows->getFollowers($target_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('UserFollows');
+            $users = $this->UserFollows->getFollowers($target_id);
 
-        //Count followers
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
-        
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['users'] = $users;
+            
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
         $data['response'] = REQUEST_OK;
-        $data['users'] = $users;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1036,26 +1140,37 @@ class ApiController extends AppController{
     function getFollowing(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('UserFollows');
-        $users = $this->UserFollows->getFollowing($target_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $this->loadModel('UserFollows');
+            $users = $this->UserFollows->getFollowing($target_id);
 
-        //Count followers
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+            
+            $data['users'] = $users;
+            $response = REQUEST_OK;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        $data['response'] = REQUEST_OK;
-        $data['users'] = $users;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1065,10 +1180,22 @@ class ApiController extends AppController{
     function getMutualFollowers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('UserFollows');
-        $mutual_followers = $this->UserFollows->getMutualFollowers($target_id);
-        $data['mutual_followers'] = $mutual_followers;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+        
+            $this->loadModel('UserFollows');
+            $mutual_followers = $this->UserFollows->getMutualFollowers($target_id);
+            $data['mutual_followers'] = $mutual_followers;
+            $response = REQUEST_OK;
+            
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
         $data['response'] = REQUEST_OK;
         
         $this->layout = 'blank';
@@ -1079,52 +1206,61 @@ class ApiController extends AppController{
     function walkRequest(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        //send a message with the default walk request text
-        $this->loadModel('UserInbox');
-        $obj = array();
-        $obj['UserInbox']['user_from'] = $user_id;
-        $obj['UserInbox']['user_to'] = $target_id;
-        $obj['UserInbox']['message'] = WALK_REQUEST_MSG;
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        $message_id = null;
-        if($this->UserInbox->save($obj)){
-            $response = REQUEST_OK;
-            $message_id = $this->UserInbox->getLastInsertID();
-            
-            $this->loadModel('UserNotification');
-                
-            $obj2['UserNotification']['user_from'] = $user_id;
-            $obj2['UserNotification']['user_id'] = $target_id;
-            $obj2['UserNotification']['type_id'] = NOTIFICATION_WALK_REQUEST;
+            //send a message with the default walk request text
+            $this->loadModel('UserInbox');
+            $obj = array();
+            $obj['UserInbox']['user_from'] = $user_id;
+            $obj['UserInbox']['user_to'] = $target_id;
+            $obj['UserInbox']['message'] = WALK_REQUEST_MSG;
 
-            if($this->UserNotification->save($obj2)){
+            $message_id = null;
+            if($this->UserInbox->save($obj)){
                 $response = REQUEST_OK;
-            }else{
+                $message_id = $this->UserInbox->getLastInsertID();
+
+                $this->loadModel('UserNotification');
+
+                $obj2['UserNotification']['user_from'] = $user_id;
+                $obj2['UserNotification']['user_id'] = $target_id;
+                $obj2['UserNotification']['type_id'] = NOTIFICATION_WALK_REQUEST;
+
+                if($this->UserNotification->save($obj2)){
+                    $response = REQUEST_OK;
+                }else{
+                    $response = REQUEST_FAILED;
+                }
+
+            } else {
                 $response = REQUEST_FAILED;
             }
-            
-        } else {
-            $response = REQUEST_FAILED;
-        }
-        
-        //Load additional data with this request
-        if($response == REQUEST_OK){
-        
-            //Count unread notifications
-            $this->loadModel('UserNotification');
-            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-            $data['count_notifications'] = $count_notifications;
 
-            //Count followers
-            $this->loadModel('UserFollows');
-            $count_followers = $this->UserFollows->countFollowers($user_id);
-            $data['count_followers'] = $count_followers;
-            
-            //Count inbox
-            $this->loadModel('UserInbox');
-            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-            $data['count_inbox'] = $count_inbox;
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
         }
         
         $data['response'] = $response;
@@ -1652,40 +1788,50 @@ class ApiController extends AppController{
     function getOtherUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
+        //Authorise user
         $this->loadModel('User');
-        $otherUser = $this->User->getOtherUserById($user_id, $target_id);
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        $this->loadModel('Dog');
-        $dogs = $this->Dog->getUserDogs($target_id);
-        
-        //activities list
-        $this->loadModel('Activity');
-        $activities = $this->Activity->getActivityList($target_id);
-        
-        //Count unread notifications
-        $this->loadModel('UserNotification');
-        $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
-        $data['count_notifications'] = $count_notifications;
+            $otherUser = $this->User->getOtherUserById($user_id, $target_id);
 
-        //Count followers
-        $this->loadModel('UserFollows');
-        $count_followers = $this->UserFollows->countFollowers($user_id);
-        $data['count_followers'] = $count_followers;
+            $this->loadModel('Dog');
+            $dogs = $this->Dog->getUserDogs($target_id);
+
+            //activities list
+            $this->loadModel('Activity');
+            $activities = $this->Activity->getActivityList($target_id);
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            //Check if mutual followrs
+            $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $target_id);
+            $data['mutual_follower'] = $mutual_follower;
+
+            $response = REQUEST_OK;
+            $data['user'] = $otherUser;
+            $data['dogs'] = $dogs;
+            $data['activities'] = $activities;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
         
-        //Count inbox
-        $this->loadModel('UserInbox');
-        $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
-        $data['count_inbox'] = $count_inbox;
-        
-        //Check if mutual followrs
-        $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $target_id);
-        $data['mutual_follower'] = $mutual_follower;
-        
-        $data['response'] = REQUEST_OK;
-        $data['user'] = $otherUser;
-        $data['dogs'] = $dogs;
-        $data['activities'] = $activities;
+        $data['response'] = $response;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
