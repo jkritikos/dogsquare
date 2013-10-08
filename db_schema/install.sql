@@ -321,5 +321,6 @@ CREATE TABLE `user_passport` (
   `active` int(1),
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
+  `remind` int(1),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

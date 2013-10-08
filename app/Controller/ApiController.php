@@ -76,6 +76,11 @@ class ApiController extends AppController{
                 'conditions' => array('DogBreed.active' => '1')
             ));
             $data['breeds'] = $breeds;
+            
+            //passport notes
+            $this->loadModel('UserPassport');
+            $notes = $this->UserPassport->getNotes($user_id);
+            $data['notes'] = $notes;
 
             //Place Categories
             $this->loadModel('PlaceCategory');
@@ -852,6 +857,160 @@ class ApiController extends AppController{
             $response = REQUEST_UNAUTHORISED;
         }
         
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //addNote adds a note and edits a note
+    function addNote(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['title'])) $title = $_REQUEST['title'];
+        if(isset($_REQUEST['description'])) $description = $_REQUEST['description'];
+        if(isset($_REQUEST['date'])) $date = $_REQUEST['date'];
+        if(isset($_REQUEST['completed'])) $completed = $_REQUEST['completed'];
+        if(isset($_REQUEST['remind'])) $remind = $_REQUEST['remind'];
+        if(isset($_REQUEST['interaction_type'])) $interactionType = $_REQUEST['interaction_type'];
+        if(isset($_REQUEST['note_id'])) $noteId = $_REQUEST['note_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            
+            $response = null;
+            $errorMessage = null;
+            
+            if($interactionType == ADD_NOTE) {
+                //Save note object
+                $this->loadModel('UserPassport');
+                $pass = array();
+                $pass['UserPassport']['user_id'] = $user_id;
+                $pass['UserPassport']['title'] = $title;
+                $pass['UserPassport']['description'] = $description;
+                $pass['UserPassport']['due_date'] = $date;
+                $pass['UserPassport']['completed'] = $completed;
+                $pass['UserPassport']['remind'] = $remind;
+                $this->log("API->addNote() called ", LOG_DEBUG);
+                if($this->UserPassport->save($pass)){
+                    $noteId = $this->UserPassport->getLastInsertID();
+                    
+                    $data['note_id'] = $noteId;
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_NOTE_CREATION;
+                }
+            } else if($interactionType == EDIT_NOTE) {
+                //Save note object
+                $this->loadModel('UserPassport');
+                $pass = array();
+                $pass['UserPassport']['user_id'] = $user_id;
+                $pass['UserPassport']['title'] = $title;
+                $pass['UserPassport']['description'] = $description;
+                $pass['UserPassport']['due_date'] = $date;
+                $pass['UserPassport']['completed'] = $completed;
+                $pass['UserPassport']['remind'] = $remind;
+                $this->log("API->addNote() called ", LOG_DEBUG);
+                $this->UserPassport->id = $noteId;
+                if($this->UserPassport->save($pass)){
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_NOTE_CREATION;
+                }
+            }
+
+            $this->log("API->addNote() returns: response $response error $errorMessage" , LOG_DEBUG);
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+                //return date to use locally
+                $date = $this->UserPassport->find('first', array(
+                                            'conditions'=>array('id'=>$noteId),
+                                            'fields'=>array('due_date')
+                                          ));
+                $dateTimestamp = strtotime($date['UserPassport']['due_date']);
+                $data['date'] = $dateTimestamp;
+                $this->log("API->addNote() returns to user, date: $dateTimestamp and note id: $noteId", LOG_DEBUG);
+                
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //delete note
+    function deleteNote(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['note_id'])) $note_id = $_REQUEST['note_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            $response = null;
+            $errorMessage = null;
+            
+            $this->log("API->deleteNote() called ", LOG_DEBUG);
+            
+            //delete note object
+            $this->loadModel('UserPassport');
+
+            $this->UserPassport->id = $note_id;
+            if($this->UserPassport->delete()){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_NOTE_DELETION;
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+                
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $this->log("API->deleteNote() returns: response $response error $errorMessage" , LOG_DEBUG);
         $data['response'] = $response;
         
         $this->layout = 'blank';
