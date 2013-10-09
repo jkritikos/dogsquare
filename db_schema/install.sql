@@ -186,6 +186,7 @@ CREATE TABLE `photos` (
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  `type_id` int(1) DEFAULT NULL,
+ `place_id` int(11) not null,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

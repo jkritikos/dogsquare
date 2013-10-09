@@ -292,6 +292,82 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Uploads an image for the specified place
+    function addPlacePhoto(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        
+        $this->log("API->addPlacePhoto() called from user $user_id for place $place_id" , LOG_DEBUG);
+        $response = REQUEST_FAILED;
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            
+            //handle photo 
+            if(isset($_FILES['photo'])){
+
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = ".jpeg";
+                $fileName = $dateString.$fileExtension;
+                $uploadfile = UPLOAD_PATH.PLACE_PATH."/". "$fileName";
+
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                $uploadfileThumb = UPLOAD_PATH . PLACE_PATH . "/". "$filenameThumb";
+
+                $this->log("API->addPlacePhoto() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
+
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->addPlacePhoto() uploading succeeded" , LOG_DEBUG);
+
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
+                        $obj['Photo']['user_id'] = $user_id;
+                        $obj['Photo']['place_id'] = $place_id;
+                        $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
+
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+
+                            $response = REQUEST_OK;
+                            $this->log("API->addPlacePhoto() saved photo $photoID to db" , LOG_DEBUG);
+                        } else {
+                            $this->log("API->addPlacePhoto() saving photo to db failed" , LOG_DEBUG);
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_PHOTO_UPLOAD;
+                        }
+                    } else {
+                        $this->log("API->addPlacePhoto() thumb uploading failed" , LOG_DEBUG);
+                        $response = REQUEST_FAILED;
+                        $errorMessage = ERROR_PHOTO_UPLOAD;
+                    }
+
+                } else {
+                    $this->log("API->addPlacePhoto() photo uploading failed" , LOG_DEBUG);
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_PHOTO_UPLOAD;
+                }
+            } else {
+                $this->log("API->addPlacePhoto() no photo found" , LOG_DEBUG);
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function addPhoto(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
@@ -393,7 +469,7 @@ class ApiController extends AppController{
     
     //Creates a new place
     function addPlace(){
-        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
         if(isset($_REQUEST['category_id'])) $categoryId = $_REQUEST['category_id'];
         if(isset($_REQUEST['longitude'])) $longitude = $_REQUEST['longitude'];
@@ -415,7 +491,7 @@ class ApiController extends AppController{
             //Save place object
             $this->loadModel('Place');
             $place = array();
-            $place['Place']['user_id'] = $userID;
+            $place['Place']['user_id'] = $user_id;
             $place['Place']['name'] = $name;
             $place['Place']['category_id'] = $categoryId;
             $place['Place']['lon'] = $longitude;
@@ -453,8 +529,10 @@ class ApiController extends AppController{
                         $this->loadModel('Photo');
                         $obj = array();
                         $obj['Photo']['path'] = $fileName;
-                        $obj['Photo']['user_id'] = $userID;
+                        $obj['Photo']['user_id'] = $user_id;
                         $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
+                        $obj['Photo']['place_id'] = $placeID;
+                        
                         if($this->Photo->save($obj)){
                             $photoID = $this->Photo->getLastInsertID();
 
@@ -499,22 +577,222 @@ class ApiController extends AppController{
 
                 //Count unread notifications
                 $this->loadModel('UserNotification');
-                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
                 $data['count_notifications'] = $count_notifications;
 
                 //Count followers
                 $this->loadModel('UserFollows');
-                $count_followers = $this->UserFollows->countFollowers($userID);
+                $count_followers = $this->UserFollows->countFollowers($user_id);
                 $data['count_followers'] = $count_followers;
 
                 //Count inbox
                 $this->loadModel('UserInbox');
-                $count_inbox = $this->UserInbox->countUnreadMessages($userID);
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
                 $data['count_inbox'] = $count_inbox;
             }
             
             $data['place_id'] = $placeID;
             $data['error'] = $errorMessage;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function editDog(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['edit'])) $editDog = $_REQUEST['edit'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        
+        $this->log("API->editDog() called by user id $user_id for dog id $dog_id", LOG_DEBUG);
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            
+            //If we're editing the entire dog profile
+            if($editDog){
+                
+            }
+            
+            if(isset($_FILES['photo'])){
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = ".jpeg";
+                $fileName = $dateString.$fileExtension;
+                $uploadfile = UPLOAD_PATH.DOG_PATH."/". "$fileName";
+
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                $uploadfileThumb = UPLOAD_PATH . DOG_PATH . "/". "$filenameThumb";
+
+                $this->log("API->editDog() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
+
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->editDog() uploading succeeded" , LOG_DEBUG);
+
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
+                        $obj['Photo']['user_id'] = $user_id;
+                        $obj['Photo']['type_id'] = DOG_PHOTO_TYPE;
+
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+                            
+                            $data['photo'] = $fileName;
+                            $data['thumb'] = $filenameThumb;
+                            $this->log("API->editDog() saved photo $photoID to db" , LOG_DEBUG);
+
+                            //Update dog with profile photo
+                            $this->loadModel('Dog');
+                            $dog['Dog']['id'] = $dog_id;
+                            $dog['Dog']['photo_id'] = $photoID;
+                            if(!$this->Dog->save($dog)){
+                                $this->log("API->editDog() failed to set profile image for dog $dog_id" , LOG_DEBUG);
+
+                                $response = REQUEST_FAILED;
+                                $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                            } else {
+                                $response = REQUEST_OK;
+                            }
+
+                        } else {
+                            $this->log("API->editDog() saving photo to db failed" , LOG_DEBUG);
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                        }
+                    } else {
+                        $this->log("API->editDog() thumb uploading failed" , LOG_DEBUG);
+                        $response = REQUEST_FAILED;
+                        $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                    }
+
+                } else {
+                    $this->log("API->editDog() photo uploading failed" , LOG_DEBUG);
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_DOG_PHOTO_UPLOAD;
+                }
+            }
+            
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    } 
+    
+    function editUser(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['edit'])) $editUser = $_REQUEST['edit'];
+        
+        $this->log("API->editUser() called for user id $user_id", LOG_DEBUG);
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            
+            //If we're editing the entire user profile
+            if($editUser){
+                
+            }
+            
+            //Change profile photo if requested
+            if(isset($_FILES['photo'])){
+                //Check for valid extension
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileExtension = ".jpeg";
+                $fileName = $dateString.$fileExtension;
+                $uploadfile = UPLOAD_PATH . USER_PATH . "/". "$fileName";
+
+                //Thumbnail
+                $filenameThumb = "thumb_".$dateString.$fileExtension;
+                $uploadfileThumb = UPLOAD_PATH . USER_PATH . "/". "$filenameThumb";
+                
+                $this->log("API->editUser() uploadfile is $uploadfile AND thumb is $uploadfileThumb" , LOG_DEBUG);
+
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    if(is_uploaded_file($_FILES['thumb']['tmp_name']) && move_uploaded_file($_FILES['thumb']['tmp_name'], $uploadfileThumb)){
+                        $this->log("API->editUser() uploading succeeded" , LOG_DEBUG);
+
+                        //Save photo info to the db
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
+                        $obj['Photo']['user_id'] = $user_id;
+                        $obj['Photo']['type_id'] = USER_PHOTO_TYPE;
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+
+                            $this->log("API->editUser() saved photo $photoID to db" , LOG_DEBUG);
+                            
+                            $data['thumb'] = $filenameThumb;
+                            $data['photo'] = $fileName;
+                            
+                            //Update user with profile photo
+                            $user['User']['id'] = $user_id;
+                            $user['User']['photo_id'] = $photoID;
+                            if(!$this->User->save($user)){
+                                $this->log("API->editUser() failed to set profile image for user $user_id" , LOG_DEBUG);
+
+                                $response = REQUEST_FAILED;
+                                $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                            } else {
+                                $response = REQUEST_OK;
+                            }
+
+                        } else {
+                            $this->log("API->editUser() saving photo to db failed" , LOG_DEBUG);
+                            $response = REQUEST_FAILED;
+                            $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                        }
+
+                    } else {
+                        $this->log("API->editUser() uploading failed" , LOG_DEBUG);
+                        $response = REQUEST_FAILED;
+                        $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                    }
+                } else {
+                    $this->log("API->signup() uploading failed" , LOG_DEBUG);
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_USER_PHOTO_UPLOAD;
+                }
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+            
         } else {
             $response = REQUEST_UNAUTHORISED;
         }
@@ -1603,6 +1881,7 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['type_id'])) $type_id = $_REQUEST['type_id'];
         
         //Authorise user
         $this->loadModel('User');
@@ -1610,8 +1889,13 @@ class ApiController extends AppController{
         if($authorised){
         
             $this->loadModel('Photo');
-            $photos = $this->Photo->getUserPhotos($target_id);
-
+            
+            if($type_id == USER_PHOTO_TYPE){
+                $photos = $this->Photo->getUserPhotos($target_id);
+            } else if($type_id == PLACE_PHOTO_TYPE){
+                $photos = $this->Photo->getPlacePhotos($target_id);
+            }
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);

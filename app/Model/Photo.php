@@ -21,7 +21,24 @@ class Photo extends AppModel {
         
         return $data;
     }
-     
+    
+    //Returns the photos for the specified place
+    function getPlacePhotos($place_id){
+        $sql = "select p.thumb, p.path from photos p where p.place_id = $place_id and p.type_id = ".PLACE_PHOTO_TYPE;
+        $rs = $this->query($sql);
+        $data = array();
+        
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['thumb'] = $rs[$i]['p']['thumb'];
+                $obj['path'] = $rs[$i]['p']['path'];
+                
+                $data[] = $obj;
+            }
+        }
+        
+        return $data;
+    }
 }
 
 ?>
