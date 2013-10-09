@@ -1295,6 +1295,65 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //delete inbox messages
+    function deleteInboxMessages(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            $response = null;
+            $errorMessage = null;
+            
+            $this->log("API->deleteInboxMessages() called ", LOG_DEBUG);
+            
+            //delete note object
+            $this->loadModel('UserInbox');
+            if($this->UserInbox->deleteAll(array('UserInbox.user_from' => $target_id, 'UserInbox.user_to' => $user_id))){
+                if($this->UserInbox->deleteAll(array('UserInbox.user_to' => $target_id, 'UserInbox.user_from' => $user_id))){
+                
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_NOTE_DELETION;
+                }
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_NOTE_DELETION;
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+                
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $this->log("API->deleteInboxMessages() returns: response $response error $errorMessage" , LOG_DEBUG);
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Checks if the specified list of emails maps to dogsquare users
     function areUsers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
