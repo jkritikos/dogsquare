@@ -19,7 +19,7 @@ class Dog extends AppModel {
     }
     
     function getDogById($dogId){
-        $sql = "SELECT d.id, d.name, db.name, d.mating, d.age, d.gender, d.weight, p.path, dl.id, count(dl.id) as likes";
+        $sql = "SELECT d.id, d.name, db.name, d.size, d.mating, d.age, d.gender, d.weight, p.path, dl.id, count(dl.id) as likes";
         $sql .= " FROM dogs d";
         $sql .= " LEFT OUTER JOIN dog_breeds db on (d.breed_id = db.id)";
         $sql .= " LEFT OUTER JOIN photos p on (d.photo_id = p.id)";
@@ -37,6 +37,7 @@ class Dog extends AppModel {
         $obj['photo'] = $rs[0]['p']['path'];
         $obj['liked'] = $rs[0]['dl']['id'];
         $obj['likes'] = $rs[0][0]['likes'];
+        $obj['size'] = $rs[0]['d']['size'];
                 
         return $obj;
     }

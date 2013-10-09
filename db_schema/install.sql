@@ -79,6 +79,7 @@ CREATE TABLE `dogs` (
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  `photo_id` int(11),
+ `size` int(1),
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

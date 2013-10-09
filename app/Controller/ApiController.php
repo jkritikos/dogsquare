@@ -134,13 +134,14 @@ class ApiController extends AppController{
         if(isset($_REQUEST['weight'])) $weight = $_REQUEST['weight'];
         if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
         if(isset($_REQUEST['mating'])) $mating = $_REQUEST['mating'];
+        if(isset($_REQUEST['size'])) $size = $_REQUEST['size'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         $this->log("API->addDog() called for user $userID with dog name $name breed $breed" , LOG_DEBUG);
         
         //Authorise user
         $this->loadModel('User');
-        $authorised = $this->User->authorise($user_id,$token);
+        $authorised = $this->User->authorise($userID,$token);
         if($authorised){
         
             $dogCreated = false;
@@ -158,6 +159,7 @@ class ApiController extends AppController{
             $dog['Dog']['gender'] = $gender;
             $dog['Dog']['mating'] = $mating;
             $dog['Dog']['weight'] = $weight;
+            $dog['Dog']['size'] = $size;
             $dog['Dog']['age'] = $age;
             $this->log("API->addDog() called ", LOG_DEBUG);
             if($this->Dog->save($dog)){
@@ -376,7 +378,7 @@ class ApiController extends AppController{
         
         //Authorise user
         $this->loadModel('User');
-        $authorised = $this->User->authorise($user_id,$token);
+        $authorised = $this->User->authorise($userID,$token);
         if($authorised){
         
             $response = null;
@@ -986,7 +988,7 @@ class ApiController extends AppController{
         
         //Authorise user
         $this->loadModel('User');
-        $authorised = $this->User->authorise($user_id,$token);
+        $authorised = $this->User->authorise($userId,$token);
         if($authorised){
         
             $commentId = null;
@@ -1060,7 +1062,7 @@ class ApiController extends AppController{
         
         //Authorise user
         $this->loadModel('User');
-        $authorised = $this->User->authorise($user_id,$token);
+        $authorised = $this->User->authorise($userId,$token);
         if($authorised){
         
             $commentId = null;
