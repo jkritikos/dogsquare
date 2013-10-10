@@ -313,7 +313,7 @@ CREATE TABLE `user_badges` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `user_passport` (
+CREATE TABLE `user_passports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `title` varchar(128) COLLATE utf8_unicode_ci,

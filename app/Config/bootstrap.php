@@ -134,6 +134,7 @@ define("NOTIFICATION_NEW_FOLLOWER", 1);
 define("NOTIFICATION_WALK_REQUEST", 2);
 define("NOTIFICATION_COMMENT_ACTIVITY", 3);
 define("NOTIFICATION_LIKE_ACTIVITY", 4);
+define("NOTIFICATION_AWARD_BADGE", 5);
 
 //Feed types
 define("FEED_NEW_WALK", 1);
@@ -191,3 +192,21 @@ define("PLACE_PHOTO_TYPE", 4);
 //NOTES INTERACTION TYPE
 define("ADD_NOTE", 2);
 define("EDIT_NOTE", 3);
+
+//Badges
+define("BADGE_PUPPY", 1);
+define("BADGE_LAZY", 2);
+define("BADGE_OLYMPIAN", 3);
+define("BADGE_SUPERFAMILY", 4);
+define("BADGE_ATHLETIC", 5);
+define("BADGE_CROSSFIT", 6);
+define("BADGE_SAVIOR", 7);
+define("BADGE_WORKIE", 8);
+define("BADGE_SWIMMIE", 9);
+define("BADGE_VIP", 10);
+define("BADGE_CRUELTY", 11);
+define("BADGE_GODFATHER", 12);
+define("BADGE_ROOKIE", 13);
+define("BADGE_SUPERSTAR", 14);
+define("BADGE_HEALTHY", 15);
+define("BADGE_101_DALMATIANS", 16);

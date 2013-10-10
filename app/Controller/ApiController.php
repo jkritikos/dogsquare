@@ -280,8 +280,24 @@ class ApiController extends AppController{
                     $this->log("API->addDog() saved feed ", LOG_DEBUG);
                 }
             }
-
             
+            //Badge handling
+            if($response == REQUEST_OK){
+                $this->loadModel('UserBadge');
+                if($age <= 2 && !$this->UserBadge->userHasBadge($userID, BADGE_PUPPY)){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($userID, BADGE_PUPPY)){
+                        $obj2['UserNotification']['user_from'] = $userID;
+                        $obj2['UserNotification']['user_id'] = $userID;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                }
+            }
+
             $data['dog_id'] = $dogID;
             $data['error'] = $errorMessage;
         } else {
