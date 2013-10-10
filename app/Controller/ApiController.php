@@ -1273,7 +1273,7 @@ class ApiController extends AppController{
             
             $this->log("API->deleteNote() called ", LOG_DEBUG);
             
-            //delete note object
+            //delete note 
             $this->loadModel('UserPassport');
 
             $this->UserPassport->id = $note_id;
@@ -1307,6 +1307,61 @@ class ApiController extends AppController{
         }
         
         $this->log("API->deleteNote() returns: response $response error $errorMessage" , LOG_DEBUG);
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //delete dog
+    function deleteDog(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            $response = null;
+            $errorMessage = null;
+            
+            $this->log("API->deleteDog() called ", LOG_DEBUG);
+            
+            //delete dog 
+            $this->loadModel('Dog');
+
+            $this->Dog->id = $dog_id;
+            if($this->Dog->delete()){
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_DOG_DELETION;
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+                
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $this->log("API->deleteDog() returns: response $response error $errorMessage" , LOG_DEBUG);
         $data['response'] = $response;
         
         $this->layout = 'blank';
