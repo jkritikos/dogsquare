@@ -42,6 +42,32 @@ class Dog extends AppModel {
         return $obj;
     }
     
+    //Returns a count of the dogs that belong to the specified user
+    function countUserDogs($user_id){
+        $sql = "select count(*) cnt from dogs d where d.user_id=$user_id";
+        $rs = $this->query($sql);
+        $count = $rs[$i][0]['cnt'];
+        
+        return $count;
+    }
+    
+    //Returns the dog ids that the specified user owns
+    function getUserDogIDs($user_id){
+        $sql = "select d.id from dogs d where d.owner_id=$user_id ";
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                
+                $data[] = $rs[$i]['d']['id'];
+            }
+        }
+       
+        return $data;
+    }
+    
+    //Returns a list of all the dogs that belong to the specified user
     function getUserDogs($userId){
         $sql = "select d.id, d.name, d.age, d.gender, d.mating, d.weight, p.thumb, p.path, db.name  ";
         $sql .= " from dogs d";

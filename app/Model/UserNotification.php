@@ -5,7 +5,7 @@ class UserNotification extends AppModel {
     
     //Returns the unread notifications for this user
     function getUnreadNotifications($user_id){
-        $sql = "select un.id, un.user_from, un.type_id, un.activity_id, p.thumb, u.name, UNIX_TIMESTAMP(un.created) created from user_notifications un ";
+        $sql = "select un.id, un.user_from, un.type_id, un.activity_id, p.thumb, u.name, UNIX_TIMESTAMP(un.created) created, un.badge_id from user_notifications un ";
         $sql .= "inner join users u on (u.id=un.user_from) inner join photos p on (p.id=u.photo_id) where un.user_id=$user_id and un.read=0 order by id desc";
         $rs = $this->query($sql);
         $data = array();
@@ -18,6 +18,7 @@ class UserNotification extends AppModel {
                 $obj['user_from'] = $rs[$i]['un']['user_from'];
                 $obj['type_id'] = $rs[$i]['un']['type_id'];
                 $obj['activity_id'] = $rs[$i]['un']['activity_id'];
+                $obj['badge_id'] = $rs[$i]['un']['badge_id'];
                 $obj['thumb'] = $rs[$i]['p']['thumb'];
                 
                 $data[] = $obj;

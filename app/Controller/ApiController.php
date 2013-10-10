@@ -238,25 +238,6 @@ class ApiController extends AppController{
 
             $this->log("API->addDog() returns: response $response error $errorMessage" , LOG_DEBUG);
         
-            //Load additional data with this request
-            if($response == REQUEST_OK){
-
-                //Count unread notifications
-                $this->loadModel('UserNotification');
-                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
-                $data['count_notifications'] = $count_notifications;
-
-                //Count followers
-                $this->loadModel('UserFollows');
-                $count_followers = $this->UserFollows->countFollowers($userID);
-                $data['count_followers'] = $count_followers;
-
-                //Count inbox
-                $this->loadModel('UserInbox');
-                $count_inbox = $this->UserInbox->countUnreadMessages($userID);
-                $data['count_inbox'] = $count_inbox;
-            }
-
             //Feed entry
             if($response == REQUEST_OK){
                 $this->loadModel('User');
@@ -289,6 +270,7 @@ class ApiController extends AppController{
                     if($this->UserBadge->awardBadge($userID, BADGE_PUPPY)){
                         $obj2['UserNotification']['user_from'] = $userID;
                         $obj2['UserNotification']['user_id'] = $userID;
+                        $obj2['UserNotification']['badge_id'] = BADGE_PUPPY;
                         $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
 
                         if($this->UserNotification->save($obj2)){
@@ -296,6 +278,40 @@ class ApiController extends AppController{
                         }
                     }
                 }
+                
+                $number_of_dogs = $this->Dog->countUserDogs($userID);
+                if($number_of_dogs == 3 && !$this->UserBadge->userHasBadge($userID, BADGE_SUPERFAMILY)){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($userID, BADGE_SUPERFAMILY)){
+                        $obj2['UserNotification']['user_from'] = $userID;
+                        $obj2['UserNotification']['user_id'] = $userID;
+                        $obj2['UserNotification']['badge_id'] = BADGE_SUPERFAMILY;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                }
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($userID);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($userID);
+                $data['count_inbox'] = $count_inbox;
             }
 
             $data['dog_id'] = $dogID;
@@ -590,6 +606,55 @@ class ApiController extends AppController{
 
             $this->log("API->addPlace() returns: response $response error $errorMessage" , LOG_DEBUG);
         
+            //Badge handling
+            if($response == REQUEST_OK){
+                $this->loadModel('UserBadge');
+                
+                if($categoryId == PLACE_CATEGORY_CRUELTY && !$this->UserBadge->userHasBadge($user_id, BADGE_CRUELTY)){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($user_id, BADGE_CRUELTY)){
+                        $this->UserNotification->create();
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_CRUELTY;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                } else if($categoryId == PLACE_CATEGORY_PARK && !$this->UserBadge->userHasBadge($user_id, BADGE_GODFATHER)){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($user_id, BADGE_GODFATHER)){
+                        $this->UserNotification->create();
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_GODFATHER;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                } else if($categoryId == PLACE_CATEGORY_HOMELESS && !$this->UserBadge->userHasBadge($user_id, BADGE_SAVIOR)){
+                    //Award badge and notification
+                    $homelessPlaces = $this->Place->countPlacesByUser($user_id, PLACE_CATEGORY_HOMELESS);
+                    
+                    if($homelessPlaces == 4 && $this->UserBadge->awardBadge($user_id, BADGE_SAVIOR)){
+                        $this->UserNotification->create();
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_SAVIOR;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                } 
+            }
+            //End badge handling
+            
             //Load additional data with this request
             if($response == REQUEST_OK){
 
@@ -983,6 +1048,26 @@ class ApiController extends AppController{
         
         $this->log("API->signup() returns: response $response error $errorMessage token $securityToken" , LOG_DEBUG);
         
+        if($response == REQUEST_OK){
+            //Badge handling
+            $this->loadModel('UserBadge');
+            if(!$this->UserBadge->userHasBadge($userID, BADGE_ROOKIE)){
+                
+                //Award badge and notification
+                $this->loadModel('UserNotification');
+                if($this->UserBadge->awardBadge($userID, BADGE_ROOKIE)){
+                    $obj2['UserNotification']['user_from'] = $userID;
+                    $obj2['UserNotification']['user_id'] = $userID;
+                    $obj2['UserNotification']['badge_id'] = BADGE_ROOKIE;
+                    $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                    if($this->UserNotification->save($obj2)){
+                        $response = REQUEST_OK;
+                    }
+                }
+            }
+        }
+        
         $data['response'] = $response;
         $data['error'] = $errorMessage;
         $data['token'] = $securityToken;
@@ -1217,6 +1302,24 @@ class ApiController extends AppController{
                 } else {
                     $response = REQUEST_FAILED;
                     $errorMessage = ERROR_NOTE_CREATION;
+                }
+
+                //Badge handling
+                if($response == REQUEST_OK){
+                    $this->loadModel('UserBadge');
+                    if($remind == 1 && !$this->UserBadge->userHasBadge($user_id, BADGE_HEALTHY)){
+                        //Award badge and notification
+                        if($this->UserBadge->awardBadge($user_id, BADGE_HEALTHY)){
+                            $obj2['UserNotification']['user_from'] = $user_id;
+                            $obj2['UserNotification']['user_id'] = $user_id;
+                            $obj2['UserNotification']['badge_id'] = BADGE_HEALTHY;
+                            $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                            if($this->UserNotification->save($obj2)){
+                                $response = REQUEST_OK;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -2073,8 +2176,31 @@ class ApiController extends AppController{
         
         $coordinates = json_decode($coordinates, true);
         $dogs = json_decode($dogs, true);
-        
+       
         $response = REQUEST_OK;
+        
+        //BEFORE we save this activity, we need to check how long ago was the last one
+        $this->loadModel('Dog');
+        $dog_ids = $this->Dog->getUserDogIDs($user_id);
+        $this->loadModel('ActivityDog');
+        $this->loadModel('UserBadge');
+        $this->loadModel('UserNotification');
+        
+        $lastActivityDays = $this->ActivityDog->getDaysSinceLastActivity($dog_ids);
+        if($lastActivityDays >= 21 && !$this->UserBadge->userHasBadge($user_id, BADGE_LAZY)){
+            //Award badge and notification
+            if($this->UserBadge->awardBadge($userID, BADGE_LAZY)){
+                $this->UserNotification->create();
+                $obj2['UserNotification']['user_from'] = $user_id;
+                $obj2['UserNotification']['user_id'] = $user_id;
+                $obj2['UserNotification']['badge_id'] = BADGE_LAZY;
+                $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                if($this->UserNotification->save($obj2)){
+                    $response = REQUEST_OK;
+                }
+            }
+        }
         
         //activity
         $this->loadModel('Activity');
@@ -2118,14 +2244,16 @@ class ApiController extends AppController{
             
             //dogs
             if($response == REQUEST_OK){
-                $this->loadModel('ActivityDog');
                 
                 if(is_array($dogs)){
                     foreach($dogs as $key => $val){
                         $this->ActivityDog->create();
                         $obj3['ActivityDog']['activity_id'] = $activity_id;
                         $obj3['ActivityDog']['dog_id'] = $dogs[$key]['dog_id'];
-
+                        
+                        //Add the dog id to a temp array for badge checking later on
+                        $dog_ids[] = $dogs[$key]['dog_id'];
+                        
                         if($this->ActivityDog->save($obj3)){
                             //carry on
                             $this->log("API->saveActivity() saved dog ", LOG_DEBUG);
@@ -2174,6 +2302,68 @@ class ApiController extends AppController{
             }
         }
         
+        //Badge handling
+        if($response == REQUEST_OK){
+           
+            if(!$this->UserBadge->userHasBadge($user_id, BADGE_CROSSFIT)){
+                $activity_counts2Weeks = $this->ActivityDog->getMaxActivityCounts(14, $dog_ids, 100);
+                
+                if($activity_counts2Weeks >= 6){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($userID, BADGE_CROSSFIT)){
+                        $this->UserNotification->create();
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_CROSSFIT;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                }
+            } 
+            
+            $hasBadgeAthletic = $this->UserBadge->userHasBadge($user_id, BADGE_ATHLETIC);
+            $hasBadgeOlympian = $this->UserBadge->userHasBadge($user_id, BADGE_OLYMPIAN);
+            
+            if(!$hasBadgeAthletic || !$hasBadgeOlympian){
+                $activity_counts1Month = $this->ActivityDog->getMaxActivityCounts(30, $dog_ids, 100);
+                
+                //Athletic badge
+                if($activity_counts1Month >= 10 && !$hasBadgeAthletic){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($userID, BADGE_ATHLETIC)){
+                        $this->UserNotification->create();
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_ATHLETIC;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                }
+                
+                //Olympian badge
+                if($activity_counts1Month >= 12 && !$hasBadgeOlympian){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($userID, BADGE_OLYMPIAN)){
+                        $this->UserNotification->create();
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_OLYMPIAN;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                }
+            }
+        }
+
         $this->log("API->saveActivity() returns activity id $activity_id ", LOG_DEBUG);
         
         $data['activity_id'] = $activity_id;
@@ -2796,7 +2986,15 @@ class ApiController extends AppController{
             $checkinID = null;
             $response = null;
             $errorMessage = null;
-
+            $category_id = null;
+            
+            //Load the requested place
+            $this->loadModel('Place');
+            $placeObject = $this->Place->findById($place_id);
+            if($placeObject != null){
+                $category_id = $placeObject['Place']['category_id'];
+            }
+            
             //Save checkin object
             $this->loadModel('PlaceCheckin');
             $checkin = array();
@@ -2811,6 +3009,78 @@ class ApiController extends AppController{
                 $errorMessage = ERROR_CHECKIN_CREATION;
             }
 
+            //Badge handling
+            $this->loadModel('UserBadge');
+            if(!$this->UserBadge->userHasBadge($user_id, BADGE_101_DALMATIANS)){
+                $total_checkins = $this->User->countCheckins($user_id, null);
+                $this->log("API->checkin() user $user_id has $total_checkins total checkins", LOG_DEBUG);
+                
+                //Award badge and notification
+                if($total_checkins == 101 && $this->UserBadge->awardBadge($user_id, BADGE_101_DALMATIANS)){
+                    $this->UserNotification->create();
+                    $obj2['UserNotification']['user_from'] = $user_id;
+                    $obj2['UserNotification']['user_id'] = $user_id;
+                    $obj2['UserNotification']['badge_id'] = BADGE_101_DALMATIANS;
+                    $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                    if($this->UserNotification->save($obj2)){
+                        $response = REQUEST_OK;
+                    }
+                }
+            }
+            
+            if($category_id == PLACE_CATEGORY_OTHER_PLACE && !$this->UserBadge->userHasBadge($user_id, BADGE_VIP)){
+                //$vipCheckins = $this->User->countCheckins($user_id, PLACE_CATEGORY_OTHER_PLACE);
+                //$this->log("API->checkin() user $user_id has $vipCheckins checkins of type other place", LOG_DEBUG);
+                
+                //Award badge and notification
+                if($this->UserBadge->awardBadge($user_id, BADGE_VIP)){
+                    $this->UserNotification->create();
+                    $obj2['UserNotification']['user_from'] = $user_id;
+                    $obj2['UserNotification']['user_id'] = $user_id;
+                    $obj2['UserNotification']['badge_id'] = BADGE_VIP;
+                    $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                    if($this->UserNotification->save($obj2)){
+                        $response = REQUEST_OK;
+                    }
+                }
+            } else if($category_id == PLACE_CATEGORY_BEACH && !$this->UserBadge->userHasBadge($user_id, BADGE_SWIMMIE)){
+                //$vipCheckins = $this->User->countCheckins($user_id, PLACE_CATEGORY_OTHER_PLACE);
+                //$this->log("API->checkin() user $user_id has $vipCheckins checkins of type other place", LOG_DEBUG);
+                
+                //Award badge and notification
+                if($this->UserBadge->awardBadge($user_id, BADGE_SWIMMIE)){
+                    $this->UserNotification->create();
+                    $obj2['UserNotification']['user_from'] = $user_id;
+                    $obj2['UserNotification']['user_id'] = $user_id;
+                    $obj2['UserNotification']['badge_id'] = BADGE_SWIMMIE;
+                    $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                    if($this->UserNotification->save($obj2)){
+                        $response = REQUEST_OK;
+                    }
+                }
+            } else if($category_id == PLACE_CATEGORY_WORKPLACE && !$this->UserBadge->userHasBadge($user_id, BADGE_WORKIE)){
+                //$vipCheckins = $this->User->countCheckins($user_id, PLACE_CATEGORY_OTHER_PLACE);
+                //$this->log("API->checkin() user $user_id has $vipCheckins checkins of type other place", LOG_DEBUG);
+                
+                //Award badge and notification
+                if($this->UserBadge->awardBadge($user_id, BADGE_WORKIE)){
+                    $this->UserNotification->create();
+                    $obj2['UserNotification']['user_from'] = $user_id;
+                    $obj2['UserNotification']['user_id'] = $user_id;
+                    $obj2['UserNotification']['badge_id'] = BADGE_WORKIE;
+                    $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                    if($this->UserNotification->save($obj2)){
+                        $response = REQUEST_OK;
+                    }
+                }
+            }
+            
+            //End badge handling
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
@@ -2828,6 +3098,7 @@ class ApiController extends AppController{
 
             $data['checkin_id'] = $checkinID;
             $data['error'] = $errorMessage;
+            
         } else {
             $response = REQUEST_UNAUTHORISED;
         }
@@ -3107,7 +3378,27 @@ class ApiController extends AppController{
             } else {
                 $response = REQUEST_INVALID;
             }
-        
+   
+            //Badge handling
+            if($response == REQUEST_OK){
+                $this->loadModel('UserBadge');
+                $dogLikes = $this->DogLike->countOtherUserLikes($dog_id);
+                
+                if($dogLikes == 20 && !$this->UserBadge->userHasBadge($user_id, BADGE_SUPERSTAR)){
+                    //Award badge and notification
+                    if($this->UserBadge->awardBadge($userID, BADGE_SUPERSTAR)){
+                        $obj2['UserNotification']['user_from'] = $user_id;
+                        $obj2['UserNotification']['user_id'] = $user_id;
+                        $obj2['UserNotification']['badge_id'] = BADGE_SUPERSTAR;
+                        $obj2['UserNotification']['type_id'] = NOTIFICATION_AWARD_BADGE;
+
+                        if($this->UserNotification->save($obj2)){
+                            $response = REQUEST_OK;
+                        }
+                    }
+                }
+            }
+
             //Load additional data with this request
             if($response == REQUEST_OK){
 

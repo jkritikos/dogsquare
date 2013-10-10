@@ -261,6 +261,21 @@ class User extends AppModel {
                 
         return $obj;
     }
+    
+    //Returns a count of the checkins for the specified user - uses $category_id if specified
+    function countCheckins($user_id, $category_id){
+        if($category_id == null){
+            $sql = "select count(*) cnt from place_checkins pc where pc.user_id=$user_id";
+        } else {
+            $sql = "select count(*) cnt from place_checkins pc inner join places p on (pc.place_id = p.id) where pc.user_id=$user_id and p.category_ud=$category_id";
+        }
+        
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        $this->log("User->countCheckins() returns $count checkins for user $user_id category $category_id", LOG_DEBUG);
+        return $count;
+    }
 }
 
 ?>

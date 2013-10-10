@@ -237,6 +237,15 @@ class Place extends AppModel {
                 
         return $data;
     }
+    
+    //Returns the number of places added by this user - uses $category_id if specified
+    function countPlacesByUser($user_id, $category_id){
+        $sql = "select count(*) cnt from places p where p.user_id=$user_id and p.category_id=$category_id";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
+    }
 }
 
 ?>

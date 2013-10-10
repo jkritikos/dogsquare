@@ -27,6 +27,15 @@ class DogLike extends AppModel {
         $this->log("DogLikes->deleteLike() deleted $deleted rows for user_id $user_id and dog_id $dog_id", LOG_DEBUG);
         return $deleted;
     }
+    
+    //Returns a count of the user likes for the specified dog, EXCLUDING the dog owner
+    function countOtherUserLikes($dog_id){
+        $sql = "select count(*) from dog_likes dl inner join dogs d on (dl.dog_id = d.id) where dl.dog_id=$dog_id and dl.user_id != d.user_id";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
+    }
      
 }
 

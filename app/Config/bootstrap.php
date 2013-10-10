@@ -157,6 +157,17 @@ define("MAP_FILTER_SAME_BREED", 9);
 //Map filter additional properties
 define("MAP_FILTER_RECENTLY_OPEN_DAYS", 100);
 
+//Place categories
+define("PLACE_CATEGORY_PARK", 1);
+define("PLACE_CATEGORY_HOMELESS", 2);
+define("PLACE_CATEGORY_CRUELTY", 3);
+define("PLACE_CATEGORY_PETSHOP", 4);
+define("PLACE_CATEGORY_VETERINARY", 5);
+define("PLACE_CATEGORY_DOG_HOSPITAL", 6);
+define("PLACE_CATEGORY_OTHER_PLACE", 7);
+define("PLACE_CATEGORY_BEACH", 8);
+define("PLACE_CATEGORY_WORKPLACE", 9);
+
 //API general
 define("REQUEST_OK", 1);
 define("REQUEST_UNAUTHORISED", -100);
