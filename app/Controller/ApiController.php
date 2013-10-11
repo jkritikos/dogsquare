@@ -2101,12 +2101,13 @@ class ApiController extends AppController{
             $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
             $data['count_inbox'] = $count_inbox;
 
-            $data['response'] = REQUEST_OK;
+            $response = REQUEST_OK;
             $data['users'] = $likedUsers;
         } else {
             $response = REQUEST_UNAUTHORISED;
         }
         
+        $data['response'] = $response;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
         
@@ -2404,27 +2405,53 @@ class ApiController extends AppController{
             $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
             $data['count_inbox'] = $count_inbox;
 
-            $data['response'] = REQUEST_OK;
+            $response = REQUEST_OK;
             $data['user'] = $otherUser;
             $data['activities'] = $activities;
         } else {
             $response = REQUEST_UNAUTHORISED;
         }
         
+        $data['response'] = $response;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
     
     function getBadges(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
-        $this->loadModel('UserBadge');
-        $badges = $this->UserBadge->getUserBadges($user_id);
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
         
-        $data['badges'] = $badges;
-        $data['response'] = REQUEST_OK;
+            $this->loadModel('UserBadge');
+            $badges = $this->UserBadge->getUserBadges($target_id);
+            $data['badges'] = $badges;
+            
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+            
+            $response = REQUEST_OK;
+        }else{
+            $response = REQUEST_UNAUTHORISED;
+        }
         
+        $data['response'] = $response;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
@@ -2497,12 +2524,13 @@ class ApiController extends AppController{
             $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
             $data['count_inbox'] = $count_inbox;
 
-            $data['response'] = REQUEST_OK;
+            $response = REQUEST_OK;
             $data['dog'] = $dog;
         } else {
             $response = REQUEST_UNAUTHORISED;
         }
         
+        $data['response'] = $response;
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
     }
@@ -2564,6 +2592,9 @@ class ApiController extends AppController{
 
             $this->loadModel('Dog');
             $dogs = $this->Dog->getUserDogs($target_id);
+            
+            $this->loadModel('UserBadge');
+            $badgeCount = $this->UserBadge->countUserBadges($target_id);
 
             //activities list
             $this->loadModel('Activity');
@@ -2590,6 +2621,7 @@ class ApiController extends AppController{
 
             $response = REQUEST_OK;
             $data['user'] = $otherUser;
+            $data['badge_count'] = $badgeCount;
             $data['dogs'] = $dogs;
             $data['activities'] = $activities;
         } else {

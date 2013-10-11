@@ -46,6 +46,23 @@ class UserBadge extends AppModel {
             return false;
         }
     }
+    
+    //Returns the number of badges for this user
+    function countUserBadges($user_id){
+        $sql = "select count(b.id) cnt from badges b left join user_badges ub on (b.id = ub.badge_id) where ub.user_id = $user_id";
+  
+        $rs = $this->query($sql);
+        $count = 0;
+        
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        $this->log("API->countUserBadges() returns is $count", LOG_DEBUG);
+        return $count;
+    }
 }
 
 ?>
