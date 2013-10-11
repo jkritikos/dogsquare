@@ -240,7 +240,6 @@ class ApiController extends AppController{
         
             //Feed entry
             if($response == REQUEST_OK){
-                $this->loadModel('User');
                 $this->loadModel('Feed');
 
                 $user = $this->User->findById($userID);
@@ -265,6 +264,8 @@ class ApiController extends AppController{
             //Badge handling
             if($response == REQUEST_OK){
                 $this->loadModel('UserBadge');
+                $this->loadModel('UserNotification');
+                
                 if($age <= 2 && !$this->UserBadge->userHasBadge($userID, BADGE_PUPPY)){
                     //Award badge and notification
                     if($this->UserBadge->awardBadge($userID, BADGE_PUPPY)){
@@ -299,7 +300,6 @@ class ApiController extends AppController{
             if($response == REQUEST_OK){
 
                 //Count unread notifications
-                $this->loadModel('UserNotification');
                 $count_notifications = $this->UserNotification->countUnreadNotifications($userID);
                 $data['count_notifications'] = $count_notifications;
 
@@ -609,6 +609,7 @@ class ApiController extends AppController{
             //Badge handling
             if($response == REQUEST_OK){
                 $this->loadModel('UserBadge');
+                $this->loadModel('UserNotification');
                 
                 if($categoryId == PLACE_CATEGORY_CRUELTY && !$this->UserBadge->userHasBadge($user_id, BADGE_CRUELTY)){
                     //Award badge and notification
@@ -659,7 +660,6 @@ class ApiController extends AppController{
             if($response == REQUEST_OK){
 
                 //Count unread notifications
-                $this->loadModel('UserNotification');
                 $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
                 $data['count_notifications'] = $count_notifications;
 
@@ -1306,8 +1306,9 @@ class ApiController extends AppController{
 
                 //Badge handling
                 if($response == REQUEST_OK){
+                    $this->loadModel('UserNotification');
                     $this->loadModel('UserBadge');
-                    if($remind == 1 && !$this->UserBadge->userHasBadge($user_id, BADGE_HEALTHY)){
+                    if($completed == 1 && !$this->UserBadge->userHasBadge($user_id, BADGE_HEALTHY)){
                         //Award badge and notification
                         if($this->UserBadge->awardBadge($user_id, BADGE_HEALTHY)){
                             $obj2['UserNotification']['user_from'] = $user_id;
@@ -1337,7 +1338,6 @@ class ApiController extends AppController{
                 $this->log("API->addNote() returns to user, date: $dateTimestamp and note id: $noteId", LOG_DEBUG);
                 
                 //Count unread notifications
-                $this->loadModel('UserNotification');
                 $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
                 $data['count_notifications'] = $count_notifications;
 

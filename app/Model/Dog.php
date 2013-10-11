@@ -44,9 +44,9 @@ class Dog extends AppModel {
     
     //Returns a count of the dogs that belong to the specified user
     function countUserDogs($user_id){
-        $sql = "select count(*) cnt from dogs d where d.user_id=$user_id";
+        $sql = "select count(*) cnt from dogs d where d.owner_id=$user_id";
         $rs = $this->query($sql);
-        $count = $rs[$i][0]['cnt'];
+        $count = $rs[0][0]['cnt'];
         
         return $count;
     }
