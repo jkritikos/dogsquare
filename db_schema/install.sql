@@ -11,6 +11,10 @@ CREATE TABLE `users` (
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  `photo_id` int(11),
+ `birth_date` datetime NOT NULL,
+ `address` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+ `country` int(3) NOT NULL,
+ `newsletter` int(1) NOT NULL,
  PRIMARY KEY (`id`),
  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

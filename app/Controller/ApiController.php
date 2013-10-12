@@ -890,9 +890,12 @@ class ApiController extends AppController{
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
         if(isset($_REQUEST['password'])) $password = $_REQUEST['password'];
-        if(isset($_REQUEST['age'])) $age = $_REQUEST['age'];
+        if(isset($_REQUEST['birth_date'])) $birthDate = $_REQUEST['birth_date'];
+        if(isset($_REQUEST['country'])) $country = $_REQUEST['country'];
+        if(isset($_REQUEST['address'])) $address = $_REQUEST['address'];
         if(isset($_REQUEST['facebook_id'])) $facebook_id = $_REQUEST['facebook_id'];
 	if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
+        if(isset($_REQUEST['newsletter'])) $newsletter = $_REQUEST['newsletter'];
         
         $this->log("API->signup() called for $name", LOG_DEBUG);
         
@@ -922,13 +925,16 @@ class ApiController extends AppController{
             if(isset($age) && $age != ''){
                 $user['User']['age'] = $age;
             }
-
-            if(isset($gender) && $gender != ''){
-                if($gender == 'male') $gender = 1;
-                else if($gender == 'female') $gender = 2;
-                $user['User']['gender'] = $gender;
+            
+            if(isset($address) && $address != ''){
+                $user['User']['address'] = $address;
             }
-
+            
+            $user['User']['gender'] = $gender;
+            $user['User']['country'] = $country;
+            $user['User']['birth_date'] = $birthDate;
+            $user['User']['newsletter'] = $newsletter;
+            
             if($this->User->save($user)){
                 $userCreated = true;
                 $userID = $this->User->getLastInsertID();
