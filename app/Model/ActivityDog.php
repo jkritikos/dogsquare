@@ -16,6 +16,7 @@ class ActivityDog extends AppModel {
         $rs = $this->query($sql);
         
         $data = array();
+        $count = 0;
         if(is_array($rs)){
             foreach($rs as $i => $values){
                 //If we ever need to switch it back to detailed data, here it is
@@ -35,7 +36,7 @@ class ActivityDog extends AppModel {
         $dogList = implode(",", $dog_ids);
         $sql = "select datediff(now(), ad.created) days from activity_dogs ad where ad.dog_id in ($dogList) order by days desc limit 1";
         $rs = $this->query($sql);
-        $days = $rs[$i][0]['days'];
+        $days = $rs[0][0]['days'];
         
         return $days;
     }

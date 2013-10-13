@@ -3049,6 +3049,8 @@ class ApiController extends AppController{
 
             //Badge handling
             $this->loadModel('UserBadge');
+            $this->loadModel('UserNotification');
+            
             if(!$this->UserBadge->userHasBadge($user_id, BADGE_101_DALMATIANS)){
                 $total_checkins = $this->User->countCheckins($user_id, null);
                 $this->log("API->checkin() user $user_id has $total_checkins total checkins", LOG_DEBUG);
@@ -3420,6 +3422,7 @@ class ApiController extends AppController{
             //Badge handling
             if($response == REQUEST_OK){
                 $this->loadModel('UserBadge');
+                $this->loadModel('UserNotification');
                 $dogLikes = $this->DogLike->countOtherUserLikes($dog_id);
                 
                 if($dogLikes == 20 && !$this->UserBadge->userHasBadge($user_id, BADGE_SUPERSTAR)){
@@ -3441,7 +3444,6 @@ class ApiController extends AppController{
             if($response == REQUEST_OK){
 
                 //Count unread notifications
-                $this->loadModel('UserNotification');
                 $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
                 $data['count_notifications'] = $count_notifications;
 
