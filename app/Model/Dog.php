@@ -69,7 +69,7 @@ class Dog extends AppModel {
     
     //Returns a list of all the dogs that belong to the specified user
     function getUserDogs($userId){
-        $sql = "select d.id, d.name, d.age, d.gender, d.mating, d.weight, p.thumb, p.path, db.name  ";
+        $sql = "select d.id, d.name, d.age, d.gender, d.mating, d.weight, p.thumb, p.path, db.name, d.size  ";
         $sql .= " from dogs d";
         $sql .= " inner join users u on (d.owner_id = u.id)";
         $sql .= " inner join photos p on (d.photo_id = p.id)";
@@ -90,6 +90,7 @@ class Dog extends AppModel {
                 $obj['Dog']['photo'] = $rs[$i]['p']['path'];
                 $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
                 $obj['Dog']['mating'] = $rs[$i]['d']['mating'];
+                $obj['Dog']['size'] = $rs[$i]['d']['size'];
                 
                 $data[] = $obj;
             }

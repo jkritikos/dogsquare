@@ -691,6 +691,13 @@ class ApiController extends AppController{
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         if(isset($_REQUEST['edit'])) $editDog = $_REQUEST['edit'];
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
+        if(isset($_REQUEST['breed_id'])) $breed = $_REQUEST['breed_id'];
+        if(isset($_REQUEST['age'])) $age = $_REQUEST['age'];
+        if(isset($_REQUEST['weight'])) $weight = $_REQUEST['weight'];
+        if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
+        if(isset($_REQUEST['mating'])) $mating = $_REQUEST['mating'];
+        if(isset($_REQUEST['size'])) $size = $_REQUEST['size'];
         
         $this->log("API->editDog() called by user id $user_id for dog id $dog_id", LOG_DEBUG);
         
@@ -701,7 +708,31 @@ class ApiController extends AppController{
             
             //If we're editing the entire dog profile
             if($editDog){
+                //$dogCreated = false;
+                $dogID = null;
+                $response = null;
+                $errorMessage = null;
                 
+                //Save dog object
+                $this->loadModel('Dog');
+                $dog = array();
+                $dog['Dog']['breed_id'] = $breed;
+                $dog['Dog']['owner_id'] = $user_id;
+                $dog['Dog']['name'] = $name;
+                $dog['Dog']['gender'] = $gender;
+                $dog['Dog']['mating'] = $mating;
+                $dog['Dog']['weight'] = $weight;
+                $dog['Dog']['size'] = $size;
+                $dog['Dog']['age'] = $age;
+                $this->log("API->addDog() called ", LOG_DEBUG);
+                $this->Dog->id = $dog_id;
+                if($this->Dog->save($dog)){
+
+                    $dogID = $this->Dog->getLastInsertID();
+                } else {
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_DOG_CREATION;
+                }
             }
             
             if(isset($_FILES['photo'])){
