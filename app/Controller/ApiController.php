@@ -77,6 +77,13 @@ class ApiController extends AppController{
             ));
             $data['breeds'] = $breeds;
             
+            //dogfuel rules
+            $this->loadModel('DogfuelRule');
+            $rules = $this->DogfuelRule->find('all', array(
+                'conditions' => array('DogfuelRule.active' => '1')
+            ));
+            $data['rules'] = $rules;
+            
             //passport notes
             $this->loadModel('UserPassport');
             $notes = $this->UserPassport->getNotes($user_id);
@@ -2225,9 +2232,11 @@ class ApiController extends AppController{
         $this->loadModel('UserNotification');
         
         $lastActivityDays = $this->ActivityDog->getDaysSinceLastActivity($dog_ids);
+        $this->log("API->saveActivity() lastActivityDays = $lastActivityDays for user $user_id" , LOG_DEBUG);
+        
         if($lastActivityDays >= 21 && !$this->UserBadge->userHasBadge($user_id, BADGE_LAZY)){
             //Award badge and notification
-            if($this->UserBadge->awardBadge($userID, BADGE_LAZY)){
+            if($this->UserBadge->awardBadge($user_id, BADGE_LAZY)){
                 $this->UserNotification->create();
                 $obj2['UserNotification']['user_from'] = $user_id;
                 $obj2['UserNotification']['user_id'] = $user_id;
@@ -2348,7 +2357,7 @@ class ApiController extends AppController{
                 
                 if($activity_counts2Weeks >= 6){
                     //Award badge and notification
-                    if($this->UserBadge->awardBadge($userID, BADGE_CROSSFIT)){
+                    if($this->UserBadge->awardBadge($user_id, BADGE_CROSSFIT)){
                         $this->UserNotification->create();
                         $obj2['UserNotification']['user_from'] = $user_id;
                         $obj2['UserNotification']['user_id'] = $user_id;
@@ -2371,7 +2380,7 @@ class ApiController extends AppController{
                 //Athletic badge
                 if($activity_counts1Month >= 10 && !$hasBadgeAthletic){
                     //Award badge and notification
-                    if($this->UserBadge->awardBadge($userID, BADGE_ATHLETIC)){
+                    if($this->UserBadge->awardBadge($user_id, BADGE_ATHLETIC)){
                         $this->UserNotification->create();
                         $obj2['UserNotification']['user_from'] = $user_id;
                         $obj2['UserNotification']['user_id'] = $user_id;
@@ -2387,7 +2396,7 @@ class ApiController extends AppController{
                 //Olympian badge
                 if($activity_counts1Month >= 12 && !$hasBadgeOlympian){
                     //Award badge and notification
-                    if($this->UserBadge->awardBadge($userID, BADGE_OLYMPIAN)){
+                    if($this->UserBadge->awardBadge($user_id, BADGE_OLYMPIAN)){
                         $this->UserNotification->create();
                         $obj2['UserNotification']['user_from'] = $user_id;
                         $obj2['UserNotification']['user_id'] = $user_id;

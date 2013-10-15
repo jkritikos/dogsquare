@@ -151,9 +151,12 @@ define("MAP_FILTER_CRUELTY", 3);
 define("MAP_FILTER_PETSHOP", 4);
 define("MAP_FILTER_VETERINARY", 5);
 define("MAP_FILTER_DOG_HOSPITAL", 6);
-define("MAP_FILTER_RECENTLY_OPEN", 7);
-define("MAP_FILTER_MATING", 8);
-define("MAP_FILTER_SAME_BREED", 9);
+define("MAP_FILTER_PUBLIC_PLACE", 7);
+define("MAP_FILTER_BEACH", 8);
+define("MAP_FILTER_WORKPLACE", 9);
+define("MAP_FILTER_RECENTLY_OPEN", 100);
+define("MAP_FILTER_MATING", 101);
+define("MAP_FILTER_SAME_BREED", 102);
 //Map filter additional properties
 define("MAP_FILTER_RECENTLY_OPEN_DAYS", 100);
 

@@ -31,6 +31,10 @@ class ActivityDog extends AppModel {
         return $count;
     }
     
+    function hasActivities($dog_ids){
+        
+    }
+    
     //Returns the max number of days since the last activity for the specified dogs
     function getDaysSinceLastActivity($dog_ids){
         $dogList = implode(",", $dog_ids);
