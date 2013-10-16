@@ -13,7 +13,7 @@ CREATE TABLE `users` (
  `photo_id` int(11),
  `birth_date` datetime NOT NULL,
  `address` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
- `country` int(3) NOT NULL,
+ `country_id` int(3) NOT NULL,
  `newsletter` int(1) NOT NULL,
  PRIMARY KEY (`id`),
  UNIQUE KEY `email` (`email`)
@@ -309,6 +309,7 @@ CREATE TABLE `badges` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+#user_badges table
 CREATE TABLE `user_badges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -318,6 +319,7 @@ CREATE TABLE `user_badges` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+#user_passports table
 CREATE TABLE `user_passports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -331,3 +333,11 @@ CREATE TABLE `user_passports` (
   `remind` int(1),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#countries table
+CREATE TABLE `countries` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) DEFAULT NULL,
+  `active` int(1) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;

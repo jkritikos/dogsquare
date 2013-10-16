@@ -93,6 +93,11 @@ class ApiController extends AppController{
             $this->loadModel('PlaceCategory');
             $categories = $this->PlaceCategory->find('all');
             $data['categories'] = $categories;
+            
+            //Countries
+            $this->loadModel('Country');
+            $countries = $this->Country->find('all');
+            $data['countries'] = $countries;
 
             //Get user
             $this->loadModel('User');
@@ -734,7 +739,8 @@ class ApiController extends AppController{
                 $this->log("API->addDog() called ", LOG_DEBUG);
                 $this->Dog->id = $dog_id;
                 if($this->Dog->save($dog)){
-
+                    
+                    $response = REQUEST_OK;
                     $dogID = $this->Dog->getLastInsertID();
                 } else {
                     $response = REQUEST_FAILED;
@@ -817,6 +823,13 @@ class ApiController extends AppController{
     
     function editUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
+        if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
+        if(isset($_REQUEST['birth_date'])) $birthDate = $_REQUEST['birth_date'];
+        if(isset($_REQUEST['country'])) $country = $_REQUEST['country'];
+        if(isset($_REQUEST['address'])) $address = $_REQUEST['address'];
+	if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
+        if(isset($_REQUEST['newsletter'])) $newsletter = $_REQUEST['newsletter'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         if(isset($_REQUEST['edit'])) $editUser = $_REQUEST['edit'];
         
@@ -829,7 +842,28 @@ class ApiController extends AppController{
             
             //If we're editing the entire user profile
             if($editUser){
+                $response = null;
+                $errorMessage = null;
                 
+                //Save dog object
+                $this->loadModel('User');
+                $user = array();
+                $user['User']['name'] = $name;
+                $user['User']['email'] = $email;
+                $user['User']['birth_date'] = $birthDate;
+                $user['User']['country_id'] = $country;
+                $user['User']['address'] = $address;
+                $user['User']['gender'] = $gender;
+                $user['User']['newsletter'] = $newsletter;
+                $this->log("API->editUser() called ", LOG_DEBUG);
+                $this->User->id = $user_id;
+                if($this->User->save($user)){
+
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                    $errorMessage = ERROR_USER_CREATION;
+                }
             }
             
             //Change profile photo if requested
@@ -969,7 +1003,7 @@ class ApiController extends AppController{
             }
             
             $user['User']['gender'] = $gender;
-            $user['User']['country'] = $country;
+            $user['User']['country_id'] = $country;
             $user['User']['birth_date'] = $birthDate;
             $user['User']['newsletter'] = $newsletter;
             

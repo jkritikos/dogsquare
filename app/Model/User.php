@@ -239,7 +239,7 @@ class User extends AppModel {
     
     
     function getOtherUserById($userId, $targetId){
-        $sql = "select u.id, u.name, u.email, u.facebook_id, u.gender, p.path, p.thumb, count(uf.id) as following, ";
+        $sql = "select u.id, u.name, u.email, u.facebook_id, u.gender, u.address, u.newsletter, u.birth_date, u.country_id, p.path, p.thumb, count(uf.id) as following, ";
         $sql .= " (select count(id) from user_follows where follows_user = $targetId) as followers,";
         $sql .= " (select id from user_follows where follows_user = $targetId and user_id = $userId) as followed";
         $sql .= " from users u";
@@ -251,6 +251,10 @@ class User extends AppModel {
         $obj['id'] = $rs[0]['u']['id'];
         $obj['name'] = $rs[0]['u']['name'];
         $obj['email'] = $rs[0]['u']['email'];
+        $obj['address'] = $rs[0]['u']['address'];
+        $obj['newsletter'] = $rs[0]['u']['newsletter'];
+        $obj['birth_date'] = strtotime($rs[0]['u']['birth_date']) * 1000;
+        $obj['country'] = $rs[0]['u']['country_id'];
         $obj['facebook_id'] = $rs[0]['u']['facebook_id'];
         $obj['gender'] = $rs[0]['u']['gender'];
         $obj['photo'] = $rs[0]['p']['path'];
