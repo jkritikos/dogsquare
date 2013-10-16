@@ -38,6 +38,7 @@ class Dog extends AppModel {
         $obj['liked'] = $rs[0]['dl']['id'];
         $obj['likes'] = $rs[0][0]['likes'];
         $obj['size'] = $rs[0]['d']['size'];
+        $obj['dogfuel'] = $this->getLatestDogfuel($dogId);
                 
         return $obj;
     }
@@ -67,6 +68,22 @@ class Dog extends AppModel {
         return $data;
     }
     
+    //Returns the latest dogfuel value for the specified dog
+    function getLatestDogfuel($dog_id){
+        $sql = "select ad.dogfuel from activity_dogs ad where ad.dog_id=$dog_id and ad.id = (select max(id) from activity_dogs where dog_id=$dog_id)";
+        $rs = $this->query($sql);
+        
+        $value = null;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                
+                $value = $rs[$i]['ad']['dogfuel'];
+            }
+        }
+        
+        return $value;
+    }
+    
     //Returns a list of all the dogs that belong to the specified user
     function getUserDogs($userId){
         $sql = "select d.id, d.name, d.age, d.gender, d.mating, d.weight, p.thumb, p.path, db.name, d.size  ";
@@ -91,7 +108,7 @@ class Dog extends AppModel {
                 $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
                 $obj['Dog']['mating'] = $rs[$i]['d']['mating'];
                 $obj['Dog']['size'] = $rs[$i]['d']['size'];
-                
+                $obj['Dog']['dogfuel'] = $this->getLatestDogfuel($rs[$i]['d']['id']);
                 $data[] = $obj;
             }
         }

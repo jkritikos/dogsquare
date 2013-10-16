@@ -39,8 +39,15 @@ class ActivityDog extends AppModel {
     function getDaysSinceLastActivity($dog_ids){
         $dogList = implode(",", $dog_ids);
         $sql = "select datediff(now(), ad.created) days from activity_dogs ad where ad.dog_id in ($dogList) order by days desc limit 1";
+        
+        $days = 0;
         $rs = $this->query($sql);
-        $days = $rs[0][0]['days'];
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $days = $rs[0][0]['days'];
+            }
+           
+        } 
         
         return $days;
     }

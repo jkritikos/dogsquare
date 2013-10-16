@@ -47,7 +47,7 @@ class Activity extends AppModel {
     }
     
     function getActivityDogs($activityId){
-        $sql = "select d.id, d.name, p.thumb";
+        $sql = "select d.id, d.name, p.thumb, ad.dogfuel ";
         $sql .= " from dogs d";
         $sql .= " inner join photos p on (d.photo_id = p.id)";
         $sql .= " inner join activity_dogs ad on (d.id = ad.dog_id)";
@@ -57,13 +57,10 @@ class Activity extends AppModel {
         $data = array();
         if(is_array($rs)){
             foreach($rs as $i => $values){
-                $id = $rs[$i]['d']['id'];
-                $name = $rs[$i]['d']['name'];
-                $thumb = $rs[$i]['p']['thumb'];
-
-                $obj['Dog']['id'] = $id;
-                $obj['Dog']['name'] = $name;
-                $obj['Dog']['thumb'] = $thumb;
+                $obj['Dog']['id'] = $rs[$i]['d']['id'];
+                $obj['Dog']['name'] = $rs[$i]['d']['name'];
+                $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
+                $obj['Dog']['dogfuel'] = $rs[$i]['ad']['dogfuel'];
 
                 $data[] = $obj;
             }

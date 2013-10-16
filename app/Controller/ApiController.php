@@ -2297,6 +2297,9 @@ class ApiController extends AppController{
                         $this->ActivityDog->create();
                         $obj3['ActivityDog']['activity_id'] = $activity_id;
                         $obj3['ActivityDog']['dog_id'] = $dogs[$key]['dog_id'];
+                        $obj3['ActivityDog']['walk_distance'] = $dogs[$key]['walk_distance'];
+                        $obj3['ActivityDog']['playtime'] = $dogs[$key]['playtime'];
+                        $obj3['ActivityDog']['dogfuel'] = $dogs[$key]['dogfuel'];
                         
                         //Add the dog id to a temp array for badge checking later on
                         $dog_ids[] = $dogs[$key]['dog_id'];
