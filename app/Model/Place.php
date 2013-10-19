@@ -169,8 +169,8 @@ class Place extends AppModel {
    }
    
    //Returns the nearby places for the specified coordinates
-   function getPlacesNearby($lat, $lon, $categoryId=null){
-        $sql = "select p.name, p.lat, p.lon, p.id, ph.thumb, c.name, ";
+   function getPlacesNearby($name, $lat, $lon, $categoryId=null){
+        $sql = "select p.name, p.lat, p.lon, p.id, ph.thumb, c.name, p.category_id, ";
         $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(p.lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(p.lat) * pi()/180) * POWER(SIN(($lon - p.lon) * pi()/180 / 2), 2) )) as distance ";
         $sql .= "from places p left join photos ph on (ph.id = p.photo_id) ";
         $sql .= "left join place_categories c on (p.category_id=c.id) ";
@@ -179,6 +179,11 @@ class Place extends AppModel {
         //add category if needed
         if($categoryId != null){
             $sql .= " and p.category_id=$categoryId";
+        }
+        
+        //add name if needed
+        if($name != null){
+            $sql .= " and p.name like '%$name%' ";
         }
         
         $sql .= " having distance <= ".NEARBY_DISTANCE ." order by distance ";
@@ -200,7 +205,7 @@ class Place extends AppModel {
                 $data[$i]['lon'] = $rs[$i]['p']['lon'];
                 $data[$i]['thumb'] = $rs[$i]['ph']['thumb'];
                 $data[$i]['category'] = $rs[$i]['c']['name'];
-                
+                $data[$i]['category_id'] = $rs[$i]['p']['category_id'];
             }
 	}
 

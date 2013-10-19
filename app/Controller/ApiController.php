@@ -94,11 +94,6 @@ class ApiController extends AppController{
             $categories = $this->PlaceCategory->find('all');
             $data['categories'] = $categories;
             
-            //Countries
-            $this->loadModel('Country');
-            $countries = $this->Country->find('all');
-            $data['countries'] = $countries;
-
             //Get user
             $this->loadModel('User');
             $user = $this->User->getOtherUserById($user_id, $user_id);
@@ -1394,6 +1389,7 @@ class ApiController extends AppController{
         
         
         //Authorise user
+        $this->loadModel('UserNotification');
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
         if($authorised){
@@ -1442,7 +1438,6 @@ class ApiController extends AppController{
 
                 //Badge handling
                 if($response == REQUEST_OK){
-                    $this->loadModel('UserNotification');
                     $this->loadModel('UserBadge');
                     if($completed == 1 && !$this->UserBadge->userHasBadge($user_id, BADGE_HEALTHY)){
                         //Award badge and notification
@@ -3080,6 +3075,12 @@ class ApiController extends AppController{
         if(isset($_REQUEST['lon'])) $lon = $_REQUEST['lon'];
         if(isset($_REQUEST['breed_list'])) $breed_list = $_REQUEST['breed_list'];
         
+        //Name is only used when searching from the searchfield
+        if(isset($_REQUEST['name'])) {
+            $name = $_REQUEST['name'];
+        } else {
+            $name = null;
+        }
         $breed_list = json_decode(urldecode($breed_list));
         
         if(!empty($breed_list)){
@@ -3088,7 +3089,7 @@ class ApiController extends AppController{
         }
         
         $category_id = null;
-        if(isset($_REQUEST['category_id'])){
+        if(isset($_REQUEST['category_id']) && $_REQUEST['category_id'] != null){
             $category_id = $_REQUEST['category_id'];
         }
         
@@ -3113,7 +3114,7 @@ class ApiController extends AppController{
             $data['places'] = $dogs;
             $response = is_array($dogs) ? REQUEST_OK : REQUEST_FAILED;
         } else {
-            $places = $this->Place->getPlacesNearby($lat, $lon, $category_id);
+            $places = $this->Place->getPlacesNearby($name, $lat, $lon, $category_id);
             $data['places'] = $places;
             $response = is_array($places) ? REQUEST_OK : REQUEST_FAILED;
         }
