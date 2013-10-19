@@ -958,6 +958,64 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function editPassword(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['old_pass'])) $oldPass = $_REQUEST['old_pass'];
+        if(isset($_REQUEST['new_pass'])) $newPass = $_REQUEST['new_pass'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        $this->log("API->editPassword() called for user with $user_id", LOG_DEBUG);
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            $response = null;
+
+            if($this->User->validateClientCredentialsByUserId($user_id, $oldPass)){
+                $pass = array();
+                $pass['User']['password'] = $this->User->hashPassword($newPass);
+                $this->User->id = $user_id;
+                if($this->User->save($pass)){
+                    
+                    $securityToken = $this->User->generateToken($user_id, $newPass);
+                    $data['token'] = $securityToken;
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
+            }else{
+                $response = REQUEST_FAILED;
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        }else{
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function signup(){
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];

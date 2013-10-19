@@ -209,6 +209,30 @@ class User extends AppModel {
         return $id;
     }
     
+    function validateClientCredentialsByUserId($userId, $password){
+        $this->log("User->validateUserPassword() called for user with id $userId and password $password", LOG_DEBUG);
+        
+        //find user
+	$currentUser = $this->findAllById($userId);
+	if($currentUser != null){
+            //if the account is active
+            if($currentUser[0]['User']['active'] == '1'){
+                $userHash = Security::hash($password, 'md5');
+
+		//and the password is a match
+		if($currentUser[0]['User']['password'] == $userHash){
+                   return true;
+		} else {
+                   return false;
+		}
+            }else {
+                return false;
+            }
+	} else {
+            return false;
+	}
+    }
+    
     /*Checks whether the specified email/password combination is valid.
     Returns the user id on success, null otherwise*/
     function validateAdminCredentials($email, $password){
