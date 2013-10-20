@@ -7,8 +7,10 @@ class Place extends AppModel {
 	 
 
     function search($name, $category, $status){
-        $sql = "select p.id,  p.name, pc.name, date_format(p.created, '%d/%m/%Y %H:%i') as created ";
-	$sql .= " from places p, place_categories pc  where pc.id = p.category_id ";
+        $sql = "select p.id, ph.thumb, p.name, pc.name, date_format(p.created, '%d/%m/%Y %H:%i') as created ";
+	$sql .= " from places p";
+        $sql .= " left outer join photos ph on (p.photo_id = ph.id)";
+        $sql .= " inner join place_categories pc on (pc.id = p.category_id)";
 		
         if($name != ''){
             $sql .= " and p.name like '%$name%' ";
@@ -31,11 +33,13 @@ class Place extends AppModel {
                 $name = $rs[$i]['p']['name'];
                 $category = $rs[$i]['pc']['name'];
                 $created = $rs[$i]['0']['created'];
+                $thumb = $rs[$i]['ph']['thumb'];
 
                 $obj['Place']['name'] = $name;
                 $obj['Place']['category'] = $category;
                 $obj['Place']['created'] = $created;
                 $obj['Place']['id'] = $id;
+                $obj['Place']['thumb'] = $thumb;
 
                 $data[] = $obj;
             }
