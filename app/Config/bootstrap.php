@@ -143,6 +143,7 @@ define("FEED_FRIEND_NEW_FOLLOWER", 3);
 define("FEED_FRIEND_LIKE_DOG", 4);
 define("FEED_FRIEND_LIKE_ACTIVITY", 5);
 define("FEED_FRIEND_COMMENT_ACTIVITY", 6);
+define("FEED_CHECKIN", 7);
 
 //Map filter types
 define("MAP_FILTER_PARK", 1);

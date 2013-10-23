@@ -1055,10 +1055,21 @@ class ApiController extends AppController{
                 $user['User']['address'] = $address;
             }
             
-            $user['User']['gender'] = $gender;
-            $user['User']['country_id'] = $country;
-            $user['User']['birth_date'] = $birthDate;
-            $user['User']['newsletter'] = $newsletter;
+            if(isset($gender) && $gender != ''){
+                $user['User']['gender'] = $gender;
+            }
+            
+            if(isset($country) && $country != ''){
+                $user['User']['country_id'] = $country;
+            }
+            
+            if(isset($country) && $country != ''){
+                $user['User']['country_id'] = $country;
+            }
+            
+            if(isset($newsletter) && $newsletter != ''){
+                $user['User']['newsletter'] = $newsletter;
+            }
             
             if($this->User->save($user)){
                 $userCreated = true;
@@ -1180,6 +1191,27 @@ class ApiController extends AppController{
         $this->log("API->signup() returns: response $response error $errorMessage token $securityToken" , LOG_DEBUG);
         
         if($response == REQUEST_OK){
+            
+            //Load dog breeds
+            $this->loadModel('DogBreed');
+            //$breeds = $this->DogBreed->find('all');
+            $breeds = $this->DogBreed->find('all', array(
+                'conditions' => array('DogBreed.active' => '1')
+            ));
+            $data['breeds'] = $breeds;
+            
+            //dogfuel rules
+            $this->loadModel('DogfuelRule');
+            $rules = $this->DogfuelRule->find('all', array(
+                'conditions' => array('DogfuelRule.active' => '1')
+            ));
+            $data['rules'] = $rules;
+            
+            //Place Categories
+            $this->loadModel('PlaceCategory');
+            $categories = $this->PlaceCategory->find('all');
+            $data['categories'] = $categories;
+            
             //Badge handling
             $this->loadModel('UserBadge');
             if(!$this->UserBadge->userHasBadge($userID, BADGE_ROOKIE)){
@@ -1357,6 +1389,33 @@ class ApiController extends AppController{
                     $count_inbox = $this->UserInbox->countUnreadMessages($userId);
                     $data['count_inbox'] = $count_inbox;
                 }
+                
+                //Feed entry
+                if($response == REQUEST_OK){
+                    $this->loadModel('Feed');
+
+                    $userObject = $this->User->findById($userId);
+                    $user_name = $userObject['User']['name'];
+                    $target_user_id = $activity_obj['Activity']['user_id'];
+                    $targetUserObject = $this->User->findById($target_user_id);
+                    $target_user_name = $targetUserObject['User']['name'];
+
+                    $feed['Feed']['user_from'] = $userId;
+                    $feed['Feed']['user_from_name'] = $user_name;
+                    $feed['Feed']['target_user_id'] = $target_user_id;
+                    $feed['Feed']['target_user_name'] = $target_user_name;
+                    $feed['Feed']['type_id'] = FEED_FRIEND_COMMENT_ACTIVITY;
+
+                    $feedOK = $this->Feed->save($feed);
+
+                    if(!$feedOK){
+                        $this->log("API->addActivityComment() error creating feed", LOG_DEBUG);
+                        $response = ERROR_FEED_CREATION;
+                    } else {
+                        $this->log("API->addActivityComment() saved feed ", LOG_DEBUG);
+                    }
+                }
+                
             } else {
                 $response = REQUEST_INVALID;
             }
@@ -3085,7 +3144,6 @@ class ApiController extends AppController{
         
         if(!empty($breed_list)){
             $breedsToString = implode(",", $breed_list);
-            $this->log("API->getPlaces() convert: $breed_list into stringList: $breedsToString", LOG_DEBUG);
         }
         
         $category_id = null;
@@ -3257,6 +3315,31 @@ class ApiController extends AppController{
             
             //End badge handling
             
+            //Feed entry
+            if($response == REQUEST_OK){
+                $this->loadModel('Feed');
+
+                $userObject = $this->User->findById($user_id);
+                $user_name = $userObject['User']['name'];
+                $place_name = $placeObject['Place']['name'];
+                $place_id = $placeObject['Place']['id'];
+                
+                $feed['Feed']['user_from'] = $user_id;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_place_id'] = $place_id;
+                $feed['Feed']['target_place_name'] = $place_name;
+                $feed['Feed']['type_id'] = FEED_CHECKIN;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->checkin() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->checkin() saved feed ", LOG_DEBUG);
+                }
+            }
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
@@ -3336,7 +3419,33 @@ class ApiController extends AppController{
                 } else{
                     $response = REQUEST_FAILED;
                 }
+                
+                //Feed entry
+                if($response == REQUEST_OK){
+                    $this->loadModel('Feed');
 
+                    $userObject = $this->User->findById($user_id);
+                    $user_name = $userObject['User']['name'];
+                    $target_user_id = $activity_obj['Activity']['user_id'];
+                    $targetUserObject = $this->User->findById($target_user_id);
+                    $target_user_name = $targetUserObject['User']['name'];
+
+                    $feed['Feed']['user_from'] = $user_id;
+                    $feed['Feed']['user_from_name'] = $user_name;
+                    $feed['Feed']['target_user_id'] = $target_user_id;
+                    $feed['Feed']['target_user_name'] = $target_user_name;
+                    $feed['Feed']['type_id'] = FEED_FRIEND_LIKE_ACTIVITY;
+
+                    $feedOK = $this->Feed->save($feed);
+
+                    if(!$feedOK){
+                        $this->log("API->likeActivity() error creating feed", LOG_DEBUG);
+                        $response = ERROR_FEED_CREATION;
+                    } else {
+                        $this->log("API->likeActivity() saved feed ", LOG_DEBUG);
+                    }
+                }
+                
                 //Load additional data with this request
                 if($response == REQUEST_OK){
 

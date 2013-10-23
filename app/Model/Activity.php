@@ -148,6 +148,17 @@ class Activity extends AppModel {
                 
         return $data;
     }
+    
+    //Returns the activities near the specified coordinates
+    function getNearbyActivities($lat, $lon){
+        $sql = "select u.id, u.name, p.thumb, a.start_lat, a.start_lon, ";
+        $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(a.start_lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(a.start_lat) * pi()/180) * POWER(SIN(($lon - a.start_lon) * pi()/180 / 2), 2) )) as distance ";
+        $sql .= "from activities a inner join users u on (a.user_id = u.id) ";
+        $sql .= "inner join photos p on (u.photo_id = p.id) ";
+        $sql .= "where 1=1 ";
+        $sql .= "and a.created = (select max(a.created) from activities a2 where a2.user_id = u.user_id) ";
+        $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
+    }
 }
 
 ?>
