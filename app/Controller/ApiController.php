@@ -3174,6 +3174,20 @@ class ApiController extends AppController{
         } else {
             $places = $this->Place->getPlacesNearby($name, $lat, $lon, $category_id);
             $data['places'] = $places;
+            
+            $this->loadModel('UserFollows');
+            $mutual = $this->UserFollows->getMutualFollowersList($user_id);
+            
+            if($mutual != null){
+                $this->loadModel('PlaceCheckin');
+                $checkins = $this->PlaceCheckin->getNearbyCheckins($lat, $lon, $mutual);
+                $data['checkins'] = $checkins;
+                
+                $this->loadModel('Activity');
+                $activities = $this->Activity->getNearbyActivities($lat, $lon, $mutual);
+                $data['activities'] = $activities;
+            }
+            
             $response = is_array($places) ? REQUEST_OK : REQUEST_FAILED;
         }
         

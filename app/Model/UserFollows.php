@@ -144,6 +144,29 @@ class UserFollows extends AppModel {
         
         return $data;
     }
+    
+    //Returns a list of the user IDs of the mutual followers of the specified user id, or null if none
+    function getMutualFollowersList($id){
+        $sql = "select uf.follows_user from user_follows uf inner join users u on (uf.follows_user=u.id) ";
+        $sql .= "inner join photos p on (u.photo_id = p.id) where uf.user_id=$id and exists ";
+        $sql .= "(select uf2.follows_user from user_follows uf2 where uf2.follows_user=$id and uf2.user_id=uf.follows_user)";
+        
+        $rs = $this->query($sql);
+        $data = array();
+        
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+		$data[] = $rs[$i]['uf']['follows_user'];
+            }
+        }
+        
+        if(!empty($data)){
+            return implode(",", $data);
+        } else {
+            return null;
+        }
+       
+    }
 }
 
 ?>

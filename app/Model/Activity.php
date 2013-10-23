@@ -150,14 +150,38 @@ class Activity extends AppModel {
     }
     
     //Returns the activities near the specified coordinates
-    function getNearbyActivities($lat, $lon){
-        $sql = "select u.id, u.name, p.thumb, a.start_lat, a.start_lon, ";
+    function getNearbyActivities($lat, $lon, $mutualFollowers){
+        $sql = "select u.id, a.id, u.name, p.thumb, a.start_lat, a.start_lon, ";
         $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(a.start_lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(a.start_lat) * pi()/180) * POWER(SIN(($lon - a.start_lon) * pi()/180 / 2), 2) )) as distance ";
         $sql .= "from activities a inner join users u on (a.user_id = u.id) ";
         $sql .= "inner join photos p on (u.photo_id = p.id) ";
         $sql .= "where 1=1 ";
-        $sql .= "and a.created = (select max(a.created) from activities a2 where a2.user_id = u.user_id) ";
+        $sql .= " and a.created > NOW() - INTERVAL 1 DAY ";
+        $sql .= " and a.user_id in ($mutualFollowers) ";
+        $sql .= "and a.created = (select max(a2.created) from activities a2 where a2.user_id = u.id) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
+        
+        $this->log("Activity->getNearbyActivities() sql $sql" , LOG_DEBUG);
+        $data = array();
+        $rs = $this->query($sql);
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+		if($rs[$i]['0']['distance'] < 1){
+                    $data[$i]['distance'] = 1000 * round($rs[$i][0]['distance'], 1) . 'm';
+		} else {
+                    $data[$i]['distance'] = round($rs[$i][0]['distance'], 1) . 'Km';
+		}
+                
+                $data[$i]['id'] = $rs[$i]['u']['id'];
+                $data[$i]['activity_id'] = $rs[$i]['a']['id'];
+                $data[$i]['user_name'] = $rs[$i]['u']['name'];
+                $data[$i]['lat'] = $rs[$i]['a']['start_lat'];
+                $data[$i]['lon'] = $rs[$i]['a']['start_lon'];
+                $data[$i]['thumb'] = $rs[$i]['p']['thumb'];
+            }
+	}
+
+        return $data;
     }
 }
 
