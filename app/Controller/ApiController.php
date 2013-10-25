@@ -570,6 +570,7 @@ class ApiController extends AppController{
                         $this->loadModel('Photo');
                         $obj = array();
                         $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $filenameThumb;
                         $obj['Photo']['user_id'] = $user_id;
                         $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
                         $obj['Photo']['place_id'] = $placeID;
@@ -980,7 +981,7 @@ class ApiController extends AppController{
                     $response = REQUEST_FAILED;
                 }
             }else{
-                $response = REQUEST_FAILED;
+                $response = ERROR_USER_PASSWORD;
             }
             
             //Load additional data with this request
