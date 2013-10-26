@@ -210,7 +210,7 @@ class User extends AppModel {
     }
     
     function validateClientCredentialsByUserId($userId, $password){
-        $this->log("User->validateUserPassword() called for user with id $userId and password $password", LOG_DEBUG);
+        $this->log("User->validateClientCredentialsByUserId() called for user with id $userId and password $password", LOG_DEBUG);
         
         //find user
 	$currentUser = $this->findAllById($userId);

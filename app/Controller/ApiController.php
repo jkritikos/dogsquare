@@ -1012,6 +1012,58 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function resetPassword(){
+        if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
+        
+        $this->log("API->resetPassword() called for user with $email", LOG_DEBUG);
+        
+        $response = null;
+        
+        $this->loadModel('User');
+        //find user
+	$currentUser = $this->User->findAllByEmail($email);
+        $user_id = $currentUser[0]['User']['id'];
+        if($user_id != null) {
+            $pass = array();
+
+            $password = "1234";
+            $pass['User']['password'] = $this->User->hashPassword($password);
+            $this->User->id = $user_id;
+            if($this->User->save($pass)){
+
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+            }
+        }else{
+            $response = REQUEST_FAILED;
+        }
+
+        //Load additional data with this request
+        if($response == REQUEST_OK){
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function signup(){
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
