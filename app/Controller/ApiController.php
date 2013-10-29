@@ -2389,6 +2389,86 @@ class ApiController extends AppController{
         
     }
     
+    function getPlaceCheckinUsers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        
+        if($authorised){
+            $this->loadModel('Place');
+            $likedUsers = $this->Place->getCheckinUsers($place_id);
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['users'] = $likedUsers;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+        
+    }
+    
+    function getPlaceLikedUsers(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        
+        if($authorised){
+            $this->loadModel('Place');
+            $likedUsers = $this->Place->getLikedUsers($place_id);
+
+            //Count unread notifications
+            $this->loadModel('UserNotification');
+            $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+            $data['count_notifications'] = $count_notifications;
+
+            //Count followers
+            $this->loadModel('UserFollows');
+            $count_followers = $this->UserFollows->countFollowers($user_id);
+            $data['count_followers'] = $count_followers;
+
+            //Count inbox
+            $this->loadModel('UserInbox');
+            $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+            $data['count_inbox'] = $count_inbox;
+
+            $response = REQUEST_OK;
+            $data['users'] = $likedUsers;
+        } else {
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+        
+    }
+    
     function getDogLikedUsers(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
@@ -2869,7 +2949,9 @@ class ApiController extends AppController{
             $this->loadModel('Place');
             $place = $this->Place->getPlaceById($place_id);
             $comments = $this->Place->getPlaceComments($place_id);
-
+            $likes = $this->Place->getPlaceLikes($place_id);
+            $checkins = $this->Place->getPlaceCheckins($place_id);
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
@@ -2888,6 +2970,8 @@ class ApiController extends AppController{
             $response = REQUEST_OK;
             $data['place'] = $place;
             $data['comments'] = $comments;
+            $data['likes'] = $likes;
+            $data['checkins'] = $checkins;
         } else {
             $response = REQUEST_UNAUTHORISED;
         }

@@ -50,12 +50,11 @@ class Place extends AppModel {
     }
         
     function getPlaceById($placeId){
-        $sql = "select p.id, p.name, p.lon, p.lat, pc.name, ph.path, pl.id, count(pch.id) as checkins, count(pl.id) as likes";
+        $sql = "select p.id, p.name, p.lon, p.lat, pc.name, ph.path, pl.id";
         $sql .= " from places p";
         $sql .= " left outer join place_categories pc on (p.category_id = pc.id)";
         $sql .= " left outer join photos ph on (p.photo_id = ph.id)";
         $sql .= " left outer join place_likes pl on (p.id = pl.place_id)";
-        $sql .= " left outer join place_checkins pch on (p.id = pch.place_id)";
         $sql .= " where p.id = $placeId";
         $rs = $this->query($sql);
 
@@ -66,10 +65,24 @@ class Place extends AppModel {
         $obj['category'] = $rs[0]['pc']['name'];
         $obj['photo'] = $rs[0]['ph']['path'];
         $obj['liked'] = $rs[0]['pl']['id'];
-        $obj['likes'] = $rs[0][0]['likes'];
-        $obj['checkins'] = $rs[0][0]['checkins'];
 
         return $obj;
+   }
+   
+   function getPlaceLikes($placeId){
+        $sql = "select count(*) cnt from place_likes pl where pl.place_id=$placeId";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
+   }
+   
+   function getPlaceCheckins($placeId){
+        $sql = "select count(*) cnt from place_checkins pc where pc.place_id=$placeId";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
    }
    
    //Returns the nearby dogs who are mating for the specified coordinates
@@ -260,6 +273,60 @@ class Place extends AppModel {
         $count = $rs[0][0]['cnt'];
         
         return $count;
+    }
+    
+    function getLikedUsers($placeId){
+        $sql = "select u.id, u.name, p.thumb";
+        $sql .= " from place_likes pl";
+        $sql .= " inner join users u on (pl.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " where pl.place_id = $placeId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['u']['id'];
+                $name = $rs[$i]['u']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $name;
+                $obj['User']['thumb'] = $thumb;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
+    
+    function getCheckinUsers($placeId){
+        $sql = "select u.id, u.name, p.thumb";
+        $sql .= " from place_checkins pc";
+        $sql .= " inner join users u on (pc.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " where pc.place_id = $placeId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['u']['id'];
+                $name = $rs[$i]['u']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $name;
+                $obj['User']['thumb'] = $thumb;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
     }
 }
 
