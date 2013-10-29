@@ -1012,6 +1012,75 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    function lostDog(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['lat'])) $latitude = $_REQUEST['lat'];
+        if(isset($_REQUEST['lon'])) $longitude = $_REQUEST['lon'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        $this->log("API->lostDog() called for user with $user_id and dog $dog_id", LOG_DEBUG);
+        
+        $this->loadModel('Dog');
+        $currentDog = $this->Dog->findAllById($dog_id);
+        $dogName = $currentDog[0]['Dog']['name'];
+        $dogPhoto = $currentDog[0]['Dog']['photo_id'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            $this->log("API->lostDog() called ", LOG_DEBUG);
+            $placeID = null;
+            $response = null;
+            $errorMessage = null;
+
+            //Save place object
+            $this->loadModel('Place');
+            $place = array();
+            $place['Place']['user_id'] = $user_id;
+            $place['Place']['name'] = $dogName;
+            $place['Place']['category_id'] = PLACE_LOST_DOG;
+            $place['Place']['dog_id'] = $dog_id;
+            $place['Place']['lon'] = $longitude;
+            $place['Place']['lat'] = $latitude;
+            $place['Place']['photo_id'] = $dogPhoto;
+            if($this->Place->save($place)){
+                $response = REQUEST_OK;
+                $placeID = $this->Place->getLastInsertID();
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_PLACE_CREATION;
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        }else{
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function resetPassword(){
         if(isset($_REQUEST['email'])) $email = $_REQUEST['email'];
         
@@ -1022,22 +1091,26 @@ class ApiController extends AppController{
         $this->loadModel('User');
         //find user
 	$currentUser = $this->User->findAllByEmail($email);
-        $user_id = $currentUser[0]['User']['id'];
-        if($user_id != null) {
-            $pass = array();
+        if($currentUser != null){
+            $user_id = $currentUser[0]['User']['id'];
+            if($user_id != null) {
+                $pass = array();
 
-            $password = "1234";
-            $pass['User']['password'] = $this->User->hashPassword($password);
-            $this->User->id = $user_id;
-            if($this->User->save($pass)){
+                $password = "1234";
+                $pass['User']['password'] = $this->User->hashPassword($password);
+                $this->User->id = $user_id;
+                if($this->User->save($pass)){
 
-                $response = REQUEST_OK;
-            } else {
+                    $response = REQUEST_OK;
+                } else {
+                    $response = REQUEST_FAILED;
+                }
+            }else{
                 $response = REQUEST_FAILED;
             }
-        }else{
+         }else{
             $response = REQUEST_FAILED;
-        }
+         }
 
         //Load additional data with this request
         if($response == REQUEST_OK){

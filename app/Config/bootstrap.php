@@ -173,6 +173,7 @@ define("PLACE_CATEGORY_DOG_HOSPITAL", 6);
 define("PLACE_CATEGORY_OTHER_PLACE", 7);
 define("PLACE_CATEGORY_BEACH", 8);
 define("PLACE_CATEGORY_WORKPLACE", 9);
+define("PLACE_LOST_DOG", 10);
 
 //API general
 define("REQUEST_OK", 1);
