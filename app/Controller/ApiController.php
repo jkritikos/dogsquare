@@ -91,7 +91,9 @@ class ApiController extends AppController{
 
             //Place Categories
             $this->loadModel('PlaceCategory');
-            $categories = $this->PlaceCategory->find('all');
+            $categories = $this->PlaceCategory->find('all', array(
+                'conditions' => array('PlaceCategory.visible' => '1')
+            ));
             $data['categories'] = $categories;
             
             //Get user
