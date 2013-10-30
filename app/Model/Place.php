@@ -303,11 +303,12 @@ class Place extends AppModel {
     }
     
     function getCheckinUsers($placeId){
-        $sql = "select u.id, u.name, p.thumb";
+        $sql = "select u.id, u.name, p.thumb, UNIX_TIMESTAMP(pc.created) created";
         $sql .= " from place_checkins pc";
         $sql .= " inner join users u on (pc.user_id=u.id)";
         $sql .= " inner join photos p on (u.photo_id=p.id)";
         $sql .= " where pc.place_id = $placeId";
+        $sql .= " order by pc.created desc";
         
         $rs = $this->query($sql);
         
@@ -317,10 +318,12 @@ class Place extends AppModel {
                 $id = $rs[$i]['u']['id'];
                 $name = $rs[$i]['u']['name'];
                 $thumb = $rs[$i]['p']['thumb'];
+                $time = $rs[$i][0]['created'] * 1000;
 
                 $obj['User']['id'] = $id;
                 $obj['User']['name'] = $name;
                 $obj['User']['thumb'] = $thumb;
+                $obj['User']['time'] = $time;
 
                 $data[] = $obj;
             }
