@@ -1039,19 +1039,20 @@ class ApiController extends AppController{
         
         $this->log("API->lostDog() called for user with $user_id and dog $dog_id", LOG_DEBUG);
         
-        $this->loadModel('Dog');
-        $currentDog = $this->Dog->findAllById($dog_id);
-        $dogName = $currentDog[0]['Dog']['name'];
-        $dogPhoto = $currentDog[0]['Dog']['photo_id'];
-        
         //Authorise user
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
         if($authorised){
             $this->log("API->lostDog() called ", LOG_DEBUG);
+            
             $placeID = null;
             $response = null;
             $errorMessage = null;
+            
+            $this->loadModel('Dog');
+            $currentDog = $this->Dog->findAllById($dog_id);
+            $dogName = $currentDog[0]['Dog']['name'];
+            $dogPhoto = $currentDog[0]['Dog']['photo_id'];
 
             //Save place object
             $this->loadModel('Place');
@@ -1069,6 +1070,59 @@ class ApiController extends AppController{
             } else {
                 $response = REQUEST_FAILED;
                 $errorMessage = ERROR_PLACE_CREATION;
+            }
+            
+            //Load additional data with this request
+            if($response == REQUEST_OK){
+
+                //Count unread notifications
+                $this->loadModel('UserNotification');
+                $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
+                $data['count_notifications'] = $count_notifications;
+
+                //Count followers
+                $this->loadModel('UserFollows');
+                $count_followers = $this->UserFollows->countFollowers($user_id);
+                $data['count_followers'] = $count_followers;
+
+                //Count inbox
+                $this->loadModel('UserInbox');
+                $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
+                $data['count_inbox'] = $count_inbox;
+            }
+        }else{
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    function foundDog(){
+        if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
+        if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        $this->log("API->foundDog() called for user with $user_id and dog $dog_id", LOG_DEBUG);
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($user_id,$token);
+        if($authorised){
+            $this->log("API->foundDog() called ", LOG_DEBUG);
+            $response = null;
+            $errorMessage = null;
+
+            //delete lost dog place 
+            $this->loadModel('Place');
+            if($this->Place->deleteAll(array('Place.dog_id' => $dog_id ), false)){
+                $this->log("API->foundDog() called ", LOG_DEBUG);
+                $response = REQUEST_OK;
+            } else {
+                $response = REQUEST_FAILED;
+                $errorMessage = ERROR_PLACE_DELETION;
             }
             
             //Load additional data with this request
