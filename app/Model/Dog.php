@@ -72,18 +72,34 @@ class Dog extends AppModel {
     
     //Returns the latest dogfuel value for the specified dog
     function getLatestDogfuel($dog_id){
-        $sql = "select ad.dogfuel from activity_dogs ad where ad.dog_id=$dog_id and ad.id = (select max(id) from activity_dogs where dog_id=$dog_id)";
+        $sql = "select sum(ad.dogfuel) as fuel from activity_dogs ad where ad.dog_id=$dog_id and ad.created > NOW() - INTERVAL 24 HOUR";
         $rs = $this->query($sql);
         
         $value = null;
         if(is_array($rs)){
             foreach($rs as $i => $values){
-                
-                $value = $rs[$i]['ad']['dogfuel'];
+                $value = $rs[$i]['0']['fuel'] >= 100 ? 100 : $rs[$i]['0']['fuel'];
             }
         }
         
         return $value;
+    }
+    
+    //Returns the latest dogfuel value for all dogs belonging to the specified user
+    function getDogfuelValues($user_id){
+        $sql = "select COALESCE(SUM(ad.dogfuel),0) as fuel , d.id from dogs d left join activity_dogs ad on (d.id=ad.dog_id) where d.owner_id=$user_id and ad.created > NOW() - INTERVAL 24 HOUR group by d.id";
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $value = $rs[$i]['0']['fuel'] >= 100 ? 100 : $rs[$i]['0']['fuel'];
+                $data[$i]['dog_id'] = $rs[$i]['d']['id'];
+                $data[$i]['dogfuel'] = $value;
+            }
+        }
+        
+        return $data;
     }
     
     //Returns a list of all the dogs that belong to the specified user

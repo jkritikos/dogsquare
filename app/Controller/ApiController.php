@@ -135,6 +135,22 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Returns the latest dogfuel value for all dogs belonging to the specified user
+    function getDogfuel(){
+        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        
+        //no security here, just return the data ASAP
+        $this->loadModel('Dog');
+        $values = $this->Dog->getDogfuelValues($userID);
+        $response = REQUEST_OK;
+        
+        $data['values'] = $values;
+        $data['response'] = $response;
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     function addDog(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
