@@ -181,6 +181,26 @@ class User extends AppModel {
         return $id;
     }
     
+    function generatePassword ($length = 8){
+        // initialize variables
+        $password = "";
+        $i = 0;
+        $possible = "0123456789bcdfghjkmnpqrstvwxyz"; 
+ 
+        // add random characters to $password until $length is reached
+        while ($i < $length) {
+            // pick a random character from the possible ones
+            $char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
+ 
+            // we don't want this character if it's already in the password
+            if (!strstr($password, $char)) { 
+                $password .= $char;
+                $i++;
+            }
+        }
+        return $password;
+    }
+    
     /*Checks whether the specified email/password combination is valid.
     Returns the user id on success, null otherwise*/
     function validateClientCredentials($email, $password){

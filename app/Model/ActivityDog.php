@@ -31,6 +31,23 @@ class ActivityDog extends AppModel {
         return $count;
     }
     
+    //Returns the max total amount of dogfuel earned by the specified dogs in the past amount of days
+    function getMaxDogfuelInPeriod($daysAgo, $dog_ids){
+        $dogList = implode(",", $dog_ids);
+        $sql = "select sum(ad.dogfuel) as fuel, ad.dog_id from activity_dogs ad where ad.dog_id in ($dogList) and ad.created >= now() - interval $daysAgo day group by ad.dog_id order by fuel desc limit 1";
+        $rs = $this->query($sql);
+        
+        $data = array();
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['fuel'];
+            }
+        }
+        
+        return $count;
+    }
+    
     function hasActivities($dog_ids){
         
     }
