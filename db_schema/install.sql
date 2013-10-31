@@ -145,7 +145,7 @@ CREATE TABLE `places` (
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  `photo_id` int(11),
- `dog_id` int(11) NOT NULL,
+ `dog_id` int(11) DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
