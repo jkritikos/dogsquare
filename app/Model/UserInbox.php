@@ -34,7 +34,20 @@ class UserInbox extends AppModel {
     }
     
     function countUnreadMessages($user_id){
-        return 0;
+        $sql = "select count(*) cnt from user_inbox ui where ui.user_to=$user_id and ui.read=0";
+  
+        $rs = $this->query($sql);
+        $count = 0;
+        
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+                
+            }
+        }
+        
+        $this->log("API->countUnreadMessages() returns is $count", LOG_DEBUG);
+        return $count;
     }
 }
 
