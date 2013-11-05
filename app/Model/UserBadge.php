@@ -32,6 +32,7 @@ class UserBadge extends AppModel {
         $rs = $this->query($sql);
         $exists = $rs[0][0]['cnt'] > 0 ? true : false;
         
+        $this->log("API->userHasBadge() returns is $exists for user $user_id and badge $badge_id", LOG_DEBUG);
         return $exists;
     }
     

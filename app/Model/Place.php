@@ -49,12 +49,12 @@ class Place extends AppModel {
         return $data;
     }
         
-    function getPlaceById($placeId){
+    function getPlaceById($placeId, $userId){
         $sql = "select p.id, p.name, p.lon, p.lat, pc.name, ph.path, pl.id";
         $sql .= " from places p";
         $sql .= " left outer join place_categories pc on (p.category_id = pc.id)";
         $sql .= " left outer join photos ph on (p.photo_id = ph.id)";
-        $sql .= " left outer join place_likes pl on (p.id = pl.place_id)";
+        $sql .= " left outer join place_likes pl on (p.id = pl.place_id and pl.user_id=$userId)";
         $sql .= " where p.id = $placeId";
         $rs = $this->query($sql);
 
@@ -190,7 +190,7 @@ class Place extends AppModel {
    
    //Returns the nearby places for the specified coordinates
    function getPlacesNearby($name, $lat, $lon, $categoryId=null){
-        $sql = "select p.name, p.lat, p.lon, p.id, p.user_id, u.name, ph.thumb, c.name, p.category_id, p.dog_id, ";
+        $sql = "select p.name, p.lat, p.lon, p.id, p.user_id, u.name, ph.thumb, c.name, p.category_id, p.dog_id, p.user_id,";
         $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(p.lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(p.lat) * pi()/180) * POWER(SIN(($lon - p.lon) * pi()/180 / 2), 2) )) as distance ";
         $sql .= "from places p left join photos ph on (ph.id = p.photo_id) ";
         $sql .= "left join place_categories c on (p.category_id=c.id) ";
@@ -229,6 +229,7 @@ class Place extends AppModel {
                 $data[$i]['category_id'] = $rs[$i]['p']['category_id'];
                 $data[$i]['user_id'] = $rs[$i]['p']['user_id'];
                 $data[$i]['user_name'] = $rs[$i]['u']['name'];
+                $data[$i]['user_id'] = $rs[$i]['p']['user_id'];
                 $data[$i]['dog_id'] = $rs[$i]['p']['dog_id'];
             }
 	}

@@ -4,12 +4,12 @@ class PlaceLike extends AppModel {
     var $name = 'PlaceLike';
     
     function userLikesPlace($user_id, $place_id){
-        $sql = "select pl.id from place_likes pl where user_id=$user_id and place_id=$place_id";
+        $sql = "select count(*) cnt from place_likes pl where user_id=$user_id and place_id=$place_id";
         
         $response = false;
         $rs = $this->query($sql);
         foreach($rs as $i => $values){
-            if($rs[$i]['pl']['id'] != null){
+            if($rs[$i]['0']['cnt'] > 0){
                 $response = true;
             }
         }

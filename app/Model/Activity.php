@@ -27,12 +27,14 @@ class Activity extends AppModel {
     
     function getActivityById($userId, $activityId){
         $sql = "select a.id, a.type_id, a.temperature, a.pace, a.distance, ";
-        $sql .= " (select al2.id from activity_likes al2 where al2.activity_id = $activityId and al2.user_id = $userId) as liked,";
+        $sql .= " (select count(*) from activity_likes al2 where al2.activity_id = $activityId and al2.user_id = $userId) as liked,";
         $sql .= " count(al2.id) as likes";
         $sql .= " from activities a";
         $sql .= " left outer join activity_likes al2 on (a.id = al2.activity_id)";
         $sql .= " where a.id = $activityId";
-        $sql .= " and a.user_id = $userId";
+        
+        $this->log("Activity->getActivityById() sql $sql" , LOG_DEBUG);
+        
         $rs = $this->query($sql);
         
         $obj['id'] = $rs[0]['a']['id'];
@@ -157,7 +159,7 @@ class Activity extends AppModel {
         $sql .= "inner join photos p on (u.photo_id = p.id) ";
         $sql .= "where 1=1 ";
         $sql .= " and a.created > NOW() - INTERVAL 1 DAY ";
-        $sql .= " and a.user_id in ($mutualFollowers) ";
+        //$sql .= " and a.user_id in ($mutualFollowers) ";
         $sql .= "and a.created = (select max(a2.created) from activities a2 where a2.user_id = u.id) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
         

@@ -324,6 +324,15 @@ class User extends AppModel {
         $this->log("User->countCheckins() returns $count checkins for user $user_id category $category_id", LOG_DEBUG);
         return $count;
     }
+    
+    //Checks if the specified user id has any lost dogs at the moment
+    function hasLostDog($user_id){
+        $sql = "select count(*) cnt from places p where p.dog_id in (select d.id from dogs d where d.owner_id=$user_id)";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count > 0;
+    }
 }
 
 ?>

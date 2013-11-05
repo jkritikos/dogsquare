@@ -3023,7 +3023,7 @@ class ApiController extends AppController{
         if($authorised){
         
             $this->loadModel('Place');
-            $place = $this->Place->getPlaceById($place_id);
+            $place = $this->Place->getPlaceById($place_id, $user_id);
             $comments = $this->Place->getPlaceComments($place_id);
             $likes = $this->Place->getPlaceLikes($place_id);
             $checkins = $this->Place->getPlaceCheckins($place_id);
@@ -3095,9 +3095,17 @@ class ApiController extends AppController{
             $this->loadModel('UserInbox');
             $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
             $data['count_inbox'] = $count_inbox;
-
-            //Check if mutual followrs
-            $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $target_id);
+            
+            //Check for lost dogs from this user
+            $mutual_follower = true;
+            $hasLostDog = $this->User->hasLostDog($target_id);
+            if($hasLostDog){
+                $mutual_follower = true;
+            } else {
+                //Check if mutual followrs
+                $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $target_id);
+            }
+            
             $data['mutual_follower'] = $mutual_follower;
 
             $response = REQUEST_OK;
@@ -3462,9 +3470,10 @@ class ApiController extends AppController{
             $data['places'] = $places;
             
             $this->loadModel('UserFollows');
-            $mutual = $this->UserFollows->getMutualFollowersList($user_id);
+            //$mutual = $this->UserFollows->getMutualFollowersList($user_id);
             
-            if($mutual != null){
+            $mutual = null;
+            //if($mutual != null){
                 $this->loadModel('PlaceCheckin');
                 $checkins = $this->PlaceCheckin->getNearbyCheckins($lat, $lon, $mutual);
                 $data['checkins'] = $checkins;
@@ -3472,7 +3481,7 @@ class ApiController extends AppController{
                 $this->loadModel('Activity');
                 $activities = $this->Activity->getNearbyActivities($lat, $lon, $mutual);
                 $data['activities'] = $activities;
-            }
+            //}
             
             $response = is_array($places) ? REQUEST_OK : REQUEST_FAILED;
         }

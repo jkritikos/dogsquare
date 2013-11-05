@@ -11,12 +11,13 @@ class PlaceCheckin extends AppModel {
         $sql .= "inner join photos p on (u.photo_id = p.id) ";
         $sql .= "where 1=1 ";
         $sql .= " and pc.created > NOW() - INTERVAL 1 DAY ";
-        $sql .= "and pc.created = (select max(pc2.created) from place_checkins pc2 where pc2.user_id = u.id) ";
-        $sql .= " and pc.user_id in ($mutualFollowers) ";
+        $sql .= "and pc.created = (select max(pc2.created) from place_checkins pc2 where pc2.user_id = u.id and pc2.place_id=pc.place_id) ";
+        //$sql .= " and pc.user_id in ($mutualFollowers) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE_CHECKINS ." order by distance ";
         
         $this->log("PlaceCheckin->getNearbyCheckins() sql $sql" , LOG_DEBUG);
         $data = array();
+        $counts = array();
         $rs = $this->query($sql);
 	if(is_array($rs)){
             foreach($rs as $i => $values){
@@ -33,6 +34,20 @@ class PlaceCheckin extends AppModel {
                 $data[$i]['lat'] = $rs[$i]['pl']['lat'];
                 $data[$i]['lon'] = $rs[$i]['pl']['lon'];
                 $data[$i]['thumb'] = $rs[$i]['p']['thumb'];
+                
+                if(!isset($counts[$rs[$i]['pl']['id']])){
+                    $counts[$rs[$i]['pl']['id']] = 1;
+                } else {
+                    $counts[$rs[$i]['pl']['id']] = $counts[$rs[$i]['pl']['id']] +1;
+                }
+                
+            }
+            
+            //hack to get the total counts
+            foreach($data as $i => $d){
+                $total = $counts[$data[$i]['place_id']];
+                $data[$i]['total_checkins'] = $total;
+                //$this->log("PlaceCheckin->getNearbyCheckins() found $total checkins for place ".$data[$i]['place_id'] , LOG_DEBUG);
             }
 	}
 
