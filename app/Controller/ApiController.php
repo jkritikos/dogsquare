@@ -145,6 +145,29 @@ class ApiController extends AppController{
         $values = $this->Dog->getDogfuelValues($userID);
         $response = REQUEST_OK;
         
+        //Dog breeds 
+        //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
+        $this->loadModel('DogBreed');
+        //$breeds = $this->DogBreed->find('all');
+        $breeds = $this->DogBreed->find('all', array(
+            'conditions' => array('DogBreed.active' => '1')
+        ));
+        $data['breeds'] = $breeds;
+
+        //dogfuel rules
+        $this->loadModel('DogfuelRule');
+        $rules = $this->DogfuelRule->find('all', array(
+            'conditions' => array('DogfuelRule.active' => '1')
+        ));
+        $data['rules'] = $rules;
+
+        //Place Categories
+        $this->loadModel('PlaceCategory');
+        $categories = $this->PlaceCategory->find('all', array(
+            'conditions' => array('PlaceCategory.visible' => '1')
+        ));
+        $data['categories'] = $categories;
+        
         $data['values'] = $values;
         $data['response'] = $response;
         $this->layout = 'blank';

@@ -43,12 +43,11 @@ if($activeTab == 'configurations'){
             </ul>
         </div>
 
-        <img height="36" src="/img/logo.png"/>
-        <h1>Dogsquare</h1>
+        <img height="36" src="/img/appicon.png"/>
+        <h1>Dogsquare Administration</h1>
 
         <div id="main-nav">
             <ul class="clearfix">
-                <li <?php echo $classDashboard; ?> ><a href="/scores/">Dashboard</a></li>
                 <li <?php echo $classConfiguration; ?> ><a href="/configurations">Configuration</a></li>
 		
                 
@@ -57,7 +56,7 @@ if($activeTab == 'configurations'){
                 
                     ?>
                     <li <?php echo $classUsers; ?> ><a href="/users">Users</a></li>
-                    <li <?php echo $classReports; ?> ><a href="/reports">Reports</a></li>
+                    
                     <?php
                 }
                 ?>
