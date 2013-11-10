@@ -33,7 +33,7 @@ class UsersController extends AppController {
 		$email = $this->request->data['User']['email'];
                 $status = $this->request->data['User']['active'];
 
-		$data = $this->User->search($name,$email,$status);
+		$data = $this->User->websearch($name,$email,$status);
 		$this->set('results', $data);
             }
 

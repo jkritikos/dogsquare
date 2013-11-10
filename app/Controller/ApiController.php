@@ -10,11 +10,38 @@
  *
  * @author jace
  */
+App::uses('CakeEmail', 'Network/Email');
 class ApiController extends AppController{
     
     var $components = array('Cookie', 'RequestHandler');
     var $helpers = array('Js','Time');
     //put your code here
+    
+    function test(){
+        echo $_SERVER['HTTP_HOST'];
+        
+        $Email = new CakeEmail('smtp');
+        
+        /*
+        $Email->emailFormat('html')
+                ->subject('Welcome to Dogsquare!')
+            ->template('welcome')
+            ->to('jkritikos@gmail.com')
+            ->send();
+         */
+        
+        $emailUser = "Jason Kritikos";
+        $followerUser = "Mitsos Mwraitis";
+        $followers = 2;
+        $following = 4;
+        $dogs = 5;
+        $Email->emailFormat('html')
+                ->subject('New follow Dogsquare')
+            ->template('follow')
+            ->viewVars(array('emailUser' => $emailUser, 'followerUser' => $followerUser, 'followers' => $followers, 'following' => $following, 'dogs' => $dogs))    
+            ->to('jkritikos@gmail.com')
+            ->send();
+    }
     
     function hello(){
         

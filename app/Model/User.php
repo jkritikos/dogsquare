@@ -57,6 +57,47 @@ class User extends AppModel {
 	return $object;
     }
     
+    function websearch($name,$email,$status){
+        $sql = "select u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created ";
+        $sql .= " from users u inner join photos p on (u.photo_id=p.id) where 1=1";
+
+	if($name != ''){
+            $sql .= " and u.name like '%$name%' order by u.name";
+	}
+
+	if($email != ''){
+            $sql .= " and u.email = $email ";
+	}
+        
+        if($status != ''){
+            $sql .= " and u.active=$status ";
+        }
+
+	$rs = $this->query($sql);
+
+	$data = array();
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $name = $rs[$i]['u']['name'];
+		$id = $rs[$i]['u']['id'];
+		$email = $rs[$i]['u']['email'];
+		$created = $rs[$i]['0']['created'];
+                $thumb = $rs[$i]['p']['thumb'];
+                
+		$obj['User']['name'] = $name;
+		$obj['User']['email'] = $email;
+		$obj['User']['created'] = $created;
+		$obj['User']['id'] = $id;
+                $obj['User']['thumb'] = $thumb;
+
+		$data[] = $obj;
+            }
+	}
+
+	$this->log("User->search() returns ".count($data), LOG_DEBUG);
+	return $data;
+    }
+    
     function search($name,$email,$status, $userId){
         $sql = "select u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created,";
         $sql .= " (select uf.id from user_follows uf where uf.user_id = $userId and uf.follows_user=u.id) as followed";
