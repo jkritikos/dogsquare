@@ -390,7 +390,7 @@
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td width="411" align="right" valign="top" class="preheaderContent"><p>&nbsp;</p>
                                             <p><?php echo $emailUser; ?>, you have a new follower on Dogsquare.</p></td>
-                                            <td width="91" align="right" class="preheaderContent"><span class="preheaderContent" style="padding-right:20px;"><img width="180" height="180" style="border-radius: 90px; -moz-border-radius: 90px;" src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/email/test.jpeg" align="right" /></span></td>
+                                            <td width="91" align="right" class="preheaderContent"><span class="preheaderContent" style="padding-right:20px;"><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/email/logo_fol.jpg" align="right" /></span></td>
                                             <!-- *|END:IF|* -->
                                         </tr>
                                     </table>
@@ -410,8 +410,8 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="600">
                                         <tr>
                                           <td valign="top" class="upperBodyContent" mc:edit="upper_body_content"><h1>
-	<span style="color:#696969;"><span style="font-size:24px;"><span style="font-family: Verdana; line-height: 18px;"><?php echo $followerUser; ?></span></span></span></h1>
-<h4><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/email/followpic.png" width="180" height="180" /></h4>
+	<span style="color:#696969;"><span style="font-size:24px;"><span style="font-family: Verdana; line-height: 18px;"><?php echo $followerUser; ?></span></span></span></h1><br />
+<h4><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/email/photo.jpg" width="180" height="180" style="border-radius: 90px; -moz-border-radius: 90px; /></h4>
 </td>
                                             <td valign="top" class="upperBodyContent" mc:edit="upper_body_content">&nbsp;</td>
                                         </tr>
