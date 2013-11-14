@@ -3034,8 +3034,10 @@ class ApiController extends AppController{
         if($authorised){
         
             $this->loadModel('Dog');
+            $this->loadModel('DogLike');
             $dog = $this->Dog->getDogById($dog_id);
-
+            $dog['liked'] = $this->DogLike->userLikesDog($user_id, $dog_id);
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);

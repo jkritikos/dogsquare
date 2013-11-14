@@ -19,11 +19,10 @@ class Dog extends AppModel {
     }
     
     function getDogById($dogId){
-        $sql = "SELECT d.id, d.name, db.name, d.size, d.mating, d.age, d.gender, d.weight, p.path, pl.id, dl.id, count(dl.id) as likes";
+        $sql = "SELECT d.id, d.name, db.name, d.size, d.mating, d.age, d.gender, d.weight, p.path, pl.id";
         $sql .= " FROM dogs d";
         $sql .= " LEFT OUTER JOIN dog_breeds db on (d.breed_id = db.id)";
         $sql .= " LEFT OUTER JOIN photos p on (d.photo_id = p.id)";
-        $sql .= " LEFT OUTER JOIN dog_likes dl on (d.id = dl.dog_id)";
         $sql .= " LEFT OUTER JOIN places pl on (d.id = pl.dog_id)";
         $sql .= " WHERE d.id = $dogId";
         $rs = $this->query($sql);
@@ -36,8 +35,7 @@ class Dog extends AppModel {
         $obj['gender'] = $rs[0]['d']['gender'];
         $obj['weight'] = $rs[0]['d']['weight'];
         $obj['photo'] = $rs[0]['p']['path'];
-        $obj['liked'] = $rs[0]['dl']['id'];
-        $obj['likes'] = $rs[0][0]['likes'];
+        $obj['likes'] = $this->countDogLikes($dogId);
         $obj['size'] = $rs[0]['d']['size'];
         $obj['lost'] = $rs[0]['pl']['id'];
         $obj['dogfuel'] = $this->getLatestDogfuel($dogId);
@@ -132,6 +130,15 @@ class Dog extends AppModel {
         }
        
         return $data;
+    }
+    
+    //Returns the count of likes for the specified dog
+    function countDogLikes($dog_id){
+        $sql = "select count(*) cnt from dog_likes dl where dog_id=$dog_id";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
     }
     
     function getLikedUsers($dogId){
