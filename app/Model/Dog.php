@@ -38,7 +38,6 @@ class Dog extends AppModel {
         $obj['likes'] = $this->countDogLikes($dogId);
         $obj['size'] = $rs[0]['d']['size'];
         $obj['lost'] = $rs[0]['pl']['id'];
-        $obj['dogfuel'] = $this->getLatestDogfuel($dogId);
                 
         return $obj;
     }
@@ -69,8 +68,8 @@ class Dog extends AppModel {
     }
     
     //Returns the latest dogfuel value for the specified dog
-    function getLatestDogfuel($dog_id){
-        $sql = "select sum(ad.dogfuel) as fuel from activity_dogs ad where ad.dog_id=$dog_id and ad.created > NOW() - INTERVAL 24 HOUR";
+    function getLatestDogfuel($dog_id, $fromDate, $toDate, $timezone){
+        $sql = "select sum(ad.dogfuel) as fuel from activity_dogs ad where ad.dog_id=$dog_id and CONVERT_TZ(ad.created, 'SYSTEM', '$timezone')  >= '$fromDate' and CONVERT_TZ(ad.created, 'SYSTEM', '$timezone') <= '$toDate'";
         $rs = $this->query($sql);
         
         $value = null;
@@ -84,8 +83,10 @@ class Dog extends AppModel {
     }
     
     //Returns the latest dogfuel value for all dogs belonging to the specified user
-    function getDogfuelValues($user_id){
-        $sql = "select COALESCE(SUM(ad.dogfuel),0) as fuel , d.id from dogs d left join activity_dogs ad on (d.id=ad.dog_id) where d.owner_id=$user_id and ad.created > NOW() - INTERVAL 24 HOUR group by d.id";
+    function getDogfuelValues($user_id,$fromDate, $toDate, $timezone){
+        //$sql = "select COALESCE(SUM(ad.dogfuel),0) as fuel , d.id from dogs d left join activity_dogs ad on (d.id=ad.dog_id) where d.owner_id=$user_id and ad.created > NOW() - INTERVAL 24 HOUR group by d.id";
+        $sql = "select COALESCE(SUM(ad.dogfuel),0) as fuel , d.id from dogs d left join activity_dogs ad on (d.id=ad.dog_id) where d.owner_id=$user_id and CONVERT_TZ(ad.created, 'SYSTEM', '$timezone')  >= '$fromDate' and CONVERT_TZ(ad.created, 'SYSTEM', '$timezone') <= '$toDate' group by d.id";
+        $this->log("Dog->getDogfuelValues() sql is $sql", LOG_DEBUG);
         $rs = $this->query($sql);
         
         $data = array();
@@ -101,7 +102,7 @@ class Dog extends AppModel {
     }
     
     //Returns a list of all the dogs that belong to the specified user
-    function getUserDogs($userId){
+    function getUserDogs($userId, $fromDate, $toDate, $timezone){
         $sql = "select d.id, d.name, d.age, d.gender, d.mating, d.weight, p.thumb, p.path, db.name, d.size  ";
         $sql .= " from dogs d";
         $sql .= " inner join users u on (d.owner_id = u.id)";
@@ -124,7 +125,7 @@ class Dog extends AppModel {
                 $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
                 $obj['Dog']['mating'] = $rs[$i]['d']['mating'];
                 $obj['Dog']['size'] = $rs[$i]['d']['size'];
-                $obj['Dog']['dogfuel'] = $this->getLatestDogfuel($rs[$i]['d']['id']);
+                $obj['Dog']['dogfuel'] = $this->getLatestDogfuel($rs[$i]['d']['id'], $fromDate, $toDate, $timezone);
                 $data[] = $obj;
             }
         }

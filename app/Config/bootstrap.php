@@ -146,6 +146,8 @@ define("FEED_FRIEND_LIKE_DOG", 4);
 define("FEED_FRIEND_LIKE_ACTIVITY", 5);
 define("FEED_FRIEND_COMMENT_ACTIVITY", 6);
 define("FEED_CHECKIN", 7);
+define("FEED_DOG_LOST", 8);
+define("FEED_DOG_FOUND", 9);
 
 //Map filter types
 define("MAP_FILTER_PARK", 1);

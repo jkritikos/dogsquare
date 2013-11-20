@@ -74,6 +74,10 @@ class ApiController extends AppController{
         if(isset($_REQUEST['password'])) $password = $_REQUEST['password'];
         if(isset($_REQUEST['facebook_id'])) $facebook_id = $_REQUEST['facebook_id'];
         if(isset($_REQUEST['f'])) $fb_dummy_pwd = $_REQUEST['f'];
+        if(isset($_REQUEST['timezone'])) $timezone = $_REQUEST['timezone'];
+        if(isset($_REQUEST['month'])) $month = $_REQUEST['month'];
+        if(isset($_REQUEST['day'])) $day = $_REQUEST['day'];
+        if(isset($_REQUEST['year'])) $year = $_REQUEST['year'];
         
         $response = null;
         
@@ -130,7 +134,9 @@ class ApiController extends AppController{
 
             //Get dogs
             $this->loadModel('Dog');
-            $dogs = $this->Dog->getUserDogs($user_id);
+            $fromDate = "$year-$month-$day 00:00:01";
+            $toDate = "$year-$month-$day 23:59:59";
+            $dogs = $this->Dog->getUserDogs($user_id, $fromDate, $toDate, $timezone);
             $data['dogs'] = $dogs;
                 
             //Count unread notifications
@@ -166,10 +172,20 @@ class ApiController extends AppController{
     function getDogfuel(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['timezone'])) $timezone = $_REQUEST['timezone'];
+        if(isset($_REQUEST['month'])) $month = $_REQUEST['month'];
+        if(isset($_REQUEST['day'])) $day = $_REQUEST['day'];
+        if(isset($_REQUEST['year'])) $year = $_REQUEST['year'];
+        
+        $this->log("API->getDogfuel() called for user $userID with timezone $timezone and date $day/$month/$year" , LOG_DEBUG);
         
         //no security here, just return the data ASAP
         $this->loadModel('Dog');
-        $values = $this->Dog->getDogfuelValues($userID);
+        //$fromDate = date("Y/n/j H:i:s", mktime(0, 1, 0, $month, $day, $year));
+        //$toDate = date("Y/n/j H:i:s", mktime(23, 59, 0, $month, $day, $year));
+        $fromDate = "$year-$month-$day 00:00:01";
+        $toDate = "$year-$month-$day 23:59:59";
+        $values = $this->Dog->getDogfuelValues($userID, $fromDate, $toDate, $timezone);
         $response = REQUEST_OK;
         
         //Dog breeds 
@@ -1139,6 +1155,29 @@ class ApiController extends AppController{
                 $this->loadModel('UserInbox');
                 $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
                 $data['count_inbox'] = $count_inbox;
+                
+                //Feed entry
+                $this->loadModel('Feed');
+
+                $userObject = $this->User->findById($user_id);
+                $user_name = $userObject['User']['name'];
+                
+                $feed['Feed']['user_from'] = $user_id;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_dog_id'] = $dog_id;
+                $feed['Feed']['target_dog_name'] = $dogName;
+                $feed['Feed']['type_id'] = FEED_DOG_LOST;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->addActivityComment() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->addActivityComment() saved feed ", LOG_DEBUG);
+                }
+                
+                
             }
         }else{
             $response = REQUEST_UNAUTHORISED;
@@ -1192,6 +1231,30 @@ class ApiController extends AppController{
                 $this->loadModel('UserInbox');
                 $count_inbox = $this->UserInbox->countUnreadMessages($user_id);
                 $data['count_inbox'] = $count_inbox;
+                
+                //Feed entry
+                $this->loadModel('Feed');
+                $this->loadModel('Dog');
+                
+                $userObject = $this->User->findById($user_id);
+                $user_name = $userObject['User']['name'];
+                $dogObject = $this->Dog->findById($dog_id);
+                $dog_name = $dogObject['Dog']['name'];
+                
+                $feed['Feed']['user_from'] = $user_id;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_dog_id'] = $dog_id;
+                $feed['Feed']['target_dog_name'] = $dog_name;
+                $feed['Feed']['type_id'] = FEED_DOG_FOUND;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->addActivityComment() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->addActivityComment() saved feed ", LOG_DEBUG);
+                }
             }
         }else{
             $response = REQUEST_UNAUTHORISED;
@@ -1768,6 +1831,8 @@ class ApiController extends AppController{
             //Load additional data with this request
             if($response == REQUEST_OK){
                 //return date to use locally
+                
+                /*
                 $date = $this->UserPassport->find('first', array(
                                             'conditions'=>array('id'=>$noteId),
                                             'fields'=>array('due_date')
@@ -1775,7 +1840,7 @@ class ApiController extends AppController{
                 $dateTimestamp = strtotime($date['UserPassport']['due_date']);
                 $data['date'] = $dateTimestamp;
                 $this->log("API->addNote() returns to user, date: $dateTimestamp and note id: $noteId", LOG_DEBUG);
-                
+                */
                 //Count unread notifications
                 $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
                 $data['count_notifications'] = $count_notifications;
@@ -3027,6 +3092,10 @@ class ApiController extends AppController{
         if(isset($_REQUEST['dog_id'])) $dog_id = $_REQUEST['dog_id'];
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['timezone'])) $timezone = $_REQUEST['timezone'];
+        if(isset($_REQUEST['month'])) $month = $_REQUEST['month'];
+        if(isset($_REQUEST['day'])) $day = $_REQUEST['day'];
+        if(isset($_REQUEST['year'])) $year = $_REQUEST['year'];
         
         //Authorise user
         $this->loadModel('User');
@@ -3036,6 +3105,10 @@ class ApiController extends AppController{
             $this->loadModel('Dog');
             $this->loadModel('DogLike');
             $dog = $this->Dog->getDogById($dog_id);
+            
+            $fromDate = "$year-$month-$day 00:00:01";
+            $toDate = "$year-$month-$day 23:59:59";
+            $dog['dogfuel'] = $this->Dog->getLatestDogfuel($dog_id, $fromDate, $toDate, $timezone);
             $dog['liked'] = $this->DogLike->userLikesDog($user_id, $dog_id);
             
             //Count unread notifications
@@ -3115,6 +3188,10 @@ class ApiController extends AppController{
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['target_id'])) $target_id = $_REQUEST['target_id'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['timezone'])) $timezone = $_REQUEST['timezone'];
+        if(isset($_REQUEST['month'])) $month = $_REQUEST['month'];
+        if(isset($_REQUEST['day'])) $day = $_REQUEST['day'];
+        if(isset($_REQUEST['year'])) $year = $_REQUEST['year'];
         
         //Authorise user
         $this->loadModel('User');
@@ -3124,7 +3201,9 @@ class ApiController extends AppController{
             $otherUser = $this->User->getOtherUserById($user_id, $target_id);
 
             $this->loadModel('Dog');
-            $dogs = $this->Dog->getUserDogs($target_id);
+            $fromDate = "$year-$month-$day 00:00:01";
+            $toDate = "$year-$month-$day 23:59:59";
+            $dogs = $this->Dog->getUserDogs($target_id, $fromDate, $toDate, $timezone);
             
             $this->loadModel('UserBadge');
             $badgeCount = $this->UserBadge->countUserBadges($target_id);
