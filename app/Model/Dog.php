@@ -18,6 +18,16 @@ class Dog extends AppModel {
         return $data;
     }
     
+    //Clears all lost dog instances related to the specified dog
+    function deleteLostDogs($dog_id){
+        $sql = "update places set dog_id=null where dog_id=$dog_id";
+        $rs = $this->query($sql);
+        $deleted = $this->getAffectedRows();
+        
+        $this->log("Dog->deleteLostDogs() cleared $deleted places with lost dog $dog_id", LOG_DEBUG);
+        return $deleted;
+    }
+    
     function getDogById($dogId){
         $sql = "SELECT d.id, d.name, db.name, d.size, d.mating, d.age, d.gender, d.weight, p.path, pl.id";
         $sql .= " FROM dogs d";

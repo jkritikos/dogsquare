@@ -1941,6 +1941,10 @@ class ApiController extends AppController{
             $this->Dog->id = $dog_id;
             if($this->Dog->delete()){
                 $response = REQUEST_OK;
+                
+                //Clear lost dog places
+                $this->Dog->deleteLostDogs($dog_id);
+                
             } else {
                 $response = REQUEST_FAILED;
                 $errorMessage = ERROR_DOG_DELETION;
@@ -2144,7 +2148,7 @@ class ApiController extends AppController{
             $obj = array();
             $obj['UserFollows']['user_id'] = $user_id;
             $obj['UserFollows']['follows_user'] = $follow_user;
-
+            
             if(!$this->UserFollows->isUserFollowing($user_id, $follow_user)){
                 if($this->UserFollows->save($obj)){
                     $this->loadModel('UserNotification');
@@ -2165,6 +2169,10 @@ class ApiController extends AppController{
                 $response = ERROR_USER_ALREADY_FOLLOWING;
             }
         
+            //Check for mutual followers
+            $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $follow_user);
+            $data['mutual_followers'] = $mutual_follower;
+            
             //Load additional data with this request
             if($response == REQUEST_OK){
 
@@ -2243,7 +2251,11 @@ class ApiController extends AppController{
             } else {
                 $response = ERROR_USER_NOT_FOLLOWING;
             }
-
+            
+            //Check for mutual followers
+            $mutual_follower = $this->UserFollows->isMutualFollower($user_id, $follow_user);
+            $data['mutual_followers'] = $mutual_follower;
+            
             //Load additional data with this request
             if($response == REQUEST_OK){
 
