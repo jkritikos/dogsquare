@@ -1541,6 +1541,16 @@ class ApiController extends AppController{
                     }
                 }
             }
+            
+            //Signup email for non FB users
+            if(!isset($facebook_id)){
+                $Email = new CakeEmail('smtp');   
+                $Email->emailFormat('html')
+                        ->subject('Welcome to Dogsquare!')
+                        ->template('welcome')
+                        ->to($email)
+                        ->send();
+            }
         }
         
         $data['response'] = $response;
@@ -2216,6 +2226,27 @@ class ApiController extends AppController{
                 } else {
                     $this->log("API->followUser() saved feed ", LOG_DEBUG);
                 }
+                
+                //Send email notification
+                if($userTarget['User']['facebook_id'] == null){
+                    
+                    $this->loadModel('Dog');
+                    $follow_stats = $this->UserFollows->getFollowStats($user_id);
+                    $userDogsCount = $this->Dog->countUserDogs($user_id);
+                    
+                    $emailUser = $target_user_name;;
+                    $followerUser = $user_name;
+                    $followers = $follow_stats['followers'];
+                    $following = $follow_stats['following'];
+                    $dogs = $userDogsCount;
+                    $Email->emailFormat('html')
+                            ->subject('New follow Dogsquare')
+                        ->template('follow')
+                        ->viewVars(array('emailUser' => $emailUser, 'followerUser' => $followerUser, 'followers' => $followers, 'following' => $following, 'dogs' => $dogs))    
+                        ->to($userTarget['User']['email'])
+                        ->send();
+                }
+                
             }
         } else {
             $response = REQUEST_UNAUTHORISED;
