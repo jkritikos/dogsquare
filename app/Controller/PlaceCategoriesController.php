@@ -25,7 +25,7 @@ class PlaceCategoriesController extends AppController{
 	            } 
 	        }
 		} else {
-	            $this->requireLogin('/placeCategories/createPlaceCategory');
+	            $this->requireLogin('/PlaceCategories/createPlaceCategory');
 		}
     }
 	
@@ -65,7 +65,7 @@ class PlaceCategoriesController extends AppController{
             $placeCategories = $this->PlaceCategory->find('all');
             $this->set('placeCategories', $placeCategories);
 		} else {
-	        $this->requireLogin('/placeCategories/viewPlaceCategory');
+	        $this->requireLogin('/PlaceCategories/viewPlaceCategory');
 		}
     }
 	
@@ -94,7 +94,7 @@ class PlaceCategoriesController extends AppController{
             $this->set('id',$id);
 	            
 		} else {
-	        $this->requireLogin("/placeCategories/editPlaceCategory/$id");
+	        $this->requireLogin("/PlaceCategories/editPlaceCategory/$id");
 		}
 	    }
 }

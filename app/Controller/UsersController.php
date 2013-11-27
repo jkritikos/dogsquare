@@ -19,7 +19,7 @@ class UsersController extends AppController {
 	if($currentUser != null){
 
 	} else {
-            $this->requireLogin('/users/index');
+            $this->requireLogin('/Users/index');
 	}
     }
 
@@ -38,7 +38,7 @@ class UsersController extends AppController {
             }
 
 	} else {
-            $this->requireLogin('/users/search');
+            $this->requireLogin('/Users/search');
 	}
     }
 
@@ -88,7 +88,7 @@ class UsersController extends AppController {
             }
 
 	} else {
-            $this->requireLogin('/users/create');
+            $this->requireLogin('/Users/create');
 	}
     }
     
@@ -138,7 +138,7 @@ class UsersController extends AppController {
             }
 
 	} else {
-            $this->requireLogin('/users/edit/$id');
+            $this->requireLogin('/Users/edit/$id');
 	}
     }
 
@@ -163,7 +163,7 @@ class UsersController extends AppController {
 		if(!empty($this->request->data['User']['redirectUrl'])){
                     $redirectUrl = $this->request->data['User']['redirectUrl'];
 		} else {
-                    $redirectUrl = "/questions/create";
+                    $redirectUrl = "/Users/index";
 		}
 
 		//Set cookie if required
@@ -228,7 +228,7 @@ class UsersController extends AppController {
             //update session data
             $this->Session->write('name', $userObj['User']['name']);
 	} else {
-            $this->requireLogin('/users/profile');
+            $this->requireLogin('/Users/profile');
 	}
     }
 }

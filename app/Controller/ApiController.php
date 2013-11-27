@@ -2231,6 +2231,9 @@ class ApiController extends AppController{
                 if($userTarget['User']['facebook_id'] == null){
                     
                     $this->loadModel('Dog');
+                    $this->loadModel('Photo');
+                    $photoObject = $this->Photo->findById($user['User']['photo_id']);
+                    $photoSourceObject = $this->Photo->findById($userTarget['User']['photo_id']);
                     $follow_stats = $this->UserFollows->getFollowStats($user_id);
                     $userDogsCount = $this->Dog->countUserDogs($user_id);
                     
@@ -2239,10 +2242,13 @@ class ApiController extends AppController{
                     $followers = $follow_stats['followers'];
                     $following = $follow_stats['following'];
                     $dogs = $userDogsCount;
+                    
+                    
+                    $Email = new CakeEmail('smtp');  
                     $Email->emailFormat('html')
                             ->subject('New follow Dogsquare')
                         ->template('follow')
-                        ->viewVars(array('emailUser' => $emailUser, 'followerUser' => $followerUser, 'followers' => $followers, 'following' => $following, 'dogs' => $dogs))    
+                        ->viewVars(array('emailUser' => $emailUser, 'followerUser' => $followerUser, 'followers' => $followers, 'following' => $following, 'dogs' => $dogs, 'userPhoto' => $photoObject['Photo']['path'], 'sourcePhoto' => $photoSourceObject['Photo']['thumb']))    
                         ->to($userTarget['User']['email'])
                         ->send();
                 }

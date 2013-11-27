@@ -32,7 +32,7 @@ class PlacesController extends AppController {
 			$userNames = $this->User->find('all', array('fields' => array( 'User.id', 'User.name') ));
 			$this->set('userNames', $userNames);
 		} else {
-	        $this->requireLogin('/places/createPlace');
+	        $this->requireLogin('/Places/createPlace');
 		}
     }
 	
@@ -80,7 +80,7 @@ class PlacesController extends AppController {
 	        }
 	
 		} else {
-	        $this->requireLogin('/places/searchPlace');
+	        $this->requireLogin('/Places/searchPlace');
 		}
     }
 
@@ -117,7 +117,7 @@ class PlacesController extends AppController {
 			}
 
 		} else {
-	            $this->requireLogin("/places/editPlace/$id");
+	            $this->requireLogin("/Places/editPlace/$id");
 		}
     }
 }

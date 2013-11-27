@@ -386,7 +386,7 @@
                             	<td align="center" valign="top">
                                 	<table border="0" cellpadding="0" cellspacing="0" width="588">
                                     	<tr>
-                                            <td width="86" valign="top" class="preheaderContent" style="padding-right:20px;" mc:edit="std_preheader_content"><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/email/profilepic.jpg" width="66" height="66" align="left" /></td>
+                                            <td width="86" valign="top" class="preheaderContent" style="padding-right:20px;" mc:edit="std_preheader_content"><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/uploaded_files/users/<?php echo $sourcePhoto; ?>" width="66" height="66" align="left" /></td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td width="411" align="right" valign="top" class="preheaderContent"><p>&nbsp;</p>
                                             <p><?php echo $emailUser; ?>, you have a new follower on Dogsquare.</p></td>
@@ -411,7 +411,7 @@
                                         <tr>
                                           <td valign="top" class="upperBodyContent" mc:edit="upper_body_content"><h1>
 	<span style="color:#696969;"><span style="font-size:24px;"><span style="font-family: Verdana; line-height: 18px;"><?php echo $followerUser; ?></span></span></span></h1><br />
-<h4><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/email/photo.jpg" width="180" height="180" style="border-radius: 90px; -moz-border-radius: 90px; /></h4>
+<h4><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/uploaded_files/users/<?php echo $userPhoto; ?>" width="180" height="180" style="border-radius: 90px; -moz-border-radius: 90px; /></h4>
 </td>
                                             <td valign="top" class="upperBodyContent" mc:edit="upper_body_content">&nbsp;</td>
                                         </tr>

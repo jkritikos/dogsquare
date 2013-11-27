@@ -31,7 +31,7 @@ class ConfigurationsController extends AppController{
 	if($currentUser != null){
 
 	} else {
-            $this->requireLogin('/configurations/index');
+            $this->requireLogin('/Configurations/index');
 	}
     }
     
@@ -53,7 +53,7 @@ class ConfigurationsController extends AppController{
             }
             
 	} else {
-            $this->requireLogin('/configurations/breedCreate');
+            $this->requireLogin('/Configurations/breedCreate');
 	}
     }
     
@@ -96,7 +96,7 @@ class ConfigurationsController extends AppController{
             $this->set('breeds', $breeds);
             
 	} else {
-            $this->requireLogin('/configurations/breedView');
+            $this->requireLogin('/Configurations/breedView');
 	}
     }
     
@@ -126,7 +126,7 @@ class ConfigurationsController extends AppController{
             $this->set('id',$id);
             
 	} else {
-            $this->requireLogin("/configurations/breedEdit/$id");
+            $this->requireLogin("/Configurations/breedEdit/$id");
 	}
     }
 
@@ -155,7 +155,7 @@ class ConfigurationsController extends AppController{
             }
         }
 	} else {
-            $this->requireLogin("/configurations/dogfuelView");
+            $this->requireLogin("/Configurations/dogfuelView");
 	}
     }
 	
@@ -211,7 +211,7 @@ class ConfigurationsController extends AppController{
             $this->set('id',$id);
             
 	} else {
-            $this->requireLogin("/configurations/dogfuelEdit/$id");
+            $this->requireLogin("/Configurations/dogfuelEdit/$id");
 	}
 	}
 }

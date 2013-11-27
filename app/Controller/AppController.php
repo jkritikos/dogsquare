@@ -39,13 +39,13 @@ class AppController extends Controller {
 	$this->set('email', $this->Cookie->read('email'));
 	$this->set('password', $this->Cookie->read('password'));
 	$this->layout = 'blank';
-	$this->render('/users/login');
+	$this->render('/Users/login');
     }
 
     /*Renders the no-access view*/
     function noAccess(){
         $this->layout = 'blank';
-	$this->render('/users/rights');
+	$this->render('/Users/rights');
     }
     
     /*Performs a var_dump, wrapped in <pre> tags*/
