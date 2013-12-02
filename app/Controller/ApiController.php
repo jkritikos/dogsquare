@@ -930,7 +930,15 @@ class ApiController extends AppController{
                 $user = array();
                 $user['User']['name'] = $name;
                 $user['User']['email'] = $email;
-                $user['User']['birth_date'] = $birthDate;
+                
+                if(isset($birthDate) && $birthDate != ''){
+                    $day = substr($birthDate, 0,2);
+                    $month = substr($birthDate, 5,2);
+                    $year = substr($birthDate, 10,4);
+                    $d = date("Y/m/d", mktime(0, 0, 0, $month, $day, $year));
+                    $user['User']['birth_date'] = $d;
+                }
+                
                 $user['User']['country_id'] = $country;
                 $user['User']['address'] = $address;
                 $user['User']['gender'] = $gender;
@@ -1334,7 +1342,7 @@ class ApiController extends AppController{
 	if(isset($_REQUEST['gender'])) $gender = $_REQUEST['gender'];
         if(isset($_REQUEST['newsletter'])) $newsletter = $_REQUEST['newsletter'];
         
-        $this->log("API->signup() called for $name", LOG_DEBUG);
+        $this->log("API->signup() called for $name with date $birthDate", LOG_DEBUG);
         
         $userCreated = false;
         $userID = null;
@@ -1375,8 +1383,12 @@ class ApiController extends AppController{
                 $user['User']['country_id'] = $country;
             }
             
-            if(isset($country) && $country != ''){
-                $user['User']['country_id'] = $country;
+            if(isset($birthDate) && $birthDate != ''){
+                $day = substr($birthDate, 0,2);
+                $month = substr($birthDate, 5,2);
+                $year = substr($birthDate, 10,4);
+                $d = date("Y/m/d", mktime(0, 0, 0, $month, $day, $year));
+                $user['User']['birth_date'] = $d;
             }
             
             if(isset($newsletter) && $newsletter != ''){
@@ -1543,13 +1555,17 @@ class ApiController extends AppController{
             }
             
             //Signup email for non FB users
-            if(!isset($facebook_id)){
-                $Email = new CakeEmail('smtp');   
-                $Email->emailFormat('html')
-                        ->subject('Welcome to Dogsquare!')
-                        ->template('welcome')
-                        ->to($email)
-                        ->send();
+            try {
+                if(!isset($facebook_id)){
+                    $Email = new CakeEmail('smtp');   
+                    $Email->emailFormat('html')
+                            ->subject('Welcome to Dogsquare!')
+                            ->template('welcome')
+                            ->to($email)
+                            ->send();
+                }
+            } catch(SocketException $e) {
+                $this->log("API->signup() error when trying to email $email ".$e->getMessage(), LOG_DEBUG);
             }
         }
         
@@ -2243,14 +2259,17 @@ class ApiController extends AppController{
                     $following = $follow_stats['following'];
                     $dogs = $userDogsCount;
                     
-                    
-                    $Email = new CakeEmail('smtp');  
-                    $Email->emailFormat('html')
-                            ->subject('New follow Dogsquare')
-                        ->template('follow')
-                        ->viewVars(array('emailUser' => $emailUser, 'followerUser' => $followerUser, 'followers' => $followers, 'following' => $following, 'dogs' => $dogs, 'userPhoto' => $photoObject['Photo']['path'], 'sourcePhoto' => $photoSourceObject['Photo']['thumb']))    
-                        ->to($userTarget['User']['email'])
-                        ->send();
+                    try {
+                        $Email = new CakeEmail('smtp');  
+                        $Email->emailFormat('html')
+                                ->subject('New follow Dogsquare')
+                            ->template('follow')
+                            ->viewVars(array('emailUser' => $emailUser, 'followerUser' => $followerUser, 'followers' => $followers, 'following' => $following, 'dogs' => $dogs, 'userPhoto' => $photoObject['Photo']['path'], 'sourcePhoto' => $photoSourceObject['Photo']['thumb']))    
+                            ->to($userTarget['User']['email'])
+                            ->send();
+                        } catch(SocketException $e) {
+                            $this->log("API->followUser() error when trying to email ".$userTarget['User']['email'] ." with error " .$e->getMessage(), LOG_DEBUG);
+                        }
                 }
                 
             }
