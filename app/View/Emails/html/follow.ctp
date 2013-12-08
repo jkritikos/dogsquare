@@ -1,3 +1,12 @@
+<?php
+
+$bigPhoto = $userPhoto;
+//for non facebook photos
+if(stristr($userPhoto, 'http://') === FALSE) {
+    $bigPhoto = "http://www.".$_SERVER['HTTP_HOST']."/uploaded_files/users/".$userPhoto;
+}
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -411,7 +420,7 @@
                                         <tr>
                                           <td valign="top" class="upperBodyContent" mc:edit="upper_body_content"><h1>
 	<span style="color:#696969;"><span style="font-size:24px;"><span style="font-family: Verdana; line-height: 18px;"><?php echo $followerUser; ?></span></span></span></h1><br />
-<h4><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/uploaded_files/users/<?php echo $userPhoto; ?>" width="180" height="180" style="border-radius: 90px; -moz-border-radius: 90px; /></h4>
+<h4><img src="<?php echo $bigPhoto; ?>" width="180" height="180" style="border-radius: 90px; -moz-border-radius: 90px; /></h4>
 </td>
                                             <td valign="top" class="upperBodyContent" mc:edit="upper_body_content">&nbsp;</td>
                                         </tr>
