@@ -1556,7 +1556,8 @@ class ApiController extends AppController{
             
             //Signup email for non FB users
             try {
-                if(!isset($facebook_id)){
+                //if(!isset($facebook_id)){
+                if(stristr($email, '@facebook.com') === FALSE){    
                     $Email = new CakeEmail('smtp');   
                     $Email->emailFormat('html')
                             ->subject('Welcome to Dogsquare!')
@@ -2244,8 +2245,8 @@ class ApiController extends AppController{
                 }
                 
                 //Send email notification
-                if($userTarget['User']['facebook_id'] == null){
-                    
+                //if($userTarget['User']['facebook_id'] == null){
+                if(stristr($userTarget['User']['email'], '@facebook.com') === FALSE){    
                     $this->loadModel('Dog');
                     $this->loadModel('Photo');
                     $photoObject = $this->Photo->findById($user['User']['photo_id']);

@@ -1,9 +1,14 @@
 <?php
 
 $bigPhoto = $userPhoto;
+$smallPhoto = $sourcePhoto;
 //for non facebook photos
 if(stristr($userPhoto, 'http://') === FALSE) {
     $bigPhoto = "http://www.".$_SERVER['HTTP_HOST']."/uploaded_files/users/".$userPhoto;
+}
+
+if(stristr($sourcePhoto, 'http://') === FALSE) {
+    $smallPhoto = "http://www.".$_SERVER['HTTP_HOST']."/uploaded_files/users/".$sourcePhoto;
 }
 ?>
 
@@ -395,7 +400,7 @@ if(stristr($userPhoto, 'http://') === FALSE) {
                             	<td align="center" valign="top">
                                 	<table border="0" cellpadding="0" cellspacing="0" width="588">
                                     	<tr>
-                                            <td width="86" valign="top" class="preheaderContent" style="padding-right:20px;" mc:edit="std_preheader_content"><img src="http://www.<?php echo $_SERVER['HTTP_HOST']; ?>/uploaded_files/users/<?php echo $sourcePhoto; ?>" width="66" height="66" align="left" /></td>
+                                            <td width="86" valign="top" class="preheaderContent" style="padding-right:20px;" mc:edit="std_preheader_content"><img src="<?php echo $smallPhoto; ?>" width="66" height="66" align="left" /></td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td width="411" align="right" valign="top" class="preheaderContent"><p>&nbsp;</p>
                                             <p><?php echo $emailUser; ?>, you have a new follower on Dogsquare.</p></td>
