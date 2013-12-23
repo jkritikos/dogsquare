@@ -233,3 +233,10 @@ define("BADGE_ROOKIE", 13);
 define("BADGE_SUPERSTAR", 14);
 define("BADGE_HEALTHY", 15);
 define("BADGE_101_DALMATIANS", 16);
+
+
+
+Configure::load('config');
+//CakePlugin::load('PhpThumb');
+CakePlugin::load('PhpThumb');
+$config['PhpThumb']['thumbs_path'] = 'thumbs';

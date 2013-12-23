@@ -2075,24 +2075,26 @@ class ApiController extends AppController{
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
         if($authorised){
-        
-            $list = json_decode(urldecode($list));
-            $listToString = '';
+            
+            if(!$list != null && $list != ''){
+                $list = json_decode(urldecode($list));
+                $listToString = '';
 
-            for($i=0;$i<sizeof($list);$i++){
+                for($i=0;$i<sizeof($list);$i++){
 
-                if($list[$i] != ''){
-                    if(sizeof($list) - 1 == $i){
-                        $listToString.= "'" . $list[$i] . "'";
-                    }else{
-                        $listToString.= "'" . $list[$i] . "',";
+                    if($list[$i] != ''){
+                        if(sizeof($list) - 1 == $i){
+                            $listToString.= "'" . $list[$i] . "'";
+                        }else{
+                            $listToString.= "'" . $list[$i] . "',";
+                        }
                     }
                 }
+                
+                $this->log("API->areUsers() called to convert list to : $listToString", LOG_DEBUG);
+                $userData = $this->User->areUsers($listToString, $user_id);
+                $data['results'] = $userData;
             }
-
-            $this->log("API->areUsers() called to convert list to : $listToString", LOG_DEBUG);
-            $this->loadModel('User');
-            $userData = $this->User->areUsers($listToString, $user_id);
 
             //Count unread notifications
             $this->loadModel('UserNotification');
@@ -2110,7 +2112,7 @@ class ApiController extends AppController{
             $data['count_inbox'] = $count_inbox;
 
             $response = REQUEST_OK;
-            $data['results'] = $userData;
+            
         } else {
             $response = REQUEST_UNAUTHORISED;
         }

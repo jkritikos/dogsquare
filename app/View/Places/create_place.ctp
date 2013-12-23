@@ -39,7 +39,7 @@ $(document).ready(function(){
 <div class="columns">
     <div class="grid_6 first">		
 
-        <form id="form" class="form panel" method="post" action="/places/createPlace" novalidate>
+        <form id="form" class="form panel" method="post" action="/places/createPlace" enctype="multipart/form-data" novalidate>
             <header><h2>Use the following fields to create a new place:</h2></header>
 
             <hr />
@@ -76,6 +76,10 @@ $(document).ready(function(){
                 <div class="clearfix">
                     <label>Latitude *</label>
                     <input type="text" name="data[Place][lat]" required="required" />
+                </div>
+                <div class="clearfix">
+                    <label>Photo *</label>
+                    <input type="file" name="photo" required="required" />
                 </div>
                 <div class="clearfix">
                     <label>User *</label>

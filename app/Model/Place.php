@@ -87,12 +87,13 @@ class Place extends AppModel {
    
    //Returns the nearby dogs who are mating for the specified coordinates
    function getMatingDogsNearby($lat, $lon){
-        $sql = "select d.id, d.name, p.thumb, a.start_lat, a.start_lon, ";
+        $sql = "select d.id, d.name, p.thumb, a.start_lat, a.start_lon, d.owner_id, u.name,";
         $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(a.start_lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(a.start_lat) * pi()/180) * POWER(SIN(($lon - a.start_lon) * pi()/180 / 2), 2) )) as distance ";
         $sql .= "from dogs d inner join activity_dogs ad  on (d.id = ad.dog_id) ";
         $sql .= "inner join activities a  on (ad.activity_id = a.id) ";
         $sql .= "inner join photos p on (d.photo_id = p.id) ";
-        $sql .= "where d.mating = 2 ";
+        $sql .= "inner join users u on (d.owner_id = u.id) ";
+        $sql .= "where d.mating = 1 ";
         $sql .= "and ad.created = (select max(ad2.created) from activity_dogs ad2 where ad2.dog_id = ad.dog_id) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
         
@@ -107,6 +108,8 @@ class Place extends AppModel {
                     $data[$i]['distance'] = round($rs[$i][0]['distance'], 1) . 'Km';
 		}
                 
+                $data[$i]['user_name'] = $rs[$i]['u']['name'];
+                $data[$i]['user_id'] = $rs[$i]['d']['owner_id'];
                 $data[$i]['id'] = $rs[$i]['d']['id'];
                 $data[$i]['name'] = $rs[$i]['d']['name'];
                 $data[$i]['lat'] = $rs[$i]['a']['start_lat'];
@@ -120,12 +123,13 @@ class Place extends AppModel {
    
    //Returns the nearby dogs who have the same breed with user's dogs for the specified coordinates
    function getSameBreedDogsNearby($lat, $lon, $breeds){
-        $sql = "select d.id, db.name, d.name, p.thumb, a.start_lat, a.start_lon, ";
+        $sql = "select d.id, db.name, d.name, p.thumb, a.start_lat, a.start_lon, d.owner_id, u.name, ";
         $sql .= "6371 * 2 * ASIN(SQRT(POWER(SIN(($lat - abs(a.start_lat)) * pi()/180 / 2), 2) +  COS($lat * pi()/180 ) * COS(abs(a.start_lat) * pi()/180) * POWER(SIN(($lon - a.start_lon) * pi()/180 / 2), 2) )) as distance ";
         $sql .= "from dogs d inner join activity_dogs ad  on (d.id = ad.dog_id) ";
         $sql .= "inner join activities a  on (ad.activity_id = a.id) ";
         $sql .= "inner join dog_breeds db  on (d.breed_id = db.id) ";
         $sql .= "inner join photos p on (d.photo_id = p.id) ";
+        $sql .= "inner join users u on (d.owner_id = u.id) ";
         $sql .= "where d.breed_id in ($breeds) ";
         $sql .= "and ad.created = (select max(ad2.created) from activity_dogs ad2 where ad2.dog_id = ad.dog_id) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
@@ -141,6 +145,8 @@ class Place extends AppModel {
                     $data[$i]['distance'] = round($rs[$i][0]['distance'], 1) . 'Km';
 		}
                 
+                $data[$i]['user_name'] = $rs[$i]['u']['name'];
+                $data[$i]['user_id'] = $rs[$i]['d']['owner_id'];
                 $data[$i]['id'] = $rs[$i]['d']['id'];
                 $data[$i]['breed'] = $rs[$i]['db']['name'];
                 $data[$i]['name'] = $rs[$i]['d']['name'];

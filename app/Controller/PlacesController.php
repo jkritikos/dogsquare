@@ -1,42 +1,95 @@
 <?php
 
 class PlacesController extends AppController {
-	/*Executed before all functions*/
-	var $components = array('Cookie', 'RequestHandler');
-	var $helpers = array('Js','Time');
-	
+    /*Executed before all functions*/
+    var $components = array('Cookie', 'RequestHandler','PhpThumb');
+    var $helpers = array('Js','Time');
+    	
     function beforeFilter() {	
-		parent::beforeFilter();
-		$this->set('headerTitle', "Configuration Management");
-		$this->set('activeTab', "configurations");
+        parent::beforeFilter();
+        $this->set('headerTitle', "Configuration Management");
+        $this->set('activeTab', "configurations");
     }
 	
-	function createPlace(){
-	    $currentUser = $this->Session->read('userID');
-		if($currentUser != null){
-			if (!empty($this->request->data)){
-                $this->loadModel('Place');
-                if($this->Place->save($this->request->data)){
-                    $this->set('notification', 'New place successfully created.');
-                } else {
-                    $this->set('error', 'Unable to create the new place - please try again.');
+    function createPlace(){
+        $currentUser = $this->Session->read('userID');
+        
+        if($currentUser != null){
+            if (!empty($this->request->data)){
+                
+                $path_info = pathinfo(basename($_FILES['photo']['name']));
+    		$fileExtension = $path_info['extension'];
+                
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                $fileName = $dateString.".".$fileExtension;
+                
+                //echo "<pre>"; var_dump($_FILES); echo "</pre>";
+                
+                $thumbInput = "/uploaded_files/places/$fileName";
+                
+                $uploadfile = UPLOAD_PATH.PLACE_PATH."/". "$fileName";
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)){
+                    $res = $this->PhpThumb->generateThumbnail($thumbInput, array(
+                        'w' => 60, 'h' => 60, 'f' => 'png', 'q' => 95, 'fltr' => "ric|30|30"
+                    ), PLACE_PHOTO_TYPE);
+                
+                    //If all went well with the thumbnail generation
+                    if($res['error'] == 0){
+                        $thumbFileName = $res['src'];
+                        
+                        //Save photo
+                        $this->loadModel('Photo');
+                        $obj = array();
+                        $obj['Photo']['path'] = $fileName;
+                        $obj['Photo']['thumb'] = $thumbFileName;
+                        $obj['Photo']['user_id'] = $currentUser;
+                        $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
+                        
+                        if($this->Photo->save($obj)){
+                            $photoID = $this->Photo->getLastInsertID();
+                            
+                            //Save place
+                            $this->loadModel('Place');
+                            
+                            $this->request->data['Place']['photo_id'] = $photoID;
+                            
+                            if($this->Place->save($this->request->data)){
+                                $this->set('notification', 'New place successfully created.');
+                            } else {
+                                $this->set('error', 'Unable to create the new place - please try again.');
+                            }
+                        }
+                        
+                        
+                        
+                        
+                        
+                    }
+                    
+                    
+                    echo "<pre>"; var_dump($res); echo "</pre>";
+                    //echo "<Br>using input $thumbInput";
+                    
                 }
                 
+                
+                
+                
             }
-			
-			$this->loadModel('PlaceCategory');
-			$categoryNames = $this->PlaceCategory->find('all', array('fields' => array('PlaceCategory.id','PlaceCategory.name') ));
-			$this->set('categoryNames', $categoryNames);
-			
-			$this->loadModel('User');
-			$userNames = $this->User->find('all', array('fields' => array( 'User.id', 'User.name') ));
-			$this->set('userNames', $userNames);
-		} else {
-	        $this->requireLogin('/Places/createPlace');
-		}
+
+            $this->loadModel('PlaceCategory');
+            $categoryNames = $this->PlaceCategory->find('all', array('fields' => array('PlaceCategory.id','PlaceCategory.name') ));
+            $this->set('categoryNames', $categoryNames);
+
+            $this->loadModel('User');
+            $userNames = $this->User->find('all', array('fields' => array( 'User.id', 'User.name') ));
+            $this->set('userNames', $userNames);
+        } else {
+            $this->requireLogin('/Places/createPlace');
+        }
     }
 	
-	/*AJAX validator for place category validations*/
+    /*AJAX validator for place category validations*/
     function validatePlace(){
         if(isset($_REQUEST['place'])) $place = $_REQUEST['place'];
 		if(isset($_REQUEST['edit_place'])) {
