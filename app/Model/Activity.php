@@ -49,7 +49,7 @@ class Activity extends AppModel {
     }
     
     function getActivityDogs($activityId){
-        $sql = "select d.id, d.name, p.thumb, ad.dogfuel ";
+        $sql = "select d.id, d.name, p.thumb, ad.dogfuel, ad.playtime ";
         $sql .= " from dogs d";
         $sql .= " inner join photos p on (d.photo_id = p.id)";
         $sql .= " inner join activity_dogs ad on (d.id = ad.dog_id)";
@@ -63,7 +63,7 @@ class Activity extends AppModel {
                 $obj['Dog']['name'] = $rs[$i]['d']['name'];
                 $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
                 $obj['Dog']['dogfuel'] = $rs[$i]['ad']['dogfuel'];
-
+                $obj['Dog']['playtime'] = $rs[$i]['ad']['playtime'];
                 $data[] = $obj;
             }
         }

@@ -40,6 +40,7 @@ $(document).ready(function(){
     <div class="grid_6 first">		
 
         <form id="form" class="form panel" method="post" action="/places/createPlace" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="data[Place][user_id]" value="0"/>
             <header><h2>Use the following fields to create a new place:</h2></header>
 
             <hr />
@@ -78,9 +79,26 @@ $(document).ready(function(){
                     <input type="text" name="data[Place][lat]" required="required" />
                 </div>
                 <div class="clearfix">
-                    <label>Photo *</label>
+                    <label>Weight *</label>
+                    <input type="number" name="data[Place][weight]" required="required" />
+                </div>
+                <div class="clearfix">
+                    <label>URL</label>
+                    <input type="text" name="data[Place][url]"/>
+                </div>
+                <div class="clearfix">
+                    <label>Color</label>
+                    <input type="text" name="data[Place][color]"/>
+                </div>
+                <div class="clearfix">
+                    <label>Photo (square) *</label>
                     <input type="file" name="photo" required="required" />
                 </div>
+                <div class="clearfix">
+                    <label>Photo Thumbnail (square) *</label>
+                    <input type="file" name="thumbnail" required="required" />
+                </div>
+                <!--
                 <div class="clearfix">
                     <label>User *</label>
                     <select name="data[Place][user_id]" required="required" />
@@ -93,7 +111,7 @@ $(document).ready(function(){
                          	<option value="<?php echo $userId ?>"><?php echo $userName ?></option>
                         <?php endforeach; ?>
                     </select>
-                </div>
+                </div>-->
             </fieldset>
 
             <hr />

@@ -211,6 +211,11 @@ class ApiController extends AppController{
         ));
         $data['categories'] = $categories;
         
+        //Dogfuel discounts
+        $this->loadModel('DogfuelDiscount');
+        $discounts = $this->DogfuelDiscount->find('all');
+        $data['discounts'] = $discounts;
+        
         $data['values'] = $values;
         $data['response'] = $response;
         $this->layout = 'blank';
@@ -747,6 +752,29 @@ class ApiController extends AppController{
                 } 
             }
             //End badge handling
+            
+            //Feed entry
+            if($response == REQUEST_OK){
+                $this->loadModel('Feed');
+
+                $user = $this->User->findById($user_id);
+                $user_name = $user['User']['name'];
+
+                $feed['Feed']['user_from'] = $user_id;
+                $feed['Feed']['user_from_name'] = $user_name;
+                $feed['Feed']['target_place_id'] = $placeID;
+                $feed['Feed']['target_place_name'] = $name;
+                $feed['Feed']['type_id'] = FEED_NEW_PLACE;
+
+                $feedOK = $this->Feed->save($feed);
+
+                if(!$feedOK){
+                    $this->log("API->addPlace() error creating feed", LOG_DEBUG);
+                    $response = ERROR_FEED_CREATION;
+                } else {
+                    $this->log("API->addPlace() saved feed ", LOG_DEBUG);
+                }
+            }
             
             //Load additional data with this request
             if($response == REQUEST_OK){
@@ -1742,6 +1770,7 @@ class ApiController extends AppController{
                     $feed['Feed']['user_from'] = $userId;
                     $feed['Feed']['user_from_name'] = $user_name;
                     $feed['Feed']['target_user_id'] = $target_user_id;
+                    $feed['Feed']['activity_id'] = $activityId;
                     $feed['Feed']['target_user_name'] = $target_user_name;
                     $feed['Feed']['type_id'] = FEED_FRIEND_COMMENT_ACTIVITY;
 
@@ -2166,13 +2195,22 @@ class ApiController extends AppController{
     function followUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        if(isset($_REQUEST['follow_user_fb'])) $follow_user_fb = $_REQUEST['follow_user_fb'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         //Authorise user
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
         if($authorised){
-        
+            
+            //If we have a Facebook ID we need to retrieve the user id first
+            if(isset($follow_user_fb) && $follow_user_fb != null){
+                $followUserObj = $this->User->findByFacebook_id($follow_user_fb);
+                if($followUserObj != null){
+                    $follow_user = $followUserObj['User']['id'];
+                }
+            }
+            
             $this->loadModel('UserFollows');
             $obj = array();
             $obj['UserFollows']['user_id'] = $user_id;
@@ -2290,6 +2328,7 @@ class ApiController extends AppController{
     function unfollowUser(){
         if(isset($_REQUEST['user_id'])) $user_id = $_REQUEST['user_id'];
         if(isset($_REQUEST['follow_user'])) $follow_user = $_REQUEST['follow_user'];
+        if(isset($_REQUEST['follow_user_fb'])) $follow_user_fb = $_REQUEST['follow_user_fb'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
         //Authorise user
@@ -2297,6 +2336,14 @@ class ApiController extends AppController{
         $authorised = $this->User->authorise($user_id,$token);
         if($authorised){
         
+            //If we have a Facebook ID we need to retrieve the user id first
+            if(isset($follow_user_fb) && $follow_user_fb != null){
+                $followUserObj = $this->User->findByFacebook_id($follow_user_fb);
+                if($followUserObj != null){
+                    $follow_user = $followUserObj['User']['id'];
+                }
+            }
+            
             $this->loadModel('UserFollows');
             if($this->UserFollows->isUserFollowing($user_id, $follow_user)){
                 $rows = $this->UserFollows->deleteUserFollow($user_id, $follow_user);
@@ -2576,7 +2623,10 @@ class ApiController extends AppController{
             $dogs = $this->Activity->getActivityDogs($activity_id);
             $coordinates = $this->Activity->getActivityCoordinates($activity_id);
             $comments = $this->Activity->getActivityComments($activity_id);
-
+            
+            //add playtime to the activity object
+            $activity['playtime'] = $dogs[0]['Dog']['playtime'];
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
@@ -3945,6 +3995,7 @@ class ApiController extends AppController{
                     $feed['Feed']['user_from_name'] = $user_name;
                     $feed['Feed']['target_user_id'] = $target_user_id;
                     $feed['Feed']['target_user_name'] = $target_user_name;
+                    $feed['Feed']['activity_id'] = $activity_id;
                     $feed['Feed']['type_id'] = FEED_FRIEND_LIKE_ACTIVITY;
 
                     $feedOK = $this->Feed->save($feed);

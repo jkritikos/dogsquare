@@ -35,6 +35,59 @@ class ConfigurationsController extends AppController{
 	}
     }
     
+    //Adds the dogfuel discount rules
+    function dogfuelDiscountAdd(){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $this->loadModel('DogfuelDiscount');
+            
+            //on submit
+            if (!empty($this->request->data)){
+                if($this->DogfuelDiscount->save($this->request->data)){
+                    $this->set('notification', 'New dogfuel discount successfully created.');
+                } else {
+                    $this->set('error', 'Unable to create the new dogfuel discount - please try again.');
+                }
+            }
+            
+            //Fetch existing
+            $data = $this->DogfuelDiscount->find('all');
+            $this->set('data', $data);
+            
+        } else {
+            $this->requireLogin('/Configurations/dogfuelDiscountAdd');
+        }
+    }
+    
+    //Edits the specified dogfuel discount rules
+    function dogfuelDiscountEdit($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $this->loadModel('DogfuelDiscount');
+            
+            //on submit
+            if (!empty($this->request->data)){
+                $this->DogfuelDiscount->id = $id;
+                if($this->DogfuelDiscount->save($this->request->data)){
+                    $this->set('notification', 'Dogfuel discount successfully modified.');
+                } else {
+                    $this->set('error', 'Unable to edit the dogfuel discount - please try again.');
+                }
+            }
+            
+            //load breed object
+            $discount = $this->DogfuelDiscount->findById($id);
+            if($discount != null){
+                $this->set('discount', $discount);
+            }
+            
+        } else {
+            $this->requireLogin('/Configurations/dogfuelDiscountAdd');
+        }
+    }
+    
     /*Creates a new dog s*/
     function breedCreate(){
         $currentUser = $this->Session->read('userID');

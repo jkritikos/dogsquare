@@ -55,7 +55,7 @@ class ActivityDog extends AppModel {
     //Returns the max number of days since the last activity for the specified dogs
     function getDaysSinceLastActivity($dog_ids){
         $dogList = implode(",", $dog_ids);
-        $sql = "select datediff(now(), ad.created) days from activity_dogs ad where ad.dog_id in ($dogList) order by days desc limit 1";
+        $sql = "select datediff(now(), max(ad.created)) days from activity_dogs ad where ad.dog_id in ($dogList) order by days desc limit 1";
         
         $days = 0;
         $rs = $this->query($sql);

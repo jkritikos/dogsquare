@@ -141,6 +141,9 @@ CREATE TABLE `places` (
  `lon` varchar(16) not null,
  `lat` varchar(16) not null,
  `address` varchar(256),
+ `url` varchar(512),
+ `color` varchar(16),
+ `weight` int(8),
  `active` int(1) DEFAULT '1',
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
@@ -178,6 +181,19 @@ CREATE TABLE `dogfuel_rules` (
  `walk_distance` float not null,
  `playtime` int(11) not null,
  `active` int(1) DEFAULT '1',
+ `created` datetime DEFAULT NULL,
+ `modified` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#Dogfuel discounts table
+CREATE TABLE `dogfuel_discounts` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `age_from` int(4) not null,
+ `age_to` int(4) not null,
+ `extra_dogfuel` int(4) not null,
+ `weather_temp` int(4) not null,
+ `weather_value` int(4) not null,
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
@@ -264,7 +280,7 @@ CREATE TABLE `activity_dogs` (
  `activity_id` int(11) not null,
  `dog_id` int(11) not null,
  `walk_distance` float,
- `playtime` int(2),
+ `playtime` float,
  `dogfuel` int(4),
  `created` datetime DEFAULT NULL,
  `modified` datetime DEFAULT NULL,
