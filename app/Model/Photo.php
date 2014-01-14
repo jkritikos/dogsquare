@@ -6,7 +6,7 @@ class Photo extends AppModel {
      
      
      function getUserPhotos($user_id){
-        $sql = "select p.thumb, p.path from photos p where p.user_id = $user_id and p.type_id = 3";
+        $sql = "select p.thumb, p.path from photos p where p.user_id = $user_id and p.type_id in(1,3)";
         $rs = $this->query($sql);
         $data = array();
         

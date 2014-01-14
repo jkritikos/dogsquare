@@ -11,7 +11,7 @@ class PlaceCheckin extends AppModel {
         $sql .= "inner join photos p on (u.photo_id = p.id) ";
         $sql .= "where 1=1 ";
         $sql .= " and pc.created > NOW() - INTERVAL 1 DAY ";
-        $sql .= "and pc.created = (select max(pc2.created) from place_checkins pc2 where pc2.user_id = u.id and pc2.place_id=pc.place_id) ";
+        $sql .= "and pc.created = (select max(pc2.created) from place_checkins pc2 where pc2.user_id = u.id) ";
         //$sql .= " and pc.user_id in ($mutualFollowers) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE_CHECKINS ." order by distance ";
         

@@ -112,9 +112,9 @@ CakeLog::config('error', array(
 define("WALK_REQUEST_MSG", "This is an automatic walk request.");
 
 //Default distance filter for nearby searches
-define("NEARBY_DISTANCE", 30);
+define("NEARBY_DISTANCE", 7);
 //Default distance filter for nearby checkins (map)
-define("NEARBY_DISTANCE_CHECKINS", 10);
+define("NEARBY_DISTANCE_CHECKINS", 7);
 
 //User roles
 define("ROLE_ADMIN", "1");

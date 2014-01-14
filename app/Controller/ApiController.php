@@ -1718,6 +1718,7 @@ class ApiController extends AppController{
                     $this->loadModel('UserNotification');
 
                     $not['UserNotification']['user_from'] = $userId;
+                    $not['UserNotification']['user_id'] = $activity_obj['Activity']['user_id'];
                     $not['UserNotification']['activity_id'] = $activityId;
                     $not['UserNotification']['type_id'] = NOTIFICATION_COMMENT_ACTIVITY;
 
@@ -1989,7 +1990,7 @@ class ApiController extends AppController{
             $response = null;
             $errorMessage = null;
             
-            $this->log("API->deleteDog() called ", LOG_DEBUG);
+            $this->log("API->deleteDog() called for dog $dog_id", LOG_DEBUG);
             
             //delete dog 
             $this->loadModel('Dog');
@@ -1998,10 +1999,13 @@ class ApiController extends AppController{
             if($this->Dog->delete()){
                 $response = REQUEST_OK;
                 
+                $this->log("API->deleteDog() deleted dog $dog_id - proceeding with lost dog places", LOG_DEBUG);
+                
                 //Clear lost dog places
                 $this->Dog->deleteLostDogs($dog_id);
                 
             } else {
+                $this->log("API->deleteDog() failed to delete dog $dog_id", LOG_DEBUG);
                 $response = REQUEST_FAILED;
                 $errorMessage = ERROR_DOG_DELETION;
             }
@@ -3602,9 +3606,20 @@ class ApiController extends AppController{
         $photo = $this->User->getProfilePhoto($user_id);
         
         if($thumb){
-            $url = "/uploaded_files/users/".$photo['thumb'];
+            //for non facebook photos
+            if(stristr($photo['thumb'], 'http://') === FALSE) {
+                $url = "/uploaded_files/users/".$photo['thumb'];
+            } else {
+                $url = $photo['thumb'];
+            }
+            
         } else {
-            $url = "/uploaded_files/users/".$photo['photo'];
+            if(stristr($photo['photo'], 'http://') === FALSE) {
+                $url = "/uploaded_files/users/".$photo['photo'];
+            } else {
+                $url = $photo['photo'];
+            }
+            
         }
         
         $this->redirect($url);
