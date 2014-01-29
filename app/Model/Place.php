@@ -50,7 +50,7 @@ class Place extends AppModel {
     }
         
     function getPlaceById($placeId, $userId){
-        $sql = "select p.id, p.name, p.lon, p.lat, pc.name, ph.path, pl.id";
+        $sql = "select p.id, p.name, p.lon, p.lat, pc.name, ph.path, pl.id, p.url";
         $sql .= " from places p";
         $sql .= " left outer join place_categories pc on (p.category_id = pc.id)";
         $sql .= " left outer join photos ph on (p.photo_id = ph.id)";
@@ -59,6 +59,7 @@ class Place extends AppModel {
         $rs = $this->query($sql);
 
         $obj['id'] = $rs[0]['p']['id'];
+        $obj['url'] = $rs[0]['p']['url'];
         $obj['name'] = $name = $rs[0]['p']['name'];
         $obj['longitude'] = $rs[0]['p']['lon'];
         $obj['latitude'] = $rs[0]['p']['lat'];
@@ -83,6 +84,19 @@ class Place extends AppModel {
         $count = $rs[0][0]['cnt'];
         
         return $count;
+   }
+   
+   //Returns the last checkin for the specified user/place combo
+   function getLastCheckin($user_id, $place_id){
+       $sql = "select unix_timestamp(pc.created) created from place_checkins pc where user_id=$user_id and place_id=$place_id order by created desc limit 1";
+       $rs = $this->query($sql);
+       $checkinTimestamp = null;
+       
+       if(is_array($rs) && count($rs) > 0){
+           $checkinTimestamp = $rs[0][0]['created'] * 1000;
+       }
+       
+       return $checkinTimestamp;
    }
    
    //Returns the nearby dogs who are mating for the specified coordinates

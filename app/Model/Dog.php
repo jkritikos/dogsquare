@@ -29,7 +29,7 @@ class Dog extends AppModel {
     }
     
     function getDogById($dogId){
-        $sql = "SELECT d.id, d.name, db.name, d.size, d.mating, d.age, d.gender, d.weight, p.path, pl.id";
+        $sql = "SELECT d.id, d.name, db.name, d.size, d.mating, d.age, d.gender, d.weight, p.path, pl.id, d.owner_id ";
         $sql .= " FROM dogs d";
         $sql .= " LEFT OUTER JOIN dog_breeds db on (d.breed_id = db.id)";
         $sql .= " LEFT OUTER JOIN photos p on (d.photo_id = p.id)";
@@ -48,13 +48,14 @@ class Dog extends AppModel {
         $obj['likes'] = $this->countDogLikes($dogId);
         $obj['size'] = $rs[0]['d']['size'];
         $obj['lost'] = $rs[0]['pl']['id'];
+        $obj['owner_id'] = $rs[0]['d']['owner_id'];
                 
         return $obj;
     }
     
     //Returns a count of the dogs that belong to the specified user
     function countUserDogs($user_id){
-        $sql = "select count(*) cnt from dogs d where d.owner_id=$user_id";
+        $sql = "select count(*) cnt from dogs d where d.owner_id=$user_id and d.active=1";
         $rs = $this->query($sql);
         $count = $rs[0][0]['cnt'];
         
@@ -63,7 +64,7 @@ class Dog extends AppModel {
     
     //Returns the dog ids that the specified user owns
     function getUserDogIDs($user_id){
-        $sql = "select d.id from dogs d where d.owner_id=$user_id ";
+        $sql = "select d.id from dogs d where d.owner_id=$user_id and d.active=1";
         $rs = $this->query($sql);
         
         $data = array();
@@ -118,7 +119,7 @@ class Dog extends AppModel {
         $sql .= " inner join users u on (d.owner_id = u.id)";
         $sql .= " inner join photos p on (d.photo_id = p.id)";
         $sql .= " inner join dog_breeds db on (d.breed_id = db.id)";
-        $sql .= " where u.id = $userId";
+        $sql .= " where u.id = $userId and d.active=1";
         $rs = $this->query($sql);
         $data = array();
         

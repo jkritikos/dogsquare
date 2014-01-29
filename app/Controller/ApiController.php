@@ -468,6 +468,7 @@ class ApiController extends AppController{
                             $photoID = $this->Photo->getLastInsertID();
 
                             $response = REQUEST_OK;
+                            $data['filename'] = $fileName;
                             $this->log("API->addPlacePhoto() saved photo $photoID to db" , LOG_DEBUG);
                         } else {
                             $this->log("API->addPlacePhoto() saving photo to db failed" , LOG_DEBUG);
@@ -493,6 +494,22 @@ class ApiController extends AppController{
         }
         
         $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //Returns the facebook ids that the current user is following
+    function getFacebookFriendsFollowing(){
+        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        
+        //No authorisation to keep things quick
+        $this->loadModel('UserFollows');
+        $facebookFollowingIDs = $this->UserFollows->getFacebookFollowing($userID);
+        $facebookFollowingIDString = implode(",", $facebookFollowingIDs);
+        
+        $data['response'] = REQUEST_OK;
+        $data['facebook_ids'] = $facebookFollowingIDString;
         
         $this->layout = 'blank';
         echo json_encode(compact('data', $data));
@@ -1996,7 +2013,8 @@ class ApiController extends AppController{
             $this->loadModel('Dog');
 
             $this->Dog->id = $dog_id;
-            if($this->Dog->delete()){
+            $this->Dog->set('active', 0);
+            if($this->Dog->save()){
                 $response = REQUEST_OK;
                 
                 $this->log("API->deleteDog() deleted dog $dog_id - proceeding with lost dog places", LOG_DEBUG);
@@ -3023,7 +3041,7 @@ class ApiController extends AppController{
             if(!$this->UserBadge->userHasBadge($user_id, BADGE_CROSSFIT)){
                 //$activity_counts2Weeks = $this->ActivityDog->getMaxActivityCounts(14, $dog_ids, 100);
                 $activity_counts2Weeks = $this->ActivityDog->getMaxDogfuelInPeriod(14, $dog_ids);
-                $targetValue = 600;
+                $targetValue = 500;
                 if($activity_counts2Weeks >= $targetValue){
                     //Award badge and notification
                     if($this->UserBadge->awardBadge($user_id, BADGE_CROSSFIT)){
@@ -3046,7 +3064,7 @@ class ApiController extends AppController{
             if(!$hasBadgeAthletic || !$hasBadgeOlympian){
                 //$activity_counts1Month = $this->ActivityDog->getMaxActivityCounts(30, $dog_ids, 100);
                 $activity_counts1Month = $this->ActivityDog->getMaxDogfuelInPeriod(30, $dog_ids);
-                $targetValue = 1000;
+                $targetValue = 600;
                 
                 //Athletic badge
                 if($activity_counts1Month >= $targetValue && !$hasBadgeAthletic){
@@ -3065,7 +3083,7 @@ class ApiController extends AppController{
                 }
                 
                 //Olympian badge
-                if($activity_counts1Month >= 1200 && !$hasBadgeOlympian){
+                if($activity_counts1Month >= 800 && !$hasBadgeOlympian){
                     //Award badge and notification
                     if($this->UserBadge->awardBadge($user_id, BADGE_OLYMPIAN)){
                         $this->UserNotification->create();
@@ -3231,6 +3249,13 @@ class ApiController extends AppController{
             $this->loadModel('DogLike');
             $dog = $this->Dog->getDogById($dog_id);
             
+            //owner
+            $owner_id = $dog['owner_id'];
+            $owner_photo_object = $this->User->getProfilePhoto($owner_id);
+            $owner_object = $this->User->findById($owner_id);
+            $dog['owner_thumb'] = $owner_photo_object['thumb'];
+            $dog['owner_name'] = $owner_object['User']['name'];
+            
             $fromDate = "$year-$month-$day 00:00:01";
             $toDate = "$year-$month-$day 23:59:59";
             $dog['dogfuel'] = $this->Dog->getLatestDogfuel($dog_id, $fromDate, $toDate, $timezone);
@@ -3273,10 +3298,13 @@ class ApiController extends AppController{
         if($authorised){
         
             $this->loadModel('Place');
+            $this->loadModel('Photo');
             $place = $this->Place->getPlaceById($place_id, $user_id);
             $comments = $this->Place->getPlaceComments($place_id);
             $likes = $this->Place->getPlaceLikes($place_id);
             $checkins = $this->Place->getPlaceCheckins($place_id);
+            $lastCheckin = $this->Place->getLastCheckin($user_id, $place_id);
+            $photos = $this->Photo->getPlacePhotos($place_id);
             
             //Count unread notifications
             $this->loadModel('UserNotification');
@@ -3298,6 +3326,8 @@ class ApiController extends AppController{
             $data['comments'] = $comments;
             $data['likes'] = $likes;
             $data['checkins'] = $checkins;
+            $data['last_checkin'] = $lastCheckin;
+            $data['photos'] = $photos;
         } else {
             $response = REQUEST_UNAUTHORISED;
         }

@@ -40,6 +40,8 @@ class PlacesController extends AppController {
                             'w' => 60, 'h' => 60, 'f' => 'png', 'q' => 95, 'fltr' => "ric|30|30"
                         ), PLACE_PHOTO_TYPE);
                         
+                        $this->log("PlacesController->createPlace() thumbnail creation: ".$res['error'], LOG_DEBUG);
+                        
                         $resPhoto = $this->PhpThumb->generateThumbnail($photoInput, array(
                             'w' => 640, 'h' => 640, 'f' => 'jpg', 'q' => 95
                         ), PLACE_PHOTO_TYPE);
@@ -51,13 +53,11 @@ class PlacesController extends AppController {
 
                             //Save place
                             if($this->Place->save($this->request->data)){
-                                $placeID = $this->Place->getLastInsertID();
-                                $this->set('notification', 'New place successfully created.');
-                            } else {
-                                $this->set('error', 'Unable to create the new place - please try again.');
+                                $placeID = $this->Place->getLastInsertID();   
                             }
                             
                             //Save photo
+                            $this->log("PlacesController->createPlace() about to save photo for place $placeID", LOG_DEBUG);
                             $this->loadModel('Photo');
                             $obj = array();
                             $obj['Photo']['path'] = $photoFileName;
@@ -72,11 +72,26 @@ class PlacesController extends AppController {
                                 //Save place
                                 $this->loadModel('Place');
                                 $this->request->data['Place']['photo_id'] = $photoID;
+                                
+                                //Update place with photo id
+                                $place['Place']['id'] = $placeID;
+                                $place['Place']['photo_id'] = $photoID;
+                                if(!$this->Place->save($place)){
+                                    $this->log("PlacesController->createPlace() failed to update place with photo" , LOG_DEBUG);
+
+                                    $this->set('error', 'Unable to create the new place - please try again.');
+                                } else {
+                                    $this->set('notification', 'New place successfully created.');
+                                }
                             } 
+                        } else {
+                            $this->log("PlacesController->createPlace() thumbnail creation error: ", LOG_DEBUG);
                         }
 
                         //echo "<pre>"; var_dump($res); echo "</pre>";
                         //echo "<Br>using input $thumbInput";   
+                    } else {
+                        $this->log("PlacesController->createPlace() no thumbnail image found", LOG_DEBUG);
                     }
                 }
             }

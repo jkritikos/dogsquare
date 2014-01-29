@@ -79,6 +79,21 @@ class UserFollows extends AppModel {
         return $count;
     }
     
+    //Returns the facebook ids of the users that the current user is following
+    function getFacebookFollowing($id){
+        $sql = "select u.facebook_id from users u inner join user_follows uf on (u.id=uf.follows_user) where uf.user_id=$id and u.facebook_id is not null";
+        $rs = $this->query($sql);
+        $data = array();
+        
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+		$data[] = $rs[$i]['u']['facebook_id'];
+            }
+        }
+        
+        return $data;
+    }
+    
     //Reutns the users that user $id is following
     function getFollowing($id){
         $sql = "select u.id, u.name, p.thumb from users u inner join user_follows uf on (u.id=uf.follows_user) inner join photos p on (u.photo_id=p.id) where uf.user_id=$id";
