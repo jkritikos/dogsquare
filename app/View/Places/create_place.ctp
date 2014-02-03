@@ -62,9 +62,9 @@ $(document).ready(function(){
                     <select name="data[Place][category_id]" required="required" />
                         <option value="">Please select</option>
                         <?php  
-                        	foreach ($categoryNames as $key => $cat): 
-                        		$categoryName = $cat['PlaceCategory']['name']; 
-								$categoryId = $cat['PlaceCategory']['id'];  
+                            foreach ($categoryNames as $key => $cat): 
+                                $categoryName = $cat['PlaceCategory']['name']; 
+				$categoryId = $cat['PlaceCategory']['id'];  
                         ?>
                          	<option value="<?php echo $categoryId ?>"><?php echo $categoryName ?></option>
                         <?php endforeach; ?>

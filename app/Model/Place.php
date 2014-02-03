@@ -17,7 +17,7 @@ class Place extends AppModel {
         }
 
         if($category != ''){
-            $sql .= " and pc.name like '%$category%' ";
+            $sql .= " and p.category_id = $category ";
         }
 
         if($status != ''){
@@ -107,7 +107,7 @@ class Place extends AppModel {
         $sql .= "inner join activities a  on (ad.activity_id = a.id) ";
         $sql .= "inner join photos p on (d.photo_id = p.id) ";
         $sql .= "inner join users u on (d.owner_id = u.id) ";
-        $sql .= "where d.mating = 1 ";
+        $sql .= "where d.mating = 1 and d.active=1 ";
         $sql .= "and ad.created = (select max(ad2.created) from activity_dogs ad2 where ad2.dog_id = ad.dog_id) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
         
@@ -144,7 +144,7 @@ class Place extends AppModel {
         $sql .= "inner join dog_breeds db  on (d.breed_id = db.id) ";
         $sql .= "inner join photos p on (d.photo_id = p.id) ";
         $sql .= "inner join users u on (d.owner_id = u.id) ";
-        $sql .= "where d.breed_id in ($breeds) ";
+        $sql .= "where d.breed_id in ($breeds) and d.active=1 ";
         $sql .= "and ad.created = (select max(ad2.created) from activity_dogs ad2 where ad2.dog_id = ad.dog_id) ";
         $sql .= "having distance <= ".NEARBY_DISTANCE ." order by distance ";
         

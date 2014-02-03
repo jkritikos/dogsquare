@@ -26,6 +26,10 @@ class ConfigurationsController extends AppController{
 	$this->set('activeTab', "configurations");
     }
     
+    function info(){
+        
+    }
+    
     function index(){
         $currentUser = $this->Session->read('userID');
 	if($currentUser != null){

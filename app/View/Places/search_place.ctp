@@ -4,12 +4,15 @@ $(document).ready(function(){
 
     $("#searchButton").click(function(){
         var nameVal = $("#nameField").val();
-		var categoryVal = $("#categoryField").val();
+	var categoryVal = $("#categoryField").val();
         var statusVal = $("#statusField").val();
-	if(nameVal == '' && categoryVal == '' && statusVal == ''){
+	
+        if(nameVal == '' && categoryVal == '' && statusVal == ''){
             $("#errorMsg").fadeIn('slow');
             return false;
-	}
+	} else {
+            $("#errorMsg").hide();
+        }
     });
 			          
     $("#form").validator({    	
@@ -35,7 +38,7 @@ $(document).ready(function(){
                 <div class="columns">
                 <div class="grid_6 first">
                         	
-                    <form id="form" class="form panel" method="post" action="/places/searchPlace">
+                    <form id="form" class="form panel" method="post" action="/places/searchPlace" novalidate>
                         <header><h2>Use any of the following criteria:</h2></header>
 
                         <hr />
@@ -46,7 +49,18 @@ $(document).ready(function(){
                             </div>
                             <div class="clearfix">
                                 <label>Category</label>
-                                <input id="categoryField" type="text" name="data[Place][category]" minlength="3"/>
+                                
+                                <select id="categoryField" name="data[Place][category]" />
+                                <option value="">Please select</option>
+                                <?php  
+                                    foreach ($categoryNames as $key => $cat): 
+                                        $categoryName = $cat['PlaceCategory']['name']; 
+                                        $categoryId = $cat['PlaceCategory']['id'];  
+                                ?>
+                                        <option value="<?php echo $categoryId ?>"><?php echo $categoryName ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                                
                             </div>
                             <div class="clearfix">
                                 <label>Status</label>
@@ -94,7 +108,7 @@ $(document).ready(function(){
 				    <tr>
 					<th align="left">Name</th>
 					<th align="left">Category</th>	
-					<th align="left">created</th>
+					<th align="left">Created</th>
 					<th align="left">Edit</th>
 				    </tr>
 				</thead>

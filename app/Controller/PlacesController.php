@@ -137,23 +137,27 @@ class PlacesController extends AppController {
         echo json_encode(compact('data', $data));
     }
 	
-	function searchPlace(){
+    function searchPlace(){
         $currentUser = $this->Session->read('userID');
-		if($currentUser != null){
-	        $this->set('headerTitle', "Search places");
-			
-	        if (!empty($this->request->data)){
-	        	$name = $this->request->data['Place']['name'];
-	            $category = $this->request->data['Place']['category'];
-	            $status = $this->request->data['Place']['active'];
+        if($currentUser != null){
+            $this->set('headerTitle', "Search places");
+            
+            $this->loadModel('PlaceCategory');
+            $categoryNames = $this->PlaceCategory->find('all', array('fields' => array('PlaceCategory.id','PlaceCategory.name') ));
+            $this->set('categoryNames', $categoryNames);
+            
+	    if (!empty($this->request->data)){
+                $name = $this->request->data['Place']['name'];
+	        $category = $this->request->data['Place']['category'];
+	        $status = $this->request->data['Place']['active'];
 				
-				$data = $this->Place->search($name, $category, $status);
-				$this->set('results', $data);
-	        }
-	
-		} else {
-	        $this->requireLogin('/Places/searchPlace');
-		}
+                $data = $this->Place->search($name, $category, $status);
+                $this->set('results', $data);
+	    }
+            
+        } else {
+            $this->requireLogin('/Places/searchPlace');
+        }
     }
 
     function editPlace($id){

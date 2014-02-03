@@ -59,24 +59,44 @@ $(document).ready(function(){
                         <input value="<?php echo $place['Place']['name']; ?>" type="text" name="data[Place][name]" />
                     </div>
                     <div class="clearfix">
-                    <label>Category</label>
-                    <select name="data[Place][category_id]" />
-                        <option value="<?php echo $place['Place']['category_id']; ?>"><?php echo $placeCategoryById['PlaceCategory']['name'] ?></option>
-                        <?php  
-                        	foreach ($categoryNames as $key => $cat): 
-                        		$categoryName = $cat['PlaceCategory']['name']; 
-								$categoryId = $cat['PlaceCategory']['id']; 
-                        ?>
-                        <option value="<?php echo $categoryId ?>"><?php echo $categoryName ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                	</div>
-                    <div class="clearfix">
-                        <label>Status</label>
+                        <label>Active</label>
                         <select name="data[Place][active]">
-							<option <?php echo $activeSelected; ?> value="1">Active</option>
-							<option <?php echo $deactiveSelected; ?> value="0">Deactive</option>
-						</select>
+                            <option <?php echo $activeSelected; ?> value="1">Active</option>
+                            <option <?php echo $deactiveSelected; ?> value="0">Deactive</option>
+                        </select>
+                    </div>
+                    <div class="clearfix">
+                        <label>Category</label>
+                        <select name="data[Place][category_id]">
+                            <option value="<?php echo $place['Place']['category_id']; ?>"><?php echo $placeCategoryById['PlaceCategory']['name']; ?></option>
+                            <?php  
+                                foreach ($categoryNames as $key => $cat): 
+                                    $categoryName = $cat['PlaceCategory']['name']; 
+                                    $categoryId = $cat['PlaceCategory']['id']; 
+                            ?>
+                            <option value="<?php echo $categoryId ?>"><?php echo $categoryName ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="clearfix">
+                        <label>Longitude *</label>
+                        <input type="text" name="data[Place][lon]" value="<?php echo $place['Place']['lon']; ?>" required="required" />
+                    </div>
+                    <div class="clearfix">
+                        <label>Latitude *</label>
+                        <input type="text" name="data[Place][lat]" value="<?php echo $place['Place']['lat']; ?>" required="required" />
+                    </div>
+                    <div class="clearfix">
+                        <label>Weight *</label>
+                        <input type="number" name="data[Place][weight]" value="<?php echo $place['Place']['weight']; ?>"/>
+                    </div>
+                    <div class="clearfix">
+                        <label>URL</label>
+                        <input type="text" name="data[Place][url]" value="<?php echo $place['Place']['url']; ?>"/>
+                    </div>
+                    <div class="clearfix">
+                        <label>Color</label>
+                        <input type="text" name="data[Place][color]" value="<?php echo $place['Place']['color']; ?>"/>
                     </div>
 		</fieldset>
 

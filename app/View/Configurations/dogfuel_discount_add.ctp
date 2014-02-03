@@ -82,7 +82,7 @@ $(document).ready(function(){
         <?php
         if(isset($data) && !empty($data)){
             ?>
-            <h3>Dogfuel Discounts</h3>				
+            <h3>Dogfuel Boosts</h3>				
             <hr />
             
 	     <table class="paginate sortable full">
@@ -90,9 +90,9 @@ $(document).ready(function(){
                     <tr>
                         <th align="left">Age from</th>					
                         <th align="left">Age to</th>
-                        <th align="left">Discount</th>
+                        <th align="left">Boost</th>
                         <th align="left">Weather temp</th>
-                        <th align="left">Weather value</th>
+                        <th align="left">Weather boost</th>
                         <th align="left">Action</th>
                     </tr>
                 </thead>

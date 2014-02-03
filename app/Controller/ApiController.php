@@ -3572,6 +3572,8 @@ class ApiController extends AppController{
         if(isset($_REQUEST['list'])) $list = $_REQUEST['list'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
+        $this->loadModel('UserNotification');
+        
         //Authorise user
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
@@ -3587,7 +3589,6 @@ class ApiController extends AppController{
 
                 $this->log("API->setNotificationRead() uses stringList: $listToString", LOG_DEBUG);
 
-                $this->loadModel('UserNotification');
                 $return = $this->UserNotification->setNotificationsToRead($listToString);
                 $this->log("API->setNotificationsRead() affected rows are $return", LOG_DEBUG);
                 if($return > 0){
