@@ -84,7 +84,7 @@ $(document).ready(function(){
                 </div>
                 <div class="clearfix">
                     <label>URL</label>
-                    <input type="text" name="data[Place][url]"/>
+                    <input type="text" name="data[Place][url]" value="http://"/>
                 </div>
                 <div class="clearfix">
                     <label>Color</label>

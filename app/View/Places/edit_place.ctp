@@ -22,6 +22,11 @@ if(isset($place)){
 <script type="text/javascript" src="/js/jquery.rules.js"></script>
 <script>
 $(document).ready(function(){
+    $('#deletePlaceButton').click(function(){
+        
+        $('#hiddenActiveFlag').val(0);
+    });
+    
     $("#form").validator({    	
     	position: 'left',
     	offset: [25, 10],
@@ -49,7 +54,8 @@ $(document).ready(function(){
 		$action = "/places/editPlace/$targetPlaceId";
 		?>
 	    <form id="form" class="form panel" method="post" action="<?php echo $action; ?>" novalidate>
-	    <input type="hidden" name="data[Place][id]" value="<?php echo $targetPlaceId; ?>" />	    
+	    <input type="hidden" name="data[Place][id]" value="<?php echo $targetPlaceId; ?>" />
+            <input id="hiddenActiveFlag" type="hidden" name="data[Place][active_override]" value="<?php echo $place['Place']['active']; ?>" />
 		<header><h2>Use the following fields to update the user details:</h2></header>
 
 		<hr />
@@ -103,6 +109,7 @@ $(document).ready(function(){
 		<hr />
 		<button class="button button-green" type="submit">Update</button>
 		<button class="button button-gray" type="reset">Reset</button>
+                <button id="deletePlaceButton" class="button button-orange" type="submit">Delete</button>
 		<img id="loader" style="display:none;position:absolute;" src="/img/ajax-loader.gif" />
 	    </form>
 	</div>

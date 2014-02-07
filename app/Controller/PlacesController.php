@@ -167,6 +167,9 @@ class PlacesController extends AppController {
             $this->set('targetPlaceId', $id);
 
             if (!empty($this->request->data)){
+                
+                $this->request->data['Place']['active'] = $this->request->data['Place']['active_override'];
+                
                 if($this->Place->save($this->request->data)){
                     $this->set('notification', 'Place details updated successfully.');
                 } else {
