@@ -65,10 +65,15 @@
     }
 
     private function create_thumb() {
-    App::import('Vendor', 'PhpThumb', array('file' => 'phpThumb'.DS.'phpthumb.class.php'));
-
-    $this->php_thumb = new phpThumb();
-
+    //dev
+    //App::import('Vendor', 'PhpThumb', array('file' => 'phpThumb'.DS.'phpthumb.class.php'));
+        App::import('Vendor', 'PhpThumb', array('file' => 'PhpThumb'.DS.'phpthumb.class.php'));
+        
+    //dev
+    //$this->php_thumb = new phpThumb();
+        
+        $this->php_thumb = new phpthumb();
+        
     foreach($this->php_thumb as $var => $value) {
         if(isset($this->options[$var]))    {
             $this->php_thumb->setParameter($var, $this->options[$var]);

@@ -98,7 +98,18 @@ class ApiController extends AppController{
             
         if($user_id != null){
             $data['token'] = $token;
-
+            
+            //Update user with facebook id
+            if(isset($facebook_id) && $facebook_id != ''){
+                $this->log("API->login() called for user $user_id - setting facebook_id to $facebook_id" , LOG_DEBUG);
+                $userObject['User']['id'] = $user_id;
+                $userObject['User']['facebook_id'] = $facebook_id;
+                
+                if($this->User->save($userObject)){
+                    $response = REQUEST_OK;
+                }
+            }
+            
             //Dog breeds 
             //TODO cakephp doesnt seem to properly encode utf8 chars, so we get back NULL
             $this->loadModel('DogBreed');
@@ -499,9 +510,54 @@ class ApiController extends AppController{
         echo json_encode(compact('data', $data));
     }
     
+    //Updates the specified user with his facebook id
+    function facebookConnect(){
+        if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
+        if(isset($_REQUEST['facebook_id'])) $facebook_id = $_REQUEST['facebook_id'];
+        
+        //Authorise user
+        $this->loadModel('User');
+        $authorised = $this->User->authorise($userID,$token);
+        if($authorised){
+            //Update user with facebook id
+            if(isset($facebook_id) && $facebook_id != ''){
+                
+                $this->log("API->facebookConnect() called for user $userID - setting facebook_id to $facebook_id" , LOG_DEBUG);
+                $userObject['User']['id'] = $userID;
+                $userObject['User']['facebook_id'] = $facebook_id;
+
+                if($this->User->save($userObject)){
+                    $response = REQUEST_OK;
+                }
+            }
+        } else {
+            //ignore
+            $response = REQUEST_UNAUTHORISED;
+        }
+        
+        $data['response'] = $response;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
     //Returns the facebook ids that the current user is following
     function getFacebookFriendsFollowing(){
         if(isset($_REQUEST['user_id'])) $userID = $_REQUEST['user_id'];
+        if(isset($_REQUEST['facebook_id'])) $facebook_id = $_REQUEST['facebook_id'];
+        
+        //Update user with facebook id
+        if(isset($facebook_id) && $facebook_id != ''){
+            $this->loadModel('User');
+            $this->log("API->login() called for user $userID - setting facebook_id to $facebook_id" , LOG_DEBUG);
+            $userObject['User']['id'] = $userID;
+            $userObject['User']['facebook_id'] = $facebook_id;
+
+            if($this->User->save($userObject)){
+                $response = REQUEST_OK;
+            }
+        }
         
         //No authorisation to keep things quick
         $this->loadModel('UserFollows');
@@ -2220,6 +2276,8 @@ class ApiController extends AppController{
         if(isset($_REQUEST['follow_user_fb'])) $follow_user_fb = $_REQUEST['follow_user_fb'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
+        $this->log("API->followUser() called with follow_user=$follow_user follow_user_fb=$follow_user_fb", LOG_DEBUG);
+        
         //Authorise user
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
@@ -2227,9 +2285,13 @@ class ApiController extends AppController{
             
             //If we have a Facebook ID we need to retrieve the user id first
             if(isset($follow_user_fb) && $follow_user_fb != null){
+                $this->log("API->followUser() retrieving dogsquare user id from  follow_user_fb=$follow_user_fb", LOG_DEBUG);
                 $followUserObj = $this->User->findByFacebook_id($follow_user_fb);
                 if($followUserObj != null){
                     $follow_user = $followUserObj['User']['id'];
+                    $this->log("API->followUser() retrieved dogsquare user id $follow_user", LOG_DEBUG);
+                } else {
+                    $this->log("API->followUser() could NOT get dogsquare user id from follow_user_fb=$follow_user_fb", LOG_DEBUG);
                 }
             }
             

@@ -241,6 +241,11 @@ define("BADGE_101_DALMATIANS", 16);
 
 
 Configure::load('config');
+
+//dev works fine like that
 //CakePlugin::load('PhpThumb');
-CakePlugin::load('PhpThumb');
+
+//media temple wants it like that
+CakePlugin::loadAll();
+
 $config['PhpThumb']['thumbs_path'] = 'thumbs';
