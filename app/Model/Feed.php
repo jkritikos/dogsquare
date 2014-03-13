@@ -21,7 +21,7 @@ class Feed extends AppModel {
         $sql .= "f.target_dog_id, f.target_dog_name, f.target_place_id, f.target_place_name, f.activity_id, ";
         $sql .= "p.thumb from feeds f inner join users u on (u.id = f.user_from) inner join photos p on (u.photo_id = p.id) ";
         $sql .= " where f.user_from in (select uf.follows_user from user_follows uf where uf.user_id=$user_id) ";
-        $sql .= "order by f.created desc limit 20";
+        $sql .= "order by f.created desc limit 50";
         
         $rs = $this->query($sql);
 

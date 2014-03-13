@@ -3743,12 +3743,14 @@ class ApiController extends AppController{
         if(isset($_REQUEST['name'])) $name = $_REQUEST['name'];
         if(isset($_REQUEST['token'])) $token = $_REQUEST['token'];
         
+        $this->log("API->search() called for search string $name", LOG_DEBUG);
+        
         //Authorise user
         $this->loadModel('User');
         $authorised = $this->User->authorise($user_id,$token);
         if($authorised){
         
-            $userData = $this->User->search($name, null, null, $user_id);
+            $userData = $this->User->search($name, null, "1", $user_id);
 
             $this->loadModel('Place');
             $placeData = $this->Place->search($name, null, null);
