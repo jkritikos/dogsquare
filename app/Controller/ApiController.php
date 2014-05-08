@@ -1409,7 +1409,24 @@ class ApiController extends AppController{
 
         //Load additional data with this request
         if($response == REQUEST_OK){
-
+            
+            //Send email notification
+            //if($userTarget['User']['facebook_id'] == null){
+            if(stristr($currentUser[0]['User']['email'], '@facebook.com') === FALSE){    
+                
+                try {
+                    $Email = new CakeEmail('smtp');  
+                    $Email->emailFormat('html')
+                            ->subject('Dogsquare Password Reset')
+                        ->template('password_reset')
+                        ->viewVars(array('password' => $password, 'email' => $currentUser[0]['User']['email']))    
+                        ->to($currentUser[0]['User']['email'])
+                        ->send();
+                    } catch(SocketException $e) {
+                        $this->log("API->resetPassword() error when trying to email ".$currentUser[0]['User']['email'] ." with error " .$e->getMessage(), LOG_DEBUG);
+                    }
+            }
+            
             //Count unread notifications
             $this->loadModel('UserNotification');
             $count_notifications = $this->UserNotification->countUnreadNotifications($user_id);
