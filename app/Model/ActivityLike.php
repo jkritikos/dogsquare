@@ -27,6 +27,21 @@ class ActivityLike extends AppModel {
         $this->log("ActivityLike->deleteLike() deleted $deleted rows for user_id $user_id and activity_id $activity_id", LOG_DEBUG);
         return $deleted;
     }
+    
+    //Returns a count of activity likes for the specified user
+     function countLikesForUser($id){
+         $sql = "select count(*) as cnt from activity_likes a where a.user_id=$id";
+        $rs = $this->query($sql);
+        
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        return $count;
+     }
      
 }
 

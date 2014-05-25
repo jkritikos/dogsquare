@@ -9,6 +9,13 @@ class User extends AppModel {
         )
     );
     
+    public $belongsTo = array(
+        'Country' => array(
+            'className' => 'Country',
+            'foreignKey' => 'country_id'
+        )
+    );
+    
     function getProfilePhoto($user_id){
         $sql = "select p.path, p.thumb from photos p inner join users u on (u.photo_id = p.id) where u.id=$user_id";
         
@@ -57,9 +64,9 @@ class User extends AppModel {
 	return $object;
     }
     
-    function websearch($name,$email,$status){
-        $sql = "select u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created ";
-        $sql .= " from users u inner join photos p on (u.photo_id=p.id) where 1=1";
+    function websearch($name,$email,$status,$country_id,$from, $to){
+        $sql = "select c.name, u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created ";
+        $sql .= " from users u inner join photos p on (u.photo_id=p.id) inner join countries c on (u.country_id = c.id) where 1=1";
 
 	if($name != ''){
             $sql .= " and u.name like '%$name%' order by u.name";
@@ -72,9 +79,30 @@ class User extends AppModel {
         if($status != ''){
             $sql .= " and u.active=$status ";
         }
+        
+        if($country_id != ''){
+            $sql .= " and u.country_id=$country_id ";
+        }
+        
+        if(!empty($from)){
+            $day = substr($from, 0,2);
+            $month = substr($from, 3,2);
+            $year = substr($from, 6,4);
+            $from = date("Y/m/d", mktime(0, 0, 0, $month, $day, $year));
+            $sql .= " and date(u.created) >= '$from' ";
+        }
+
+        if(!empty($to)){
+            $day = substr($to, 0,2);
+            $month = substr($to, 3,2);
+            $year = substr($to, 6,4);
+            $to = date("Y/m/d", mktime(0, 0, 0, $month, $day, $year));
+            $sql .= " and date(u.created) <= '$to' ";
+        }
 
 	$rs = $this->query($sql);
-
+        $this->log("User->websearch() sql $sql", LOG_DEBUG);
+        
 	$data = array();
 	if(is_array($rs)){
             foreach($rs as $i => $values){
@@ -89,6 +117,7 @@ class User extends AppModel {
 		$obj['User']['created'] = $created;
 		$obj['User']['id'] = $id;
                 $obj['User']['thumb'] = $thumb;
+                $obj['User']['country'] = $rs[$i]['c']['name'];
 
 		$data[] = $obj;
             }

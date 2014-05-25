@@ -56,11 +56,19 @@ $(document).ready(function(){
 		<fieldset>
                     <div class="clearfix">
                         <label>Name</label>
-                        <input value="<?php echo $user['User']['name']; ?>" type="text" name="data[User][name]" required="required" />
+                        <input size="50" value="<?php echo $user['User']['name']; ?>" type="text" name="data[User][name]" required="required" />
                     </div>
                     <div class="clearfix">
                         <label>Email</label>
-                        <input value="<?php echo $user['User']['email']; ?>" type="text" name="data[User][email]" required="required" />
+                        <input size="50" value="<?php echo $user['User']['email']; ?>" type="text" name="data[User][email]" required="required" />
+                    </div>
+                    <div class="clearfix">
+                        <label>Country</label>
+                        <label><?php echo $user['Country']['name']; ?></label>
+                    </div>
+                    <div class="clearfix">
+                        <label>Registration date</label>
+                        <label><?php echo $user['User']['created']; ?></label>
                     </div>
                     <div class="clearfix">
                         <label>Status</label>
@@ -124,7 +132,10 @@ $(document).ready(function(){
     	</dl>
     
     	</section>    						    
-    </div>    
+    </div>
+        
+    <?php echo $this->element('menu_user'); ?>
+        
     </aside>
     
     <!-- End of Right column/section -->

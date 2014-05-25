@@ -7,6 +7,7 @@ $classConfiguration = "";
 $classUsers = "";
 $classReports = "";
 $classDashboard = "";
+$classDogs = "";
 
 $this->log("header.ctp active tab is $activeTab", LOG_DEBUG);
 
@@ -15,21 +16,31 @@ if($activeTab == 'configurations'){
     $classUsers = "";
     $classReports = "";
     $classDashboard = "";
+    $classDogs = "";
 } else if($activeTab == 'users'){
     $classConfiguration = "";
     $classUsers = "class=\"active\"";
     $classReports = "";
     $classDashboard = "";
+    $classDogs = "";
 } else if($activeTab == 'reports'){
     $classConfiguration = "";
     $classUsers = "";
     $classReports = "class=\"active\"";
     $classDashboard = "";
+    $classDogs = "";
 } else if($activeTab == "dashboard"){
     $classConfiguration = "";
     $classUsers = "";
     $classDashboard = "class=\"active\"";
     $classReports = "";
+    $classDogs = "";
+} else if($activeTab == "dogs"){
+    $classConfiguration = "";
+    $classUsers = "";
+    $classDashboard = "";
+    $classReports = "";
+    $classDogs = "class=\"active\"";
 }
 
 ?>
@@ -60,6 +71,16 @@ if($activeTab == 'configurations'){
                     <?php
                 }
                 ?>
+                    
+                <?php
+                if(in_array(ROLE_ADMIN, $role)){
+                
+                    ?>
+                    <li <?php echo $classDogs; ?> ><a href="/dogs">Dogs</a></li>
+                    
+                    <?php
+                }
+                ?>    
 
             </ul>
         </div>

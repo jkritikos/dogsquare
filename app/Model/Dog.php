@@ -3,6 +3,43 @@
 class Dog extends AppModel {
     var $name = 'Dog';
     
+    function websearch($name, $breed, $country, $mating){
+        $sql = "select u.id, u.name, d.id, d.name, db.name, c.name from dogs d inner join dog_breeds db on (d.breed_id = db.id) inner join users u on (d.owner_id = u.id) inner join countries c on (u.country_id = c.id) where 1=1 ";
+        
+        if($name != ''){
+            $sql .= " and d.name like '%$name%' ";
+        }
+        
+        if($breed != ''){
+            $sql .= " and d.breed_id = $breed ";
+        }
+        
+        if($country != ''){
+            $sql .= " and u.country_id = $country ";
+        }
+        
+        if($mating != ''){
+            $sql .= " and d.mating = $mating";
+        }
+        
+        $rs = $this->query($sql);
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['Dog']['id'] = $rs[$i]['d']['id'];
+                $obj['Dog']['name'] = $rs[$i]['d']['name'];
+                $obj['Dog']['owner'] = $rs[$i]['u']['name'];
+                $obj['Dog']['owner_id'] = $rs[$i]['u']['id'];
+                $obj['Dog']['breed'] = $rs[$i]['db']['name'];
+                $obj['Dog']['country'] = $rs[$i]['c']['name'];
+                
+                $data[] =$obj;
+            }
+        }
+        
+        return $data;
+    }
+    
     function getProfilePhoto($dog_id){
         $sql = "select p.path, p.thumb from photos p inner join dogs d on (d.photo_id = p.id) where d.id=$dog_id";
         

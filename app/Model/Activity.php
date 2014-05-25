@@ -3,6 +3,21 @@
 class Activity extends AppModel {
     var $name = 'Activity';
     
+    //Returns a count of the user activities
+    function countActivitiesForUser($user_id){
+        $sql = "select count(*) as cnt from activities a where a.user_id=$user_id";
+        $rs = $this->query($sql);
+        
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        return $count;
+    }
+    
     //Returns a list of the activities by this user.
     function getActivityList($user_id){
         $sql = "select a.id, p.thumb, UNIX_TIMESTAMP(a.created) created, group_concat(d.name separator ', ') dogs from activities a ";

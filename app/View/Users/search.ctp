@@ -6,7 +6,10 @@ $(document).ready(function(){
         var nameVal = $("#nameField").val();
 	var emailVal = $("#emailField").val();
         var statusVal = $("#statusField").val();
-	if(nameVal == '' && emailVal == '' && statusVal == ''){
+        var countryVal = $("#countryField").val();
+        var dateFrom = $("#fromDate").val();
+        var dateTo = $("#toDate").val();
+	if(nameVal == '' && emailVal == '' && statusVal == '' && countryVal == '' && dateFrom == '' && dateTo == ''){
             $("#errorMsg").fadeIn('slow');
             return false;
 	}
@@ -47,6 +50,28 @@ $(document).ready(function(){
                             <div class="clearfix">
                                 <label>Email</label>
                                 <input id="emailField" type="text" name="data[User][email]" minlength="3"/>
+                            </div>
+                            <div class="clearfix">
+                                <label>Country</label>
+                                <select id="countryField" name="data[User][country_id]">
+                                    <option selected value="">Please select</option>
+                                    <?php
+                                    
+                                    foreach($countries as $i => $data){
+                                        ?>
+                                        <option value="<?php echo $i; ?>"><?php echo $data; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="clearfix">
+                                <label>Registration date from</label>
+                                <input id="fromDate" type="date" name="data[User][created_from]" minlength="3"/>
+                            </div>
+                            <div class="clearfix">
+                                <label>Registration date to</label>
+                                <input id="toDate" type="date" name="data[User][created_to]" minlength="3"/>
                             </div>
                             <div class="clearfix">
                                 <label>Status</label>
@@ -93,7 +118,7 @@ $(document).ready(function(){
 				<thead>
 				    <tr>
 					<th align="left">Name</th>
-					<th align="left">Email</th>					
+					<th align="left">Country</th>					
 					<th align="left">Created</th>
 					<th align="left">Edit</th>
 				    </tr>
@@ -108,7 +133,7 @@ $(document).ready(function(){
                                     ?>
                                     <tr>
                                         <td><?php echo $r['User']['name']; ?></td>
-                                        <td><?php echo $r['User']['email']; ?></td>
+                                        <td><?php echo $r['User']['country']; ?></td>
                                         <td><?php echo $r['User']['created']; ?></td>
                                         <td><a href="<?php echo $editLink; ?>"><img src="/img/fam/user_edit.png" /></a></td>
                                     </tr>	                    		
@@ -133,37 +158,27 @@ $(document).ready(function(){
 
                 </section>
 
-                <!-- End of Left column/section -->
+        <!-- End of Left column/section -->
 
-                <!-- Right column/section -->
-
-                <aside class="grid_2">
-				
-		    <div class="widget">
-
-			    <header>
-
-				<h2>Options</h2>
-
-			    </header>
-
-			    <section>
-
-				<dl>				    				                                    				    
-				    <dd><img src="/img/fam/user_add.png" />&nbsp;<a href="/users/create">Create new user</a></dd>				    				                                    				    
-				    <dd><img src="/img/fam/search.png" />&nbsp;<a href="/users/search">Search users</a></dd>				    				                                    				   
-				    <dd><img src="/img/fam/user_edit.png" />&nbsp;<a href="/users/profile">My profile</a></dd>				    
-				</dl>
-
-			    </section>
-						    
-		    </div>
-
-		</aside>
-
-                <!-- End of Right column/section -->
-                <div class="clear"></div>
-
+        <!-- Right column/section -->
+        <aside class="grid_2">
+            <div class="widget">
+                <header>
+                    <h2>Options</h2>
+                </header>
+                <section>
+                    <dl>				    				                                    				    
+                        <dd><img src="/img/fam/user_add.png" />&nbsp;<a href="/users/create">Create new user</a></dd>				    				                                    				    
+                        <dd><img src="/img/fam/search.png" />&nbsp;<a href="/users/search">Search users</a></dd>				    				                                    				   
+                        <dd><img src="/img/fam/user_edit.png" />&nbsp;<a href="/users/profile">My profile</a></dd>				    
+                    </dl>
+                </section>	    
             </div>
-            <div id="push"></div>
-        </section>
+        </aside>
+
+        <!-- End of Right column/section -->
+        <div class="clear"></div>
+
+    </div>
+    <div id="push"></div>
+</section>

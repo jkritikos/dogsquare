@@ -27,13 +27,20 @@ class UsersController extends AppController {
         $currentUser = $this->Session->read('userID');
 	if($currentUser != null){
             $this->set('headerTitle', "Search users");
-
+            
+            $this->loadModel('Country');
+            $countries = $this->Country->find('list');
+            $this->set('countries', $countries);
+            
             if (!empty($this->request->data)){
                 $name = $this->request->data['User']['name'];
 		$email = $this->request->data['User']['email'];
                 $status = $this->request->data['User']['active'];
+                $country_id = $this->request->data['User']['country_id'];
+                $registrationFrom = $this->request->data['User']['created_from'];
+                $registrationTo = $this->request->data['User']['created_to'];
 
-		$data = $this->User->websearch($name,$email,$status);
+		$data = $this->User->websearch($name,$email,$status,$country_id,$registrationFrom,$registrationTo);
 		$this->set('results', $data);
             }
 
@@ -129,19 +136,202 @@ class UsersController extends AppController {
 		}
             }
 
-            $userObj = $this->User->findById($id);
-            if($userObj != null){
-                $this->set('user', $userObj);
-
-		//update session data
-		$this->Session->write('name', $userObj['User']['name']);
-            }
+            $userObj = $this->User->findById($id);        
+            $this->set('user', $userObj);
+            $this->set('user_id', $id);
+            
+            //count stuff for the menu
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            $this->loadModel('Activity');
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $follow_stats = $this->UserFollows->getFollowStats($id);
+            $placeComments = $this->PlaceComment->countCommentsForUser($id);
+            $placeLikes = $this->PlaceLike->countLikesForUser($id);
+            $activityComments = $this->ActivityComment->countCommentsForUser($id);
+            $activityLikes = $this->ActivityLike->countLikesForUser($id);
+            $userPhotos = $this->Photo->countPhotosByUser($id);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($id);
+            $activities = $this->Activity->countActivitiesForUser($id);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            
 
 	} else {
-            $this->requireLogin('/Users/edit/$id');
+            $this->requireLogin("/Users/edit/$id");
 	}
     }
-
+    
+    //Returns the list of followers of the specified user
+    function viewFollowers($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $user = $this->User->findById($id);
+            $this->set('user', $user);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', $user['User']['name']);
+            
+            //count stuff for the menu
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            $this->loadModel('Activity');
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $follow_stats = $this->UserFollows->getFollowStats($id);
+            $placeComments = $this->PlaceComment->countCommentsForUser($id);
+            $placeLikes = $this->PlaceLike->countLikesForUser($id);
+            $activityComments = $this->ActivityComment->countCommentsForUser($id);
+            $activityLikes = $this->ActivityLike->countLikesForUser($id);
+            $userPhotos = $this->Photo->countPhotosByUser($id);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($id);
+            $activities = $this->Activity->countActivitiesForUser($id);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            
+            //load the required data
+            $followersList = $this->UserFollows->getFollowers($id);
+            $this->set('followersList', $followersList);
+            
+	} else {
+            $this->requireLogin("/Users/viewFollowers/$id");
+	}
+    }
+    
+    //Returns the list of users followed by the specified user
+    function viewFollowing($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $user = $this->User->findById($id);
+            $this->set('user', $user);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', $user['User']['name']);
+            
+            //count stuff for the menu
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            $this->loadModel('Activity');
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $follow_stats = $this->UserFollows->getFollowStats($id);
+            $placeComments = $this->PlaceComment->countCommentsForUser($id);
+            $placeLikes = $this->PlaceLike->countLikesForUser($id);
+            $activityComments = $this->ActivityComment->countCommentsForUser($id);
+            $activityLikes = $this->ActivityLike->countLikesForUser($id);
+            $userPhotos = $this->Photo->countPhotosByUser($id);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($id);
+            $activities = $this->Activity->countActivitiesForUser($id);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            
+            //load the required data
+            $followersList = $this->UserFollows->getFollowing($id);
+            $this->set('followersList', $followersList);
+	} else {
+            $this->requireLogin("/Users/viewFollowing/$id");
+	}
+    }
+    
+    //Returns the dogs owned by the specified user
+    function viewDogs($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $user = $this->User->findById($id);
+            $this->set('user', $user);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', "Dogs of " . $user['User']['name']);
+            
+            //count stuff for the menu
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            $this->loadModel('Activity');
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $follow_stats = $this->UserFollows->getFollowStats($id);
+            $placeComments = $this->PlaceComment->countCommentsForUser($id);
+            $placeLikes = $this->PlaceLike->countLikesForUser($id);
+            $activityComments = $this->ActivityComment->countCommentsForUser($id);
+            $activityLikes = $this->ActivityLike->countLikesForUser($id);
+            $userPhotos = $this->Photo->countPhotosByUser($id);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($id);
+            $activities = $this->Activity->countActivitiesForUser($id);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            
+            //load the required data
+            $timezone = "+2:00";
+            $fromDate = date("Y-m-d") . " 00:00:01";
+            $toDate = date("Y-m-d") . " 23:59:59";
+            $dogList = $this->Dog->getUserDogs($id, $fromDate, $toDate, $timezone);
+            $this->set('dogList', $dogList);
+            
+            //echo "<pre>"; var_dump($dogList); echo "</pre>";
+            
+	} else {
+            $this->requireLogin("/Users/viewDogs/$id");
+	}
+    }
+    
     function login(){
 	$this->layout = 'blank';
 
