@@ -45,28 +45,39 @@ $(document).ready(function(){
 
                             foreach($breeds as $i => $data){
                                 ?>
-                                <option value="<?php echo $i; ?>"><?php echo $data; ?></option>
+                                <option <?php if($dog['Dog']['breed_id'] == $i) echo "selected"; ?> value="<?php echo $i; ?>"><?php echo $data; ?></option>
                                 <?php
                             }
                             ?>
                         </select>
                     </div>
                     <div class="clearfix">
-                        <label>Country</label>
-                        <label><?php echo $user['Country']['name']; ?></label>
-                    </div>
-                    <div class="clearfix">
-                        <label>Registration date</label>
-                        <label><?php echo $user['User']['created']; ?></label>
-                    </div>
-                    <div class="clearfix">
-                        <label>Status</label>
-                        <select name="data[User][active]">
-				<option <?php echo $activeSelected; ?> value="1">Active</option>
-				<option <?php echo $deactiveSelected; ?> value="0">Deactive</option>
+                        <label>Mating</label>
+                        <select name="data[Dog][mating]">
+                            <option <?php if($dog['Dog']['mating'] == 1) echo "selected"; ?> value="1">Yes</option>
+                            <option <?php if($dog['Dog']['mating'] == 2) echo "selected"; ?> value="2">No</option>
 			</select>
                     </div>
-                    
+                    <div class="clearfix">
+                        <label>Gender</label>
+                        <select name="data[Dog][gender]">
+                            <option <?php if($dog['Dog']['gender'] == 1) echo "selected"; ?> value="1">Male</option>
+                            <option <?php if($dog['Dog']['gender'] == 2) echo "selected"; ?> value="2">Female</option>
+			</select>
+                    </div>
+                    <div class="clearfix">
+                        <label>Size</label>
+                        <select name="data[Dog][size]">
+                            <option <?php if($dog['Dog']['size'] == 1) echo "selected"; ?> value="1">Small</option>
+                            <option <?php if($dog['Dog']['size'] == 2) echo "selected"; ?> value="2">Medium</option>
+                            <option <?php if($dog['Dog']['size'] == 3) echo "selected"; ?> value="3">Large</option>
+                            <option <?php if($dog['Dog']['size'] == 4) echo "selected"; ?> value="4">X-Large</option>
+			</select>
+                    </div>
+                    <div class="clearfix">
+                        <label>Owner</label>
+                        <label><?php echo $owner['User']['name']; ?></label>
+                    </div>
                     
 		</fieldset>
 
@@ -83,27 +94,9 @@ $(document).ready(function(){
     
     <!-- End of Left column/section -->    
     <!-- Right column/section -->
-    
-    <aside class="grid_2">    				
-    <div class="widget">    
-        <header>
-            <h2>Options</h2>
-    	</header>    
-    	<section>
-    
-    	<dl>				    				                                    				    
-            <dd><img src="/img/fam/user_add.png" />&nbsp;<a href="/users/create">Create new user</a></dd>
-            <dd><img src="/img/fam/search.png" />&nbsp;<a href="/users/search">Search users</a></dd>
-            <dd><img src="/img/fam/user_edit.png" />&nbsp;<a href="/users/profile">My profile</a></dd>
-    	</dl>
-    
-    	</section>    						    
-    </div>
         
-    <?php echo $this->element('menu_user'); ?>
-        
-    </aside>
-    
+    <?php echo $this->element('menu_dog'); ?>
+   
     <!-- End of Right column/section -->
     <div class="clear"></div>    
 </div>

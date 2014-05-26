@@ -8,30 +8,33 @@
     <div class="columns leading">
         <div class="grid_6 first">
 	     
-            <h3><?php echo count($dogList); ?> Dogs</h3>				
+            <h3><?php echo count($activitiesList); ?> Activities</h3>				
             <hr />
             
 	     <table class="paginate sortable full">
                 <thead>
                     <tr>
-                        <th align="left">Name</th>
-                        <th align="left">Breed</th>
+                        <th align="left">Date</th>
+                        <th align="left">Temperature</th>
                     </tr>
                 </thead>
                 <tbody>
                     
                 <?php
 
-                    foreach($dogList as $r => $data){
-                        $name = $data['Dog']['name'];
-                        $id = $data['Dog']['id'];
-                        $breed = $data['Dog']['dog_breed'];
+                    foreach($activitiesList as $r => $data){
+                        $created = $data['Activity']['created'];
+                        $id = $data['Activity']['id'];
+                        $temperature = $data['Activity']['temperature'];
+                        $pace = $data['Activity']['pace'];
+                        $distance = $data['Activity']['distance'];
                         
-                        $link = "/dogs/edit/$id";
+                        $link = "/users/editActivity/$id";
                         ?>
                         <tr>
-                            <td><a href="<?php echo $link; ?>"><?php echo $name; ?></a></td>
-                            <td><?php echo $breed; ?></td>
+                            <td><a href="<?php echo $link; ?>"><?php echo $created; ?></a></td>
+                            <td><?php echo $temperature; ?></td>
+                            
                         </tr>	                    		
                         <?php	                    	
                     }

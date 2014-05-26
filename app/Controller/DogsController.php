@@ -54,9 +54,9 @@ class DogsController extends AppController {
 	if($currentUser != null){
             
             //load data for the menu
-            $photos = 0;
-            $activities = 0;
-            $likes = 0;
+            $photos = 1;
+            $activities = 2;
+            $likes = 3;
             
             $this->set('photos', $photos);
             $this->set('activities', $activities);
@@ -69,6 +69,10 @@ class DogsController extends AppController {
             $this->loadModel('DogBreed');
             $breeds = $this->DogBreed->find('list', array('order'=> 'name')); 
             $this->set('breeds', $breeds);
+            
+            $this->loadModel('User');
+            $owner = $this->User->findById($dog['Dog']['owner_id']);
+            $this->set('owner', $owner);
             
 	} else {
             $this->requireLogin("/Dogs/edit/$id");
