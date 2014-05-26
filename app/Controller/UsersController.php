@@ -391,8 +391,10 @@ class UsersController extends AppController {
             $this->loadModel('Activity');
             $activity_dogs = $this->Activity->getActivityDogs($activityId);
             $activity_obj = $this->Activity->findById($activityId);
+            $coordinates = $this->Activity->getActivityCoordinates($activityId);
             $this->set('activity', $activity_obj);
             $this->set('activity_dogs', $activity_dogs);
+            $this->set('activity_coordinates', $coordinates);
             
             $id = $activity_obj['Activity']['user_id'];
             $user = $this->User->findById($id);
@@ -436,7 +438,7 @@ class UsersController extends AppController {
             //$activities = $this->Activity->getActivityList($id);
             //$this->set('activitiesList', $activities);
             
-            //echo "<pre>"; var_dump($dogList); echo "</pre>";
+            //echo "<pre>"; var_dump($coordinates); echo "</pre>";
             
 	} else {
             $this->requireLogin("/Users/viewActivity/$id");

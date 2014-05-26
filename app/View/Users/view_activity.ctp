@@ -1,15 +1,42 @@
 <script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCytXV60HGiJyfNucScCd98poZ73bVfmHo&sensor=false"></script>
-    <script type="text/javascript">
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(-34.397, 150.644),
-          zoom: 8
-        };
-        var map = new google.maps.Map(document.getElementById("map-canvas"),
-            mapOptions);
+<script type="text/javascript">
+  function initialize() {
+      
+      var coordinates = [];
+      
+      <?php
+      foreach($activity_coordinates as $i){
+          $lat = $i['latitude'];
+          $lon = $i['longitude'];
+          
+          ?>
+          var obj = new google.maps.LatLng(<?php echo $lat; ?>, <?php echo $lon; ?>);
+          coordinates.push(obj);
+          <?php
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+      ?>
+   
+    var mapOptions = {
+        zoom:17,
+      center: new google.maps.LatLng(<?php echo $activity_coordinates[0]['latitude']; ?>, <?php echo $activity_coordinates[0]['longitude']; ?>)
+    };
+    var map = new google.maps.Map(document.getElementById("map-canvas"),
+        mapOptions);
+        
+    var activityPath = new google.maps.Polyline({
+    path: coordinates,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+
+  activityPath.setMap(map);
+    
+        
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 <script>
 $(document).ready(function(){
     initialize();
@@ -39,20 +66,7 @@ $(document).ready(function(){
                                 <label>Email</label>
                                 <input id="emailField" type="text" name="data[User][email]" minlength="3"/>
                             </div>
-                            <div class="clearfix">
-                                <label>Country</label>
-                                <select id="countryField" name="data[User][country_id]">
-                                    <option selected value="">Please select</option>
-                                    <?php
-                                    
-                                    foreach($countries as $i => $data){
-                                        ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $data; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
-                            </div>
+                            
                             <div class="clearfix">
                                 <label>Registration date from</label>
                                 <input id="fromDate" type="date" name="data[User][created_from]" minlength="3"/>
@@ -125,7 +139,7 @@ $(document).ready(function(){
                             <h3>Location:</h3>				
                             <hr />
                             
-                            <div style="width:760px; height:320px;" id="map-canvas"></div>
+                            <div style="width:760px; height:380px;" id="map-canvas"></div>
 	                    
                         </div>
                     </div>    
