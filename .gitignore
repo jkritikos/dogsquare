@@ -9,3 +9,5 @@ app/webroot/uploaded_files/*
 app/tmp/logs/debug.log
 
 app/tmp/logs/error.log
+
+nbproject/private/private.xml
