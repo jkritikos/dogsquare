@@ -20,7 +20,7 @@ class Activity extends AppModel {
     
     //Returns a list of the activities by this user.
     function getActivityList($user_id){
-        $sql = "select a.temperature, a.pace, a.distance, a.id, p.thumb, UNIX_TIMESTAMP(a.created) created, group_concat(d.name separator ', ') dogs from activities a ";
+        $sql = "select a.temperature, a.pace, a.distance, a.id, p.thumb, date_format(a.created, '%d/%m/%Y %H:%i' ) as creation_date, UNIX_TIMESTAMP(a.created) created, group_concat(d.name separator ', ') dogs from activities a ";
         $sql .= "inner join activity_dogs ad on (a.id = ad.activity_id) inner join dogs d ";
         $sql .= "on (d.id = ad.dog_id) inner join photos p on (p.id = d.photo_id) where a.user_id=$user_id group by a.id order by a.id desc";
         
@@ -31,6 +31,7 @@ class Activity extends AppModel {
                 $obj['Activity']['id'] = $rs[$i]['a']['id'];
                 $obj['Activity']['thumb'] = $rs[$i]['p']['thumb'];
                 $obj['Activity']['created'] = $rs[$i][0]['created'];
+                $obj['Activity']['creation_date'] = $rs[$i][0]['creation_date'];
                 $obj['Activity']['dogs'] = $rs[$i][0]['dogs'];
                 $obj['Activity']['temperature'] = $rs[$i]['a']['temperature'];
                 $obj['Activity']['pace'] = $rs[$i]['a']['pace'];
@@ -67,7 +68,7 @@ class Activity extends AppModel {
     }
     
     function getActivityDogs($activityId){
-        $sql = "select d.id, d.name, p.thumb, ad.dogfuel, ad.playtime ";
+        $sql = "select d.id, d.name, p.thumb, ad.dogfuel, ad.playtime, ad.walk_distance ";
         $sql .= " from dogs d";
         $sql .= " inner join photos p on (d.photo_id = p.id)";
         $sql .= " inner join activity_dogs ad on (d.id = ad.dog_id)";
@@ -82,6 +83,7 @@ class Activity extends AppModel {
                 $obj['Dog']['thumb'] = $rs[$i]['p']['thumb'];
                 $obj['Dog']['dogfuel'] = $rs[$i]['ad']['dogfuel'];
                 $obj['Dog']['playtime'] = $rs[$i]['ad']['playtime'];
+                $obj['Dog']['distance'] = $rs[$i]['ad']['walk_distance'];
                 $data[] = $obj;
             }
         }

@@ -384,6 +384,65 @@ class UsersController extends AppController {
 	}
     }
     
+    function viewActivity($activityId){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $this->loadModel('Activity');
+            $activity_dogs = $this->Activity->getActivityDogs($activityId);
+            $activity_obj = $this->Activity->findById($activityId);
+            $this->set('activity', $activity_obj);
+            $this->set('activity_dogs', $activity_dogs);
+            
+            $id = $activity_obj['Activity']['user_id'];
+            $user = $this->User->findById($id);
+            $this->set('user', $user);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', $user['User']['name'] . " activity overview");
+            
+            //count stuff for the menu
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $follow_stats = $this->UserFollows->getFollowStats($id);
+            $placeComments = $this->PlaceComment->countCommentsForUser($id);
+            $placeLikes = $this->PlaceLike->countLikesForUser($id);
+            $activityComments = $this->ActivityComment->countCommentsForUser($id);
+            $activityLikes = $this->ActivityLike->countLikesForUser($id);
+            $userPhotos = $this->Photo->countPhotosByUser($id);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($id);
+            $activities = $this->Activity->countActivitiesForUser($id);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            
+            //load the required data
+            //$activities = $this->Activity->getActivityList($id);
+            //$this->set('activitiesList', $activities);
+            
+            //echo "<pre>"; var_dump($dogList); echo "</pre>";
+            
+	} else {
+            $this->requireLogin("/Users/viewActivity/$id");
+	}
+    }
+    
     function login(){
 	$this->layout = 'blank';
 

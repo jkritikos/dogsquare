@@ -14,6 +14,7 @@
 	     <table class="paginate sortable full">
                 <thead>
                     <tr>
+                        <th align="left">ID</th>
                         <th align="left">Date</th>
                         <th align="left">Temperature</th>
                     </tr>
@@ -23,15 +24,16 @@
                 <?php
 
                     foreach($activitiesList as $r => $data){
-                        $created = $data['Activity']['created'];
+                        $created = $data['Activity']['creation_date'];
                         $id = $data['Activity']['id'];
                         $temperature = $data['Activity']['temperature'];
                         $pace = $data['Activity']['pace'];
                         $distance = $data['Activity']['distance'];
                         
-                        $link = "/users/editActivity/$id";
+                        $link = "/users/viewActivity/$id";
                         ?>
                         <tr>
+                            <td><?php echo $id; ?></td>
                             <td><a href="<?php echo $link; ?>"><?php echo $created; ?></a></td>
                             <td><?php echo $temperature; ?></td>
                             
