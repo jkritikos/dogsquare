@@ -91,6 +91,15 @@ class Activity extends AppModel {
         return $data;
     }
     
+    //Returns a count of the comments for this activity
+    function countActivityComments($activityId){
+        $sql = "select count(*) as cnt from activity_comments ac where ac.activity_id=$activityId";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
+    }
+    
     function getActivityComments($activityId){
         $sql = "select ad.id, ad.comment, ad.user_id, u.name, ad.created";
         $sql .= " from activity_comments ad";
@@ -144,8 +153,17 @@ class Activity extends AppModel {
         return $data;
     }
     
+    //Returns a count of the likes for this activity
+    function countActivityLikes($activityId){
+        $sql = "select count(*) as cnt from activity_likes ac where ac.activity_id=$activityId";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
+    }
+    
     function getLikedUsers($activityId){
-        $sql = "select u.id, u.name, p.thumb";
+        $sql = "select u.id, u.name, p.thumb, date_format(al.created, '%d/%m/%Y %H:%i' ) as creation_date ";
         $sql .= " from activity_likes al";
         $sql .= " inner join users u on (al.user_id=u.id)";
         $sql .= " inner join photos p on (u.photo_id=p.id)";
@@ -162,6 +180,7 @@ class Activity extends AppModel {
 
                 $obj['User']['id'] = $id;
                 $obj['User']['name'] = $name;
+                $obj['User']['creation_date'] = $rs[$i][0]['creation_date'];
                 $obj['User']['thumb'] = $thumb;
 
                 $data[] = $obj;

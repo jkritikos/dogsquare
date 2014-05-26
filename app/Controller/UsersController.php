@@ -395,6 +395,7 @@ class UsersController extends AppController {
             $this->set('activity', $activity_obj);
             $this->set('activity_dogs', $activity_dogs);
             $this->set('activity_coordinates', $coordinates);
+            $this->set('activity_id', $activityId);
             
             $id = $activity_obj['Activity']['user_id'];
             $user = $this->User->findById($id);
@@ -402,46 +403,75 @@ class UsersController extends AppController {
             $this->set('user_id', $id);
             $this->set('headerTitle', $user['User']['name'] . " activity overview");
             
-            //count stuff for the menu
-            $this->loadModel('UserFollows');
-            $this->loadModel('Dog');
+            $activity_comments = $this->Activity->countActivityComments($activityId);
+            $activity_likes = $this->Activity->countActivityLikes($activityId);
             
-            $this->loadModel('ActivityComment');
-            $this->loadModel('PlaceComment');
-            $this->loadModel('PlaceLike');
-            $this->loadModel('ActivityLike');
-            $this->loadModel('Photo');
-            $follow_stats = $this->UserFollows->getFollowStats($id);
-            $placeComments = $this->PlaceComment->countCommentsForUser($id);
-            $placeLikes = $this->PlaceLike->countLikesForUser($id);
-            $activityComments = $this->ActivityComment->countCommentsForUser($id);
-            $activityLikes = $this->ActivityLike->countLikesForUser($id);
-            $userPhotos = $this->Photo->countPhotosByUser($id);
-            
-            $followers = $follow_stats['followers'];
-            $following = $follow_stats['following'];
-            $dogs = $this->Dog->countUserDogs($id);
-            $activities = $this->Activity->countActivitiesForUser($id);
-            $comments = $placeComments + $activityComments;
-            $likes = $placeLikes + $activityLikes;
-            $photos = $userPhotos;
-            
-            $this->set('followers', $followers);
-            $this->set('following', $following);
-            $this->set('dogs', $dogs);
-            $this->set('activities', $activities);
-            $this->set('comments', $comments);
-            $this->set('likes', $likes);
-            $this->set('photos', $photos);
-            
-            //load the required data
-            //$activities = $this->Activity->getActivityList($id);
-            //$this->set('activitiesList', $activities);
-            
+            $this->set('comments', $activity_comments);
+            $this->set('likes', $activity_likes);
             //echo "<pre>"; var_dump($coordinates); echo "</pre>";
             
 	} else {
             $this->requireLogin("/Users/viewActivity/$id");
+	}
+    }
+    
+    //Returns the likes for the specified activity
+    function viewActivityLikes($activityId){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $this->loadModel('Activity');
+            
+            $activity_obj = $this->Activity->findById($activityId);
+            $likesList = $this->Activity->getLikedUsers($activityId);
+            $this->set('likesLists', $likesList);
+            $this->set('activity_id', $activityId);
+            
+            $id = $activity_obj['Activity']['user_id'];
+            $user = $this->User->findById($id);
+            $this->set('user', $user);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', $user['User']['name'] . " activity overview");
+            
+            $activity_comments = $this->Activity->countActivityComments($activityId);
+            $activity_likes = $this->Activity->countActivityLikes($activityId);
+            
+            $this->set('comments', $activity_comments);
+            $this->set('likes', $activity_likes);
+            //echo "<pre>"; var_dump($coordinates); echo "</pre>";
+            
+	} else {
+            $this->requireLogin("/Users/viewActivityLikes/$activityId");
+	}
+    }
+    
+    //Returns the comments for the specified activity
+    function viewActivityComments($activityId){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $this->loadModel('Activity');
+            
+            $activity_obj = $this->Activity->findById($activityId);
+            $commentList = $this->Activity->getActivityComments($activityId);
+            $this->set('commentList', $commentList);
+            $this->set('activity_id', $activityId);
+            
+            $id = $activity_obj['Activity']['user_id'];
+            $user = $this->User->findById($id);
+            $this->set('user', $user);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', $user['User']['name'] . " activity overview");
+            
+            $activity_comments = $this->Activity->countActivityComments($activityId);
+            $activity_likes = $this->Activity->countActivityLikes($activityId);
+            
+            $this->set('comments', $activity_comments);
+            $this->set('likes', $activity_likes);
+            //echo "<pre>"; var_dump($coordinates); echo "</pre>";
+            
+	} else {
+            $this->requireLogin("/Users/viewActivityComments/$activityId");
 	}
     }
     

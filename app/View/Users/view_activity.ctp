@@ -51,7 +51,7 @@ $(document).ready(function(){
         <section class="grid_6 first">
             <div class="columns leading">
 
-                <div class="columns">
+                <!--<div class="columns">
                 <div class="grid_6 first">
                     <h3>Activity details:</h3>				
                             <hr />    	
@@ -88,7 +88,7 @@ $(document).ready(function(){
                         
                     </form>
                </div>
-                    </div>
+                    </div>-->
 
                     <div class="columns leading">
                         <div class="grid_6 first">
@@ -139,7 +139,7 @@ $(document).ready(function(){
                             <h3>Location:</h3>				
                             <hr />
                             
-                            <div style="width:760px; height:380px;" id="map-canvas"></div>
+                            <div style="width:750px; height:380px;" id="map-canvas"></div>
 	                    
                         </div>
                     </div>    
@@ -156,13 +156,40 @@ $(document).ready(function(){
         <aside class="grid_2">
             <div class="widget">
                 <header>
-                    <h2>Options</h2>
+                    <h2>Activity properties</h2>
                 </header>
                 <section>
                     <dl>				    				                                    				    
-                        <dd><img src="/img/fam/user_add.png" />&nbsp;<a href="/users/create">Create new user</a></dd>				    				                                    				    
-                        <dd><img src="/img/fam/search.png" />&nbsp;<a href="/users/search">Search users</a></dd>				    				                                    				   
-                        <dd><img src="/img/fam/user_edit.png" />&nbsp;<a href="/users/profile">My profile</a></dd>				    
+                        <dd>
+                            <img src="/img/fam/emoticon_smile.png" />&nbsp;
+                            <?php
+                            if($likes > 0){
+                                $link = "/users/viewActivityLikes/$activity_id";
+                                ?>
+                                <a href="<?php echo $link; ?>"><?php echo $likes; ?> likes</a>
+                                <?php
+                            } else {
+                                ?>
+                                0 likes
+                                <?php
+                            }
+                            ?>
+                        </dd>	
+                        <dd>
+                            <img src="/img/fam/comment.png" />&nbsp;
+                            <?php
+                            if($comments > 0){
+                                $link = "/users/viewActivityComments/$activity_id";
+                                ?>
+                                <a href="<?php echo $link; ?>"><?php echo $comments; ?> comments</a>
+                                <?php
+                            } else {
+                                ?>
+                                0 comments
+                                <?php
+                            }
+                            ?>
+                        </dd>
                     </dl>
                 </section>	    
             </div>
