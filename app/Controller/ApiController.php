@@ -2723,7 +2723,7 @@ class ApiController extends AppController{
             $activity = $this->Activity->getActivityById($user_id, $activity_id);
             $dogs = $this->Activity->getActivityDogs($activity_id);
             $coordinates = $this->Activity->getActivityCoordinates($activity_id);
-            $comments = $this->Activity->getActivityComments($activity_id);
+            $comments = $this->Activity->getActivityComments($activity_id, true);
             
             //add playtime to the activity object
             $activity['playtime'] = $dogs[0]['Dog']['playtime'];

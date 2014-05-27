@@ -453,7 +453,7 @@ class UsersController extends AppController {
             $this->loadModel('Activity');
             
             $activity_obj = $this->Activity->findById($activityId);
-            $commentList = $this->Activity->getActivityComments($activityId);
+            $commentList = $this->Activity->getActivityComments($activityId, false);
             $this->set('commentList', $commentList);
             $this->set('activity_id', $activityId);
             
@@ -468,11 +468,39 @@ class UsersController extends AppController {
             
             $this->set('comments', $activity_comments);
             $this->set('likes', $activity_likes);
-            //echo "<pre>"; var_dump($coordinates); echo "</pre>";
+            
+            //echo "<pre>"; var_dump($commentList); echo "</pre>";
             
 	} else {
             $this->requireLogin("/Users/viewActivityComments/$activityId");
 	}
+    }
+    
+    //AJAX call for deleting/restoring user comments
+    function processComment(){
+        if(isset($_REQUEST['comment_id'])) $comment_id = $_REQUEST['comment_id'];
+        if(isset($_REQUEST['type_id'])) $type_id = $_REQUEST['type_id'];
+        if(isset($_REQUEST['flag'])) $flag = $_REQUEST['flag'];
+        
+        //Activity or place comment
+        $result = false;
+        if($type_id == 1){
+            $this->loadModel('ActivityComment');
+            $obj['ActivityComment']['id'] = $comment_id;
+            $obj['ActivityComment']['active'] = $flag;
+            
+            if($this->ActivityComment->save($obj)){
+                $result = true;
+            }
+            
+        } else {
+            
+        }
+        
+        $data['result'] = $result;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
     }
     
     function login(){

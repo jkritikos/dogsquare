@@ -1,3 +1,57 @@
+<script>
+$(document).ready(function(){
+
+    $( ".commentDeletion" ).click(function(e){
+        
+        var commentId = $( this ).attr("commentId");
+        var actionFlag = $(this).attr('actionFlag');
+        var commentType = 1;
+        //alert('delete comment '+commentId+' with actionFlag '+actionFlag);
+        var button = $(this);
+        
+        var actualButton = $(this).find('span');
+        //actualButton.removeClass('accept');
+        //actualButton.addClass('delete');
+        
+        
+        var options = {
+            url: "/users/processComment",
+            type: "POST",
+            dataType: "json",
+            data: ({comment_id : commentId, type_id:commentType, flag:actionFlag}),
+            success: function(d){
+                
+                //alert('got back response '+d);
+                //var s = JSON.stringify(d);
+                //alert(s);
+
+                if(d.data.result){
+                    
+                    if(actualButton.hasClass('accept')){
+                        actualButton.removeClass('accept');
+                        actualButton.addClass('delete');
+                        //button.html('Restore');
+                        button.attr('actionFlag', 0);
+                    } else {
+                        actualButton.removeClass('delete');
+                        actualButton.addClass('accept');
+                        //button.html('Delete');
+                        button.attr('actionFlag', 1);
+                    }
+                } else {
+                    alert('error');
+                }
+            }
+        };
+
+        $.ajax(options);
+ 
+    });
+			          
+    
+});
+</script>
+
 <section id="content">
     <div class="wrapper">
 
@@ -15,7 +69,9 @@
                 <thead>
                     <tr>
                         <th align="left">Name</th>
+                        <th align="left">Comment</th>
                         <th align="left">Date</th>
+                        <th align="left">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,15 +79,29 @@
                 <?php
 
                     foreach($commentList as $r => $data){
-                        $name = $data['User']['name'];
-                        $id = $data['User']['id'];
-                        $created = $data['User']['creation_date'];
+                        $name = $data['comm']['name'];
+                        $id = $data['comm']['user_id'];
+                        $comment_id = $data['comm']['id'];
+                        $comment = $data['comm']['text'];
+                        $creation_date = $data['comm']['creation_date'];
+                        $created = $data['comm']['creation_date'];
+                        $active = $data['comm']['active'];
                         
-                        $link = "/dogs/edit/$id";
+                        $link = "/users/edit/$id";
+                        
+                        $actionFlag = "0";
+                        $buttonClass = "delete";
+                        if($active == 0){
+                            $actionFlag = 1;
+                            $buttonClass = "accept";
+                        }
+                        
                         ?>
                         <tr>
                             <td><a href="<?php echo $link; ?>"><?php echo $name; ?></a></td>
-                            <td><?php echo $created; ?></td>
+                            <td><?php echo $comment; ?></td>
+                            <td><?php echo $creation_date; ?></td>
+                            <td><a commentId="<?php echo $comment_id; ?>" actionFlag="<?php echo $actionFlag; ?>" href="#" class="action-button commentDeletion" title="accept"><span class="<?php echo $buttonClass; ?>"></span></a></td>
                         </tr>	                    		
                         <?php	                    	
                     }

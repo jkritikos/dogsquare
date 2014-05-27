@@ -100,11 +100,18 @@ class Activity extends AppModel {
         return $count;
     }
     
-    function getActivityComments($activityId){
-        $sql = "select ad.id, ad.comment, ad.user_id, u.name, ad.created";
+    function getActivityComments($activityId, $onlyActive){
+        $sql = "select ad.active, ad.id, ad.comment, ad.user_id, u.name, ad.created, date_format(ad.created, '%d/%m/%Y %H:%i' ) as creation_date";
         $sql .= " from activity_comments ad";
         $sql .= " inner join users u on (ad.user_id=u.id)";
-        $sql .= " where ad.activity_id = $activityId order by ad.created desc";
+        $sql .= " where ad.activity_id = $activityId ";
+        
+        if($onlyActive){
+            $sql .= " and ad.active=1 ";
+        }
+        
+        $sql .= "order by ad.created desc";
+        
         $rs = $this->query($sql);
         
         $data = array();
@@ -123,6 +130,8 @@ class Activity extends AppModel {
                 $obj['comm']['user_id'] = $userId;
                 $obj['comm']['name'] = $userName;
                 $obj['comm']['date'] = $timestamp;
+                $obj['comm']['creation_date'] = $rs[$i][0]['creation_date'];
+                $obj['comm']['active'] = $rs[$i]['ad']['active'];
 
                 $data[] = $obj;
             }

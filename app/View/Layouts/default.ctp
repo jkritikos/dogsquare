@@ -14,7 +14,7 @@
 <link rel="stylesheet" media="all" href="/css/jquery.gritter.css" />
 <link rel="stylesheet" media="all" href="/css/jquery.autocomplete.css" />
 <link rel="stylesheet" media="all" href="/css/visualize.css" />
-
+<link rel="stylesheet" media="all" href="/css/action-buttons.css" />
 
 <script src="/js/html5.js"></script>
 <!-- jquerytools -->
