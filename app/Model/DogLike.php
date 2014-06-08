@@ -36,6 +36,35 @@ class DogLike extends AppModel {
         
         return $count;
     }
+    
+    function getLikedDogs($userId){
+        $sql = "select d.id, d.name, p.thumb, date_format(pl.created, '%d/%m/%Y %H:%i' ) as creation_date";
+        $sql .= " from dog_likes pl";
+        $sql .= " inner join users u on (pl.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " inner join dogs d on (pl.dog_id = d.id) ";
+        $sql .= " where pl.user_id = $userId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['d']['id'];
+                $name = $rs[$i]['d']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $name;
+                $obj['User']['thumb'] = $thumb;
+                $obj['User']['creation_date'] = $rs[$i][0]['creation_date'];
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
      
 }
 

@@ -43,6 +43,35 @@ class ActivityLike extends AppModel {
         return $count;
      }
      
+     function getLikedActivities($userId){
+        $sql = "select a.id, u.id, u.name, p.thumb, date_format(al.created, '%d/%m/%Y %H:%i' ) as creation_date ";
+        $sql .= " from activity_likes al inner join activities a on (al.activity_id = a.id)";
+        $sql .= " inner join users u on (a.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " where al.user_id = $userId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['u']['id'];
+                $name = $rs[$i]['u']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['activity_id'] = $rs[$i]['a']['id'];
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $name;
+                $obj['User']['creation_date'] = $rs[$i][0]['creation_date'];
+                $obj['User']['thumb'] = $thumb;
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
+     
 }
 
 ?>

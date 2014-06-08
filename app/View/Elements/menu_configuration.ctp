@@ -24,9 +24,7 @@
             <dl>				    				                                    				    
                 <dd><img src="/img/fam/cog_add.png" />&nbsp;<a href="/placeCategories/createPlaceCategory">New place category</a></dd>				    				                                    				    
                 <dd><img src="/img/fam/cog.png" />&nbsp;<a href="/placeCategories/viewPlaceCategory">View place categories</a></dd>
-                <hr/>
-                <dd><img src="/img/fam/map_add.png" />&nbsp;<a href="/places/createPlace">New place</a></dd>
-                <dd><img src="/img/fam/search.png" />&nbsp;<a href="/places/searchPlace">Search places</a></dd>				    				                                    				   				    
+                			    				                                    				   				    
             </dl>				    
         </section>				    
     </div>

@@ -191,6 +191,15 @@ class Dog extends AppModel {
         return $count;
     }
     
+    //Returns the count of activities for the specified dog
+    function countDogActivities($dog_id){
+        $sql = "select count(*) cnt from activity_dogs dl where dog_id=$dog_id";
+        $rs = $this->query($sql);
+        $count = $rs[0][0]['cnt'];
+        
+        return $count;
+    }
+    
     function getLikedUsers($dogId){
         $sql = "select u.id, u.name, p.thumb";
         $sql .= " from dog_likes dl";
@@ -215,6 +224,32 @@ class Dog extends AppModel {
             }
         }
                 
+        return $data;
+    }
+    
+    //Returns a list of the activities by this user.
+    function getActivityList($dog_id){
+        $sql = "select a.temperature, a.pace, a.distance, a.id, p.thumb, date_format(a.created, '%d/%m/%Y %H:%i' ) as creation_date, UNIX_TIMESTAMP(a.created) created, group_concat(d.name separator ', ') dogs from activities a ";
+        $sql .= "inner join activity_dogs ad on (a.id = ad.activity_id) inner join dogs d ";
+        $sql .= "on (d.id = ad.dog_id) inner join photos p on (p.id = d.photo_id) where ad.dog_id=$dog_id group by a.id order by a.id desc";
+        
+        $rs = $this->query($sql);
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['Activity']['id'] = $rs[$i]['a']['id'];
+                $obj['Activity']['thumb'] = $rs[$i]['p']['thumb'];
+                $obj['Activity']['created'] = $rs[$i][0]['created'];
+                $obj['Activity']['creation_date'] = $rs[$i][0]['creation_date'];
+                $obj['Activity']['dogs'] = $rs[$i][0]['dogs'];
+                $obj['Activity']['temperature'] = $rs[$i]['a']['temperature'];
+                $obj['Activity']['pace'] = $rs[$i]['a']['pace'];
+                $obj['Activity']['distance'] = $rs[$i]['a']['distance'];
+                
+                $data[] = $obj;
+            }
+        }
+        
         return $data;
     }
     

@@ -19,9 +19,35 @@ if(isset($place)){
 
 ?>
 
+<script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCytXV60HGiJyfNucScCd98poZ73bVfmHo&sensor=false"></script>
 <script type="text/javascript" src="/js/jquery.rules.js"></script>
+<script type="text/javascript">
+  function initialize() {
+    var myLatlng = new google.maps.LatLng(<?php echo $place['Place']['lat']; ?>, <?php echo $place['Place']['lon']; ?>);
+  
+    var mapOptions = {
+        zoom:17,
+      center: new google.maps.LatLng(<?php echo $place['Place']['lat']; ?>, <?php echo $place['Place']['lon']; ?>)
+    };
+    var map = new google.maps.Map(document.getElementById("map-canvas"),
+        mapOptions);
+        
+    
+    // To add the marker to the map, use the 'map' property
+var marker = new google.maps.Marker({
+    position: myLatlng,
+    map: map,
+    title:"Hello World!"
+});
+        
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 <script>
 $(document).ready(function(){
+    //map
+    initialize();
+    
     $('#deletePlaceButton').click(function(){
         
         $('#hiddenActiveFlag').val(0);
@@ -104,6 +130,10 @@ $(document).ready(function(){
                         <label>Color</label>
                         <input type="text" name="data[Place][color]" value="<?php echo $place['Place']['color']; ?>"/>
                     </div>
+                    <div class="clearfix">
+                        <label>Font Color</label>
+                        <input type="text" name="data[Place][color_font]" value="<?php echo $place['Place']['color_font']; ?>"/>
+                    </div>
 		</fieldset>
 
 		<hr />
@@ -113,6 +143,17 @@ $(document).ready(function(){
 		<img id="loader" style="display:none;position:absolute;" src="/img/ajax-loader.gif" />
 	    </form>
 	</div>
+    
+        <div class="columns leading">
+            <div class="grid_6 first">
+                <h3>Location:</h3>				
+                <hr />
+
+                <div style="width:750px; height:380px;" id="map-canvas"></div>
+
+            </div>
+        </div>
+    
     </div>
     
     <div class="clear">&nbsp;</div>    
@@ -121,7 +162,20 @@ $(document).ready(function(){
     <!-- End of Left column/section -->    
     <!-- Right column/section -->
     
-    <?php echo $this->element('menu_configuration'); ?>
+    <aside class="grid_2">		
+            <div class="widget">				    
+                <header>				    
+                    <h2>Options</h2>			    
+                </header>
+
+                <section>				    
+                    <dl>
+                        <dd><img src="/img/fam/map_add.png" />&nbsp;<a href="/places/createPlace">New place</a></dd>
+                        <dd><img src="/img/fam/search.png" />&nbsp;<a href="/places/searchPlace">Search places</a></dd>	
+                    </dl>			    
+                </section>				    
+            </div>		
+	</aside>
     
     <!-- End of Right column/section -->
     <div class="clear"></div>    

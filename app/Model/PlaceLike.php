@@ -43,6 +43,35 @@ class PlaceLike extends AppModel {
         return $count;
      }
      
+     function getLikedPlaces($userId){
+        $sql = "select pp.name, pp.id, u.id, u.name, p.thumb, date_format(pl.created, '%d/%m/%Y %H:%i' ) as creation_date";
+        $sql .= " from place_likes pl";
+        $sql .= " inner join users u on (pl.user_id=u.id)";
+        $sql .= " inner join photos p on (u.photo_id=p.id)";
+        $sql .= " inner join places pp on (pp.id = pl.place_id) ";
+        $sql .= " where pl.user_id = $userId";
+        
+        $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $id = $rs[$i]['u']['id'];
+                $name = $rs[$i]['u']['name'];
+                $thumb = $rs[$i]['p']['thumb'];
+
+                $obj['User']['place_id'] = $rs[$i]['pp']['id'];
+                $obj['User']['id'] = $id;
+                $obj['User']['name'] = $rs[$i]['pp']['name'];
+                $obj['User']['thumb'] = $thumb;
+                $obj['User']['creation_date'] = $rs[$i][0]['creation_date'];
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+    }
 }
 
 ?>

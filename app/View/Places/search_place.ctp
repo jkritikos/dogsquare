@@ -150,7 +150,20 @@ $(document).ready(function(){
 
                 <!-- Right column/section -->
 
-                <?php echo $this->element('menu_configuration'); ?>
+                <aside class="grid_2">		
+            <div class="widget">				    
+                <header>				    
+                    <h2>Options</h2>			    
+                </header>
+
+                <section>				    
+                    <dl>
+                        <dd><img src="/img/fam/map_add.png" />&nbsp;<a href="/places/createPlace">New place</a></dd>
+                        <dd><img src="/img/fam/search.png" />&nbsp;<a href="/places/searchPlace">Search places</a></dd>	
+                    </dl>			    
+                </section>				    
+            </div>		
+	</aside>
                 <!-- End of Right column/section -->
                 <div class="clear"></div>
 

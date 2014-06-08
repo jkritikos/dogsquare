@@ -8,6 +8,7 @@ $classUsers = "";
 $classReports = "";
 $classDashboard = "";
 $classDogs = "";
+$classPlaces = "";
 
 $this->log("header.ctp active tab is $activeTab", LOG_DEBUG);
 
@@ -17,30 +18,42 @@ if($activeTab == 'configurations'){
     $classReports = "";
     $classDashboard = "";
     $classDogs = "";
+    $classPlaces = "";
 } else if($activeTab == 'users'){
     $classConfiguration = "";
     $classUsers = "class=\"active\"";
     $classReports = "";
     $classDashboard = "";
     $classDogs = "";
+    $classPlaces = "";
 } else if($activeTab == 'reports'){
     $classConfiguration = "";
     $classUsers = "";
     $classReports = "class=\"active\"";
     $classDashboard = "";
     $classDogs = "";
+    $classPlaces = "";
 } else if($activeTab == "dashboard"){
     $classConfiguration = "";
     $classUsers = "";
     $classDashboard = "class=\"active\"";
     $classReports = "";
     $classDogs = "";
+    $classPlaces = "";
 } else if($activeTab == "dogs"){
     $classConfiguration = "";
     $classUsers = "";
     $classDashboard = "";
     $classReports = "";
     $classDogs = "class=\"active\"";
+    $classPlaces = "";
+} else if($activeTab == "places"){
+    $classConfiguration = "";
+    $classUsers = "";
+    $classDashboard = "";
+    $classReports = "";
+    $classDogs = "";
+    $classPlaces = "class=\"active\"";
 }
 
 ?>
@@ -67,7 +80,9 @@ if($activeTab == 'configurations'){
                 
                     ?>
                     <li <?php echo $classUsers; ?> ><a href="/users">Users</a></li>
-                    
+                    <li <?php echo $classDogs; ?> ><a href="/dogs">Dogs</a></li>
+                    <li <?php echo $classPlaces; ?> ><a href="/places">Places</a></li>
+                    <li <?php echo $classReports; ?> ><a href="/reports">Reports</a></li>
                     <?php
                 }
                 ?>
@@ -76,7 +91,7 @@ if($activeTab == 'configurations'){
                 if(in_array(ROLE_ADMIN, $role)){
                 
                     ?>
-                    <li <?php echo $classDogs; ?> ><a href="/dogs">Dogs</a></li>
+                    
                     
                     <?php
                 }

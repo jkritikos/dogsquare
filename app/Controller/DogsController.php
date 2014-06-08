@@ -55,11 +55,11 @@ class DogsController extends AppController {
             
             //load data for the menu
             $photos = 1;
-            $activities = 2;
-            $likes = 3;
+            $countActivities = $this->Dog->countDogActivities($id);
+            $likes = $this->Dog->countDogLikes($id);
             
             $this->set('photos', $photos);
-            $this->set('activities', $activities);
+            $this->set('activities', $countActivities);
             $this->set('likes', $likes);
             
             $this->set('id', $id);
@@ -76,6 +76,24 @@ class DogsController extends AppController {
             
 	} else {
             $this->requireLogin("/Dogs/edit/$id");
+	}
+    }
+    
+    //Returns the activity list for the specified dog
+    function viewActivities($dogId){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $activityList = $this->Dog->getActivityList($dogId);
+            $this->set('activitiesList', $activityList);
+            
+            //menu stuff
+            $countActivities = $this->Dog->countDogActivities($dogId);
+            $this->set('activities', $countActivities);
+            $countLikes = $this->Dog->$this->Dog->countDogLikes($dogId);
+            $this->set('likes', $countLikes);
+            
+	} else {
+            $this->requireLogin("/Dogs/viewActivities/$dogId");
 	}
     }
     

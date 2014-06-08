@@ -7,10 +7,19 @@ class PlacesController extends AppController {
     	
     function beforeFilter() {	
         parent::beforeFilter();
-        $this->set('headerTitle', "Configuration Management");
-        $this->set('activeTab', "configurations");
+        $this->set('headerTitle', "Place Management");
+        $this->set('activeTab', "places");
     }
 	
+    function index(){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+
+	} else {
+            $this->requireLogin('/Dogs/index');
+	}
+    }
+    
     function createPlace(){
         $currentUser = $this->Session->read('userID');
         
