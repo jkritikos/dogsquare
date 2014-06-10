@@ -3,6 +3,21 @@ App::uses('AppModel', 'Model');
 class PlaceCheckin extends AppModel {
      public $name = 'PlaceCheckin';
      
+     //Returns a count of the place checkins for this place
+     function countPlaceCheckins($id){
+         $sql = "select count(*) as cnt from place_checkins a where a.place_id=$id";
+        $rs = $this->query($sql);
+        
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        return $count;
+     }
+     
      //Returns the nearby checkins for the specified coordinates
      function getNearbyCheckins($lat, $lon, $mutualFollowers){ 
         $sql = "select u.id, u.name, pl.id, pl.name, pl.lat, pl.lon, p.thumb, ";

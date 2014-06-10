@@ -43,6 +43,21 @@ class PlaceLike extends AppModel {
         return $count;
      }
      
+     //Returns a count of the place likes for this place
+     function countPlaceLikes($id){
+         $sql = "select count(*) as cnt from place_likes a where a.place_id=$id";
+        $rs = $this->query($sql);
+        
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        return $count;
+     }
+     
      function getLikedPlaces($userId){
         $sql = "select pp.name, pp.id, u.id, u.name, p.thumb, date_format(pl.created, '%d/%m/%Y %H:%i' ) as creation_date";
         $sql .= " from place_likes pl";

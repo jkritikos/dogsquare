@@ -76,7 +76,7 @@ $(document).ready(function(){
                     </div>
                     <div class="clearfix">
                         <label>Owner</label>
-                        <label><?php echo $owner['User']['name']; ?></label>
+                        <label><a href="/users/edit/<?php echo $owner['User']['id']; ?>"><?php echo $owner['User']['name']; ?></a></label>
                     </div>
                     
 		</fieldset>

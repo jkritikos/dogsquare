@@ -8,35 +8,30 @@
     <div class="columns leading">
         <div class="grid_6 first">
 	     
-            <h3><?php echo count($activitiesList); ?> Activities</h3>				
+            <h3><?php echo count($likesList); ?> Likes</h3>				
             <hr />
             
 	     <table class="paginate sortable full">
                 <thead>
                     <tr>
-                        <th align="left">ID</th>
+                        <th align="left">Name</th>
                         <th align="left">Date</th>
-                        <th align="left">Temperature</th>
                     </tr>
                 </thead>
                 <tbody>
                     
                 <?php
 
-                    foreach($activitiesList as $r => $data){
-                        $created = $data['Activity']['creation_date'];
-                        $id = $data['Activity']['id'];
-                        $temperature = $data['Activity']['temperature'];
-                        $pace = $data['Activity']['pace'];
-                        $distance = $data['Activity']['distance'];
+                    foreach($likesList as $r => $data){
+                        $name = $data['User']['name'];
+                        $id = $data['User']['id'];
+                        $created = $data['User']['creation_date'];
                         
-                        $link = "/users/viewActivity/$id";
+                        $link = "/dogs/edit/$id";
                         ?>
                         <tr>
-                            <td><?php echo $id; ?></td>
-                            <td><a href="<?php echo $link; ?>"><?php echo $created; ?></a></td>
-                            <td><?php echo $temperature; ?></td>
-                            
+                            <td><a href="<?php echo $link; ?>"><?php echo $name; ?></a></td>
+                            <td><?php echo $created; ?></td>
                         </tr>	                    		
                         <?php	                    	
                     }
@@ -54,7 +49,7 @@
 </section>
 <!-- End of Left column/section -->
               
-<?php echo $this->element('menu_dog'); ?>
+<?php echo $this->element('menu_dog'); ?>	
  <!-- End of Right column/section -->
 
 </div>

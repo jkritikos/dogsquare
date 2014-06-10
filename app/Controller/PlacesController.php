@@ -174,6 +174,7 @@ class PlacesController extends AppController {
         if($currentUser != null){
             $this->set('headerTitle', "Edit place");
             $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
 
             if (!empty($this->request->data)){
                 
@@ -204,10 +205,33 @@ class PlacesController extends AppController {
             if($categoryNames != null){
                 $this->set('categoryNames', $categoryNames);
             }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
 
         } else {
             $this->requireLogin("/Places/editPlace/$id");
         }
+    }
+    
+    function viewLikes($id){
+        
+    }
+    
+    function viewComments($id){
+        
+    }
+    
+    function viewCheckins($id){
+        
     }
 }
 

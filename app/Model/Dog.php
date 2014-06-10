@@ -201,7 +201,7 @@ class Dog extends AppModel {
     }
     
     function getLikedUsers($dogId){
-        $sql = "select u.id, u.name, p.thumb";
+        $sql = "select u.id, u.name, p.thumb, date_format(dl.created, '%d/%m/%Y %H:%i' ) as creation_date";
         $sql .= " from dog_likes dl";
         $sql .= " inner join users u on (dl.user_id=u.id)";
         $sql .= " inner join photos p on (u.photo_id=p.id)";
@@ -219,6 +219,7 @@ class Dog extends AppModel {
                 $obj['User']['id'] = $id;
                 $obj['User']['name'] = $name;
                 $obj['User']['thumb'] = $thumb;
+                $obj['User']['creation_date'] = $rs[$i][0]['creation_date'];
 
                 $data[] = $obj;
             }

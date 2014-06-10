@@ -82,7 +82,7 @@ $(document).ready(function(){
 	    <form id="form" class="form panel" method="post" action="<?php echo $action; ?>" novalidate>
 	    <input type="hidden" name="data[Place][id]" value="<?php echo $targetPlaceId; ?>" />
             <input id="hiddenActiveFlag" type="hidden" name="data[Place][active_override]" value="<?php echo $place['Place']['active']; ?>" />
-		<header><h2>Use the following fields to update the user details:</h2></header>
+		<header><h2>Use the following fields to update the place details:</h2></header>
 
 		<hr />
 		<fieldset>
@@ -162,19 +162,7 @@ $(document).ready(function(){
     <!-- End of Left column/section -->    
     <!-- Right column/section -->
     
-    <aside class="grid_2">		
-            <div class="widget">				    
-                <header>				    
-                    <h2>Options</h2>			    
-                </header>
-
-                <section>				    
-                    <dl>
-                        <dd><img src="/img/fam/map_add.png" />&nbsp;<a href="/places/createPlace">New place</a></dd>
-                        <dd><img src="/img/fam/search.png" />&nbsp;<a href="/places/searchPlace">Search places</a></dd>	
-                    </dl>			    
-                </section>				    
-            </div>		
+    <?php echo $this->element('menu_place'); ?>		
 	</aside>
     
     <!-- End of Right column/section -->
