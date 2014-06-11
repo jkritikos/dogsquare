@@ -102,15 +102,30 @@
             if($photos > 0){
                 $link = "/users/viewPhotos/$user_id";
                 ?>
-                <a href="<?php echo $link; ?>"><?php echo $photos; ?> photos</a>
+                <a href="<?php echo $link; ?>"><?php echo $photos; ?> gallery photos</a>
                 <?php
             } else {
                 ?>
-                0 photos
+                0 gallery photos
                 <?php
             }
             ?>
         </dd>
+        <dd>
+            <img src="/img/fam/accept.png" />&nbsp;
+            <?php
+            if($checkins > 0){
+                $link = "/users/viewCheckins/$user_id";
+                ?>
+                <a href="<?php echo $link; ?>"><?php echo $checkins; ?> checkins</a>
+                <?php
+            } else {
+                ?>
+                0 checkins
+                <?php
+            }
+            ?>
+         </dd>
     </dl>
 
     </section>    						    

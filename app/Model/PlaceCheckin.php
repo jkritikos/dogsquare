@@ -18,6 +18,58 @@ class PlaceCheckin extends AppModel {
         return $count;
      }
      
+     function getPlaceCheckins($id){
+         $sql = "select u.id, u.name, date_format(pc.created, '%d/%m/%Y %H:%i' ) as creation_date from place_checkins pc inner join users u on (pc.user_id = u.id) where pc.place_id=$id";
+         $rs = $this->query($sql);
+        $data = array();
+        
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['user_name'] = $rs[$i]['u']['name'];
+                $obj['user_id'] = $rs[$i]['u']['id'];
+                $obj['creation_date'] = $rs[$i][0]['creation_date'];
+                
+                $data[] = $obj;
+            }
+        }
+        
+        return $data;
+     }
+     
+     //Returns a count of the place checkins for this user
+     function countUserCheckins($id){
+         $sql = "select count(*) as cnt from place_checkins a where a.user_id=$id";
+        $rs = $this->query($sql);
+        
+        $count = 0;
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $count = $rs[$i][0]['cnt'];
+            }
+        }
+        
+        return $count;
+     }
+     
+     //Returns the checkins made by this user
+     function getUserCheckins($id){
+         $sql = "select p.name, pc.id, p.id, date_format(pc.created, '%d/%m/%Y %H:%i' ) as creation_date from place_checkins pc inner join places p on (pc.place_id = p.id) where pc.user_id=$id";
+         $rs = $this->query($sql);
+        $data = array();
+        
+	if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['place_name'] = $rs[$i]['p']['name'];
+                $obj['place_id'] = $rs[$i]['p']['id'];
+                $obj['creation_date'] = $rs[$i][0]['creation_date'];
+                
+                $data[] = $obj;
+            }
+        }
+        
+        return $data;
+     }
+     
      //Returns the nearby checkins for the specified coordinates
      function getNearbyCheckins($lat, $lon, $mutualFollowers){ 
         $sql = "select u.id, u.name, pl.id, pl.name, pl.lat, pl.lon, p.thumb, ";

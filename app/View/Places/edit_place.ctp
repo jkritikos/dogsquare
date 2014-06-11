@@ -81,7 +81,7 @@ $(document).ready(function(){
 		?>
 	    <form id="form" class="form panel" method="post" action="<?php echo $action; ?>" novalidate>
 	    <input type="hidden" name="data[Place][id]" value="<?php echo $targetPlaceId; ?>" />
-            <input id="hiddenActiveFlag" type="hidden" name="data[Place][active_override]" value="<?php echo $place['Place']['active']; ?>" />
+            
 		<header><h2>Use the following fields to update the place details:</h2></header>
 
 		<hr />
@@ -139,7 +139,7 @@ $(document).ready(function(){
 		<hr />
 		<button class="button button-green" type="submit">Update</button>
 		<button class="button button-gray" type="reset">Reset</button>
-                <button id="deletePlaceButton" class="button button-orange" type="submit">Delete</button>
+                <!--<button id="deletePlaceButton" class="button button-orange" type="submit">Delete</button>-->
 		<img id="loader" style="display:none;position:absolute;" src="/img/ajax-loader.gif" />
 	    </form>
 	</div>
@@ -163,7 +163,7 @@ $(document).ready(function(){
     <!-- Right column/section -->
     
     <?php echo $this->element('menu_place'); ?>		
-	</aside>
+	
     
     <!-- End of Right column/section -->
     <div class="clear"></div>    

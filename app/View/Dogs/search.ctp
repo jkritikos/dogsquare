@@ -119,8 +119,8 @@ $(document).ready(function(){
 				<thead>
 				    <tr>
 					<th align="left">Name</th>
-					<th align="left">Breed</th>					
 					<th align="left">Country</th>
+                                        <th align="left">Breed</th>
                                         <th align="left">Owner</th>
 				    </tr>
 				</thead>

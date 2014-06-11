@@ -178,7 +178,7 @@ class PlacesController extends AppController {
 
             if (!empty($this->request->data)){
                 
-                $this->request->data['Place']['active'] = $this->request->data['Place']['active_override'];
+                //$this->request->data['Place']['active'] = $this->request->data['Place']['active_override'];
                 
                 if($this->Place->save($this->request->data)){
                     $this->set('notification', 'Place details updated successfully.');
@@ -216,6 +216,9 @@ class PlacesController extends AppController {
             $this->loadModel('PlaceCheckin');
             $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
             $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
 
         } else {
             $this->requireLogin("/Places/editPlace/$id");
@@ -223,15 +226,142 @@ class PlacesController extends AppController {
     }
     
     function viewLikes($id){
-        
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
+            
+            $placeObj = $this->Place->findById($id);
+            if($placeObj != null){
+                $this->set('place', $placeObj);
+                $this->set('headerTitle', $placeObj['Place']['name']);
+            }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
+            
+            //load required data
+            $placeLikes = $this->PlaceLike->getPlaceLikes($id);
+            $this->set('placeLikes', $placeLikes);
+            
+	} else {
+            $this->requireLogin("/Places/viewLikes/$id");
+	}
     }
     
     function viewComments($id){
-        
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
+            
+            $placeObj = $this->Place->findById($id);
+            if($placeObj != null){
+                $this->set('place', $placeObj);
+                $this->set('headerTitle', $placeObj['Place']['name']);
+            }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
+            
+            //load required data
+            $placeComments = $this->PlaceComment->getPlaceComments($id, false);
+            $this->set('commentList', $placeComments);
+            
+	} else {
+            $this->requireLogin("/Places/viewComments/$id");
+	}
     }
     
     function viewCheckins($id){
-        
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
+            
+            $placeObj = $this->Place->findById($id);
+            if($placeObj != null){
+                $this->set('place', $placeObj);
+                $this->set('headerTitle', $placeObj['Place']['name']);
+            }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
+            
+            //load required data
+            $checkinList = $this->PlaceCheckin->getPlaceCheckins($id);
+            $this->set('checkinList', $checkinList);
+	} else {
+            $this->requireLogin("/Places/viewCheckins/$id");
+	}
+    }
+    
+    function viewPhotos($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
+            
+            $placeObj = $this->Place->findById($id);
+            if($placeObj != null){
+                $this->set('place', $placeObj);
+                $this->set('headerTitle', $placeObj['Place']['name']);
+            }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
+            
+            //load required data
+            $photoList = $this->Photo->getPlacePhotos($id);
+            $this->set('photoList', $photoList);
+            
+	} else {
+            $this->requireLogin("/Places/viewPhotos/$id");
+	}
     }
 }
 

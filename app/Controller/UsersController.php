@@ -48,6 +48,58 @@ class UsersController extends AppController {
             $this->requireLogin('/Users/search');
 	}
     }
+    
+    function viewPhotos($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->loadModel('Photo');
+            $photoList = $this->Photo->getGalleryUserPhotos($id);
+            $this->set('photoList', $photoList);
+            
+            $userObj = $this->User->findById($id);        
+            $this->set('user', $userObj);
+            $this->set('user_id', $id);
+            $this->set('headerTitle', $userObj['User']['name']);
+            
+            //count stuff for the menu
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            $this->loadModel('Activity');
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
+            $follow_stats = $this->UserFollows->getFollowStats($id);
+            $placeComments = $this->PlaceComment->countCommentsForUser($id);
+            $placeLikes = $this->PlaceLike->countLikesForUser($id);
+            $activityComments = $this->ActivityComment->countCommentsForUser($id);
+            $activityLikes = $this->ActivityLike->countLikesForUser($id);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($id);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($id);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($id);
+            $activities = $this->Activity->countActivitiesForUser($id);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
+            
+	} else {
+            $this->requireLogin("/Users/viewPhotos/$id");
+	}
+    }
 
     /*Creates a new user*/
     function create(){
@@ -149,12 +201,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($id);
             $placeComments = $this->PlaceComment->countCommentsForUser($id);
             $placeLikes = $this->PlaceLike->countLikesForUser($id);
             $activityComments = $this->ActivityComment->countCommentsForUser($id);
             $activityLikes = $this->ActivityLike->countLikesForUser($id);
-            $userPhotos = $this->Photo->countPhotosByUser($id);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($id);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($id);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -171,7 +225,7 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
-            
+            $this->set('checkins', $userCheckins);
 
 	} else {
             $this->requireLogin("/Users/edit/$id");
@@ -196,12 +250,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($id);
             $placeComments = $this->PlaceComment->countCommentsForUser($id);
             $placeLikes = $this->PlaceLike->countLikesForUser($id);
             $activityComments = $this->ActivityComment->countCommentsForUser($id);
             $activityLikes = $this->ActivityLike->countLikesForUser($id);
-            $userPhotos = $this->Photo->countPhotosByUser($id);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($id);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($id);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -218,6 +274,7 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
             
             //load the required data
             $followersList = $this->UserFollows->getFollowers($id);
@@ -246,12 +303,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($id);
             $placeComments = $this->PlaceComment->countCommentsForUser($id);
             $placeLikes = $this->PlaceLike->countLikesForUser($id);
             $activityComments = $this->ActivityComment->countCommentsForUser($id);
             $activityLikes = $this->ActivityLike->countLikesForUser($id);
-            $userPhotos = $this->Photo->countPhotosByUser($id);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($id);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($id);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -268,6 +327,7 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
             
             //load the required data
             $followersList = $this->UserFollows->getFollowing($id);
@@ -295,12 +355,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($id);
             $placeComments = $this->PlaceComment->countCommentsForUser($id);
             $placeLikes = $this->PlaceLike->countLikesForUser($id);
             $activityComments = $this->ActivityComment->countCommentsForUser($id);
             $activityLikes = $this->ActivityLike->countLikesForUser($id);
-            $userPhotos = $this->Photo->countPhotosByUser($id);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($id);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($id);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -317,6 +379,7 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
             
             //load the required data
             $timezone = "+2:00";
@@ -350,12 +413,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($id);
             $placeComments = $this->PlaceComment->countCommentsForUser($id);
             $placeLikes = $this->PlaceLike->countLikesForUser($id);
             $activityComments = $this->ActivityComment->countCommentsForUser($id);
             $activityLikes = $this->ActivityLike->countLikesForUser($id);
-            $userPhotos = $this->Photo->countPhotosByUser($id);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($id);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($id);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -372,6 +437,7 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
             
             //load the required data
             $activities = $this->Activity->getActivityList($id);
@@ -411,12 +477,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($userId);
             $placeComments = $this->PlaceComment->countCommentsForUser($userId);
             $placeLikes = $this->PlaceLike->countLikesForUser($userId);
             $activityComments = $this->ActivityComment->countCommentsForUser($userId);
             $activityLikes = $this->ActivityLike->countLikesForUser($userId);
-            $userPhotos = $this->Photo->countPhotosByUser($userId);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($userId);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($userId);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -433,8 +501,61 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
 	} else {
             $this->requireLogin('/Users/viewComments');
+	}
+    }
+    
+    function viewCheckins($userId){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            
+            $user = $this->User->findById($userId);
+            $this->set('user', $user);
+            $this->set('user_id', $userId);
+            $this->set('headerTitle', $user['User']['name']);
+            
+            //load menu stuff
+            $this->loadModel('UserFollows');
+            $this->loadModel('Dog');
+            $this->loadModel('Activity');
+            $this->loadModel('ActivityComment');
+            $this->loadModel('PlaceLike');
+            $this->loadModel('PlaceComment');
+            $this->loadModel('ActivityLike');
+            $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
+            $follow_stats = $this->UserFollows->getFollowStats($userId);
+            $placeComments = $this->PlaceComment->countCommentsForUser($userId);
+            $placeLikes = $this->PlaceLike->countLikesForUser($userId);
+            $activityComments = $this->ActivityComment->countCommentsForUser($userId);
+            $activityLikes = $this->ActivityLike->countLikesForUser($userId);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($userId);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($userId);
+            
+            $followers = $follow_stats['followers'];
+            $following = $follow_stats['following'];
+            $dogs = $this->Dog->countUserDogs($userId);
+            $activities = $this->Activity->countActivitiesForUser($userId);
+            $comments = $placeComments + $activityComments;
+            $likes = $placeLikes + $activityLikes;
+            $photos = $userPhotos;
+            
+            //load required data
+            $checkinList = $this->PlaceCheckin->getUserCheckins($userId);
+            $this->set('checkinList', $checkinList);
+            
+            $this->set('followers', $followers);
+            $this->set('following', $following);
+            $this->set('dogs', $dogs);
+            $this->set('activities', $activities);
+            $this->set('comments', $comments);
+            $this->set('likes', $likes);
+            $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
+	} else {
+            $this->requireLogin("/Users/viewCheckins/$userId");
 	}
     }
     
@@ -563,12 +684,14 @@ class UsersController extends AppController {
             $this->loadModel('PlaceLike');
             $this->loadModel('ActivityLike');
             $this->loadModel('Photo');
+            $this->loadModel('PlaceCheckin');
             $follow_stats = $this->UserFollows->getFollowStats($userId);
             $placeComments = $this->PlaceComment->countCommentsForUser($userId);
             $placeLikes = $this->PlaceLike->countLikesForUser($userId);
             $activityComments = $this->ActivityComment->countCommentsForUser($userId);
             $activityLikes = $this->ActivityLike->countLikesForUser($userId);
-            $userPhotos = $this->Photo->countPhotosByUser($userId);
+            $userPhotos = $this->Photo->countGalleryPhotosByUser($userId);
+            $userCheckins = $this->PlaceCheckin->countUserCheckins($userId);
             
             $followers = $follow_stats['followers'];
             $following = $follow_stats['following'];
@@ -585,6 +708,7 @@ class UsersController extends AppController {
             $this->set('comments', $comments);
             $this->set('likes', $likes);
             $this->set('photos', $photos);
+            $this->set('checkins', $userCheckins);
 	} else {
             $this->requireLogin("/Users/viewLikes/$userId");
 	}
@@ -615,6 +739,28 @@ class UsersController extends AppController {
             if($this->PlaceComment->save($obj)){
                 $result = true;
             }
+        }
+        
+        $data['result'] = $result;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
+    
+    //AJAX call for deleting/restoring user comments
+    function processPhoto(){
+        if(isset($_REQUEST['photo_id'])) $photo_id = $_REQUEST['photo_id'];
+        if(isset($_REQUEST['flag'])) $flag = $_REQUEST['flag'];
+        
+        //Activity or place comment
+        $result = false;
+        
+        $this->loadModel('Photo');
+        $obj['Photo']['id'] = $photo_id;
+        $obj['Photo']['active'] = $flag;
+
+        if($this->Photo->save($obj)){
+            $result = true;
         }
         
         $data['result'] = $result;

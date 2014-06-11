@@ -40,7 +40,7 @@
                 </dd>
                 
                 <dd>
-                <img src="/img/fam/emoticon_smile.png" />&nbsp;
+                <img src="/img/fam/accept.png" />&nbsp;
                 <?php
                 if($checkins > 0){
                     $link = "/places/viewCheckins/$id";
@@ -53,6 +53,21 @@
                     <?php
                 }
                 ?>
+                </dd>
+                <dd>
+                    <img src="/img/fam/camera.png" />&nbsp;
+                    <?php
+                    if($photos > 0){
+                        $link = "/places/viewPhotos/$id";
+                        ?>
+                        <a href="<?php echo $link; ?>"><?php echo $photos; ?> photos</a>
+                        <?php
+                    } else {
+                        ?>
+                        0 photos
+                        <?php
+                    }
+                    ?>
                 </dd>
             </dl>				    
         </section>				    

@@ -58,6 +58,27 @@ class PlaceLike extends AppModel {
         return $count;
      }
      
+     //Returns the likes for this place
+     function getPlaceLikes($id){
+         $sql = "select p.id, p.name, u.id, u.name, date_format(a.created, '%d/%m/%Y %H:%i' ) as creation_date from place_likes a inner join places p on (a.place_id = p.id) inner join users u on (a.user_id = u.id) where a.place_id=$id";
+         $rs = $this->query($sql);
+        
+        $data = array();
+        if(is_array($rs)){
+            foreach($rs as $i => $values){
+                $obj['PlaceLike']['place_id'] = $rs[$i]['p']['id'];
+                $obj['PlaceLike']['place_name'] = $rs[$i]['p']['name'];
+                $obj['PlaceLike']['user_id'] = $rs[$i]['u']['id'];
+                $obj['PlaceLike']['user_name'] = $rs[$i]['u']['name'];
+                $obj['PlaceLike']['creation_date'] = $rs[$i][0]['creation_date'];
+
+                $data[] = $obj;
+            }
+        }
+                
+        return $data;
+     }
+     
      function getLikedPlaces($userId){
         $sql = "select pp.name, pp.id, u.id, u.name, p.thumb, date_format(pl.created, '%d/%m/%Y %H:%i' ) as creation_date";
         $sql .= " from place_likes pl";
