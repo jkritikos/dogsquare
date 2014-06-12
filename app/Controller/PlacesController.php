@@ -363,6 +363,160 @@ class PlacesController extends AppController {
             $this->requireLogin("/Places/viewPhotos/$id");
 	}
     }
+    
+    function addPhoto($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
+            
+            $this->log("PlacesController->addPhoto() called", LOG_DEBUG);
+            
+            //on submit
+            if (!empty($this->request->data)){
+                $this->log("PlacesController->addPhoto() form post", LOG_DEBUG);
+                $dateString = Security::hash(time().rand(1, 10), 'md5');
+                
+                //thumb
+                $path_infoThumb = pathinfo(basename($_FILES['thumbnail']['name']));
+    		$fileExtensionThumb = $path_infoThumb['extension'];
+                $fileNameThumb = $dateString.".".$fileExtensionThumb;
+                $thumbInput = "/uploaded_files/places/$fileNameThumb";
+                $uploadfileThumb = UPLOAD_PATH.PLACE_PATH."/". "$fileNameThumb";
+                
+                //photo
+                $path_info = pathinfo(basename($_FILES['photo']['name']));
+    		$fileExtension = $path_info['extension'];
+                $fileName = "photo_".$dateString.".".$fileExtension;
+                $photoInput = "/uploaded_files/places/$fileName";
+                $uploadfilePhoto = UPLOAD_PATH.PLACE_PATH."/". "$fileName";
+                
+                //echo "<pre>"; var_dump($_FILES); echo "</pre>";
+                if(is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfilePhoto)){
+                    if(is_uploaded_file($_FILES['thumbnail']['tmp_name']) && move_uploaded_file($_FILES['thumbnail']['tmp_name'], $uploadfileThumb)){
+                        $res = $this->PhpThumb->generateThumbnail($thumbInput, array(
+                            'w' => 60, 'h' => 60, 'f' => 'png', 'q' => 95, 'fltr' => "ric|30|30"
+                        ), PLACE_PHOTO_TYPE);
+                        
+                        $this->log("PlacesController->addPhoto() thumbnail creation: ".$res['error'], LOG_DEBUG);
+                        
+                        $resPhoto = $this->PhpThumb->generateThumbnail($photoInput, array(
+                            'w' => 640, 'h' => 640, 'f' => 'jpg', 'q' => 95
+                        ), PLACE_PHOTO_TYPE);
+
+                        //If all went well with the thumbnail generation
+                        if($res['error'] == 0 && $resPhoto['error'] == 0){
+                            $thumbFileName = $res['src'];
+                            $photoFileName = $resPhoto['src'];
+
+                            $placeID = $id;
+                            
+                            //Save photo
+                            $this->log("PlacesController->addPhoto() about to save photo for place $placeID", LOG_DEBUG);
+                            $this->loadModel('Photo');
+                            $obj = array();
+                            $obj['Photo']['path'] = $photoFileName;
+                            $obj['Photo']['thumb'] = $thumbFileName;
+                            $obj['Photo']['user_id'] = $currentUser;
+                            $obj['Photo']['type_id'] = PLACE_PHOTO_TYPE;
+                            $obj['Photo']['place_id'] = $placeID;
+
+                            if($this->Photo->save($obj)){
+                                $photoID = $this->Photo->getLastInsertID();
+                                $this->set('notification', 'New photo successfully added.');
+                            } else {
+                                $this->set('error', 'Unable to add the new photo - please try again.');
+                            } 
+                        } else {
+                            $this->log("PlacesController->addPhoto() thumbnail creation error: ", LOG_DEBUG);
+                        }
+
+                        //echo "<pre>"; var_dump($res); echo "</pre>";
+                        //echo "<Br>using input $thumbInput";   
+                    } else {
+                        $this->log("PlacesController->addPhoto() no thumbnail image found", LOG_DEBUG);
+                    }
+                }
+            }
+            
+            $placeObj = $this->Place->findById($id);
+            if($placeObj != null){
+                $this->set('place', $placeObj);
+                $this->set('headerTitle', $placeObj['Place']['name']);
+            }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
+            
+	} else {
+            $this->requireLogin("/Places/addPhoto/$id");
+	}
+    }
+    
+    function profilePhoto($id){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('targetPlaceId', $id);
+            $this->set('id', $id);
+            
+            $placeObj = $this->Place->findById($id);
+            if($placeObj != null){
+                $this->set('place', $placeObj);
+                $this->set('headerTitle', $placeObj['Place']['name']);
+            }
+            
+            //menu stuff
+            $this->loadModel('PlaceComment');
+            $comments = $this->PlaceComment->countPlaceComments($id);
+            $this->set('comments', $comments);
+            $this->loadModel('PlaceLike');
+            $likes = $this->PlaceLike->countPlaceLikes($id);
+            $this->set('likes', $likes);
+            $this->loadModel('PlaceCheckin');
+            $checkins = $this->PlaceCheckin->countPlaceCheckins($id);
+            $this->set('checkins', $checkins);
+            $this->loadModel('Photo');
+            $photos = $this->Photo->countPlacePhotos($id);
+            $this->set('photos', $photos);
+            
+            //load required data
+            $photoList = $this->Photo->getPlacePhotos($id);
+            $this->set('photoList', $photoList);
+            
+	} else {
+            $this->requireLogin("/Places/profilePhoto/$id");
+	}
+    }
+    
+    function updateProfilePhoto(){
+        if(isset($_REQUEST['photo_id'])) $photo_id = $_REQUEST['photo_id'];
+        if(isset($_REQUEST['place_id'])) $place_id = $_REQUEST['place_id'];
+        
+        $result = false;
+        
+        $obj['Place']['id'] = $place_id;
+        $obj['Place']['photo_id'] = $photo_id;
+
+        if($this->Place->save($obj)){
+            $result = true;
+        }
+        
+        $data['result'] = $result;
+        
+        $this->layout = 'blank';
+        echo json_encode(compact('data', $data));
+    }
 }
 
 ?>

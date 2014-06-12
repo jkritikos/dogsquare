@@ -1,5 +1,20 @@
 <!-- Right column/section -->	
 <aside class="grid_2">		
+    
+    <div class="widget">    
+        <header>
+            <h2>Options</h2>
+    	</header>    
+    	<section>
+    
+    	<dl>				    				                                    				    
+            <dd><img src="/img/fam/picture_add.png" />&nbsp;<a href="/places/addPhoto/<?php echo $id; ?>">Add photos</a></dd>
+            <dd><img src="/img/fam/picture_edit.png" />&nbsp;<a href="/places/profilePhoto/<?php echo $id; ?>">Set profile photo</a></dd>
+    	</dl>
+    
+    	</section>    						    
+    </div>
+    
     <div class="widget">				    
         <header>				    
             <h2>Place properties</h2>			    
