@@ -65,7 +65,7 @@ class User extends AppModel {
     }
     
     function websearch($name,$email,$status,$country_id,$from, $to){
-        $sql = "select c.name, u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created ";
+        $sql = "select c.name, u.name, p.thumb, u.email, u.id, date_format(u.created, '%d/%m/%Y %H:%i' ) as created, (select count(*) from activities a where a.user_id=u.id) as activities_count  ";
         $sql .= " from users u inner join photos p on (u.photo_id=p.id) inner join countries c on (u.country_id = c.id) where 1=1";
 
 	if($name != ''){
@@ -100,6 +100,8 @@ class User extends AppModel {
             $sql .= " and date(u.created) <= '$to' ";
         }
 
+        $sql .= " order by activities_count desc ";
+        
 	$rs = $this->query($sql);
         $this->log("User->websearch() sql $sql", LOG_DEBUG);
         
@@ -118,7 +120,8 @@ class User extends AppModel {
 		$obj['User']['id'] = $id;
                 $obj['User']['thumb'] = $thumb;
                 $obj['User']['country'] = $rs[$i]['c']['name'];
-
+                $obj['User']['activities_count'] = $rs[$i][0]['activities_count'];
+                
 		$data[] = $obj;
             }
 	}

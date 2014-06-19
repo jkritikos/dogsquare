@@ -118,6 +118,7 @@ $(document).ready(function(){
 				<thead>
 				    <tr>
 					<th align="left">Name</th>
+                                        <th align="left">Activities</th>
 					<th align="left">Country</th>					
 					<th align="left">Created</th>
 					<th align="left">Edit</th>
@@ -133,6 +134,7 @@ $(document).ready(function(){
                                     ?>
                                     <tr>
                                         <td><?php echo $r['User']['name']; ?></td>
+                                        <td><?php echo $r['User']['activities_count']; ?></td>
                                         <td><?php echo $r['User']['country']; ?></td>
                                         <td><?php echo $r['User']['created']; ?></td>
                                         <td><a href="<?php echo $editLink; ?>"><img src="/img/fam/user_edit.png" /></a></td>
