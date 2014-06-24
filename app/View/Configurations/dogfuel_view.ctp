@@ -2,6 +2,16 @@
 <script>
 $(document).ready(function(){
 	     
+    $("#massUpdateButton").click(function(){
+        var walkValue = $("#massUpdateWalk").val();
+	var playValue = $("#massUpdatePlay").val();
+        
+	if(walkValue == '' && playValue == ''){
+            $("#errorMsg").fadeIn('slow');
+            return false;
+	}
+    });         
+             
     $("#form").validator({    	
     	position: 'left',
     	offset: [25, 10],
@@ -108,6 +118,32 @@ $(document).ready(function(){
 <!-- Start of dog fuel View section -->
 
 <div class="columns leading">
+        <div class="grid_6 first">
+	     
+            <h3>Dogfuel mass update</h3>				
+            <hr />
+            <form id="formMassUpdate" class="form panel" method="post" action="/configurations/dogfuelMassUpdate" novalidate>
+            <header><h2>Apply the desired formula (e.g * 1.5 or / 2 or + 5 or - 3)</h2></header>
+
+            <hr />
+            <fieldset>
+                <div class="clearfix">
+                    <label>Walk Distance</label>
+                    <input id="massUpdateWalk" type="text" name="data[DogfuelRule][walk]"/>
+                </div>
+                <div class="clearfix">
+                    <label>Playtime</label>
+                    <input id="massUpdatePlay" type="text" name="data[DogfuelRule][play]"/>
+                </div>
+            </fieldset>
+            <span id="errorMsg" style="display:none"><b><font color="red">You must specify at least one of the values.</font></b></span>
+            <hr />
+            <button id="massUpdateButton" class="button button-green" type="submit">Update</button>
+            <button class="button button-gray" type="reset">Reset</button>
+            <img id="loader" style="display:none;position:absolute;" src="/img/ajax-loader.gif" />
+        </form>
+	</div>
+    
         <div class="grid_6 first">
 	     
             <h3>Dogfuel Rules</h3>				

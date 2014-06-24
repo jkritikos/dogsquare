@@ -74,9 +74,9 @@ class PlaceComment extends AppModel {
      }
      
      function getPlaceCommentsByUser($userId, $onlyActive){
-        $sql = "select ad.active, ad.id, ad.comment, ad.user_id, u.name, ad.created, date_format(ad.created, '%d/%m/%Y %H:%i' ) as creation_date";
+        $sql = "select p.name, p.id, ad.active, ad.id, ad.comment, ad.user_id, u.name, ad.created, date_format(ad.created, '%d/%m/%Y %H:%i' ) as creation_date";
         $sql .= " from place_comments ad";
-        $sql .= " inner join users u on (ad.user_id=u.id)";
+        $sql .= " inner join users u on (ad.user_id=u.id) inner join places p on (p.id = ad.place_id) ";
         $sql .= " where ad.user_id = $userId ";
         
         if($onlyActive){
@@ -105,7 +105,9 @@ class PlaceComment extends AppModel {
                 $obj['comm']['date'] = $timestamp;
                 $obj['comm']['creation_date'] = $rs[$i][0]['creation_date'];
                 $obj['comm']['active'] = $rs[$i]['ad']['active'];
-
+                $obj['comm']['place_name'] = $rs[$i]['p']['name'];
+                $obj['comm']['place_id'] = $rs[$i]['p']['id'];
+                
                 $data[] = $obj;
             }
         }

@@ -261,11 +261,18 @@ class Place extends AppModel {
         return $data;
    }
    
-   function getPlaceComments($placeId){
+   function getPlaceComments($placeId, $onlyActive){
         $sql = "select pc.id, pc.comment, pc.user_id, u.name, pc.created";
         $sql .= " from place_comments pc";
         $sql .= " inner join users u on (pc.user_id=u.id)";
-        $sql .= " where pc.place_id = $placeId order by pc.created desc";
+        $sql .= " where pc.place_id = $placeId ";
+        
+        if($onlyActive){
+            $sql .= " and pc.active=1 ";
+        }
+        
+        $sql .= " order by pc.created desc";
+        
         $rs = $this->query($sql);
         
         $data = array();

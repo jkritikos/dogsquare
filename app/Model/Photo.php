@@ -53,8 +53,13 @@ class Photo extends AppModel {
         return $data;
     }
      
-     function getUserPhotos($user_id){
-        $sql = "select p.thumb, p.path from photos p where p.user_id = $user_id and p.type_id in(1,3)";
+     function getUserPhotos($user_id, $onlyActive){
+        $sql = "select p.thumb, p.path from photos p where p.user_id = $user_id and p.type_id in(1,3) ";
+        
+        if($onlyActive){
+            $sql .= " and p.active=1 ";
+        }
+        
         $rs = $this->query($sql);
         $data = array();
         
@@ -71,8 +76,12 @@ class Photo extends AppModel {
     }
     
     //Returns the photos for the specified place
-    function getPlacePhotos($place_id){
+    function getPlacePhotos($place_id, $onlyActive){
         $sql = "select p.id, u.id, u.name, p.active, p.thumb, p.path, date_format(p.created, '%d/%m/%Y %H:%i' ) as creation_date from photos p inner join users u on (p.user_id = u.id) where p.place_id = $place_id and p.type_id = ".PLACE_PHOTO_TYPE;
+        if($onlyActive){
+            $sql .= " and p.active=1 ";
+        }
+        
         $rs = $this->query($sql);
         $data = array();
         

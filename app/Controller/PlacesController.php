@@ -356,7 +356,9 @@ class PlacesController extends AppController {
             $this->set('photos', $photos);
             
             //load required data
-            $photoList = $this->Photo->getPlacePhotos($id);
+            $photoList = $this->Photo->getPlacePhotos($id, false);
+            $canDeletePhoto = count($photoList) > 1;
+            $this->set('allow_photo_delete', $canDeletePhoto);
             $this->set('photoList', $photoList);
             
 	} else {

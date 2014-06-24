@@ -105,7 +105,14 @@ $(document).ready(function(){
                             <td><?php echo $id; ?></td>
                             <td><a data-lightbox="image-<?php echo $i; ?>" href="<?php echo $imgPath; ?>"><img src="<?php echo $thumbPath; ?>"></td>
                             <td><?php echo $created; ?></td>
-                            <td><a photoId="<?php echo $id; ?>" actionFlag="<?php echo $actionFlag; ?>" href="#" class="action-button photoDeletion" title="accept"><span class="<?php echo $buttonClass; ?>"></span></a></td>
+                            <td>
+                                <?php if($allow_photo_delete){
+                                    ?>
+                                    <a photoId="<?php echo $id; ?>" actionFlag="<?php echo $actionFlag; ?>" href="#" class="action-button photoDeletion" title="accept"><span class="<?php echo $buttonClass; ?>"></span></a>
+                                    <?php
+                                }
+                                ?>
+                            </td>
                         </tr>	                    		
                         <?php	                    	
                     }

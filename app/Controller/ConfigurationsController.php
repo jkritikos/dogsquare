@@ -187,26 +187,51 @@ class ConfigurationsController extends AppController{
 	}
     }
 
-	
-	function dogfuelView(){
+    //Does a mass update on the dogfuel walk/play rules
+    function dogfuelMassUpdate(){
         $currentUser = $this->Session->read('userID');
 	if($currentUser != null){
-		$this->set('currentUser', $currentUser);
+            $this->set('currentUser', $currentUser);
 		
-        $this->loadModel('DogfuelRule');
+            $this->loadModel('DogfuelRule');
+        	
+            //on submit
+            if (!empty($this->request->data)){
+                $walk = $this->request->data['DogfuelRule']['walk'];
+                $play = $this->request->data['DogfuelRule']['play'];
+                $rows = $this->DogfuelRule->doMassUpdate($walk, $play);
+                
+                if($rows > 0){
+                    $this->set('notification', 'Dog fuel rules successfully updated.');
+                    $this->redirect(array('action' => 'dogfuelView'));
+                } else {
+                    $this->set('error', 'Unable to update the dogfuel rules - please try again.');
+                }
+            }
+	} else {
+            $this->requireLogin("/Configurations/dogfuelView");
+	}
+    }
+    
+    function dogfuelView(){
+        $currentUser = $this->Session->read('userID');
+	if($currentUser != null){
+            $this->set('currentUser', $currentUser);
+		
+            $this->loadModel('DogfuelRule');
         
-		$this->loadModel('DogBreed');
-		$breed = $this->DogBreed->getDogBreedNames();
-		$this->set('breed', $breed);
+            $this->loadModel('DogBreed');
+            $breed = $this->DogBreed->getDogBreedNames();
+            $this->set('breed', $breed);
 		
-		$dogfuel = $this->DogfuelRule->getDogfuelAll();
-		$this->set('dogfuel', $dogfuel);
+            $dogfuel = $this->DogfuelRule->getDogfuelAll();
+            $this->set('dogfuel', $dogfuel);
 		
         //on submit
         if (!empty($this->request->data)){
             if($this->DogfuelRule->save($this->request->data)){
                 $this->set('notification', 'Dog fuel successfully created.');
-				$this->redirect(array('action' => 'dogfuelView'));
+		$this->redirect(array('action' => 'dogfuelView'));
             } else {
                 $this->set('error', 'Unable to create the Dog fuel - please try again.');
             }

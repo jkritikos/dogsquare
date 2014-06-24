@@ -69,7 +69,7 @@ class User extends AppModel {
         $sql .= " from users u inner join photos p on (u.photo_id=p.id) inner join countries c on (u.country_id = c.id) where 1=1";
 
 	if($name != ''){
-            $sql .= " and u.name like '%$name%' order by u.name";
+            $sql .= " and u.name like '%$name%' ";
 	}
 
 	if($email != ''){

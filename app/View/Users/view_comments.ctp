@@ -144,8 +144,10 @@ $(document).ready(function(){
                         $creation_date = $data['comm']['creation_date'];
                         $created = $data['comm']['creation_date'];
                         $active = $data['comm']['active'];
+                        $place_name = $data['comm']['place_name'];
+                        $place_id = $data['comm']['place_id'];
                         
-                        $link = "/users/edit/$id";
+                        $link = "/places/editPlace/$place_id";
                         
                         $actionFlag = "0";
                         $buttonClass = "delete";
@@ -156,7 +158,7 @@ $(document).ready(function(){
                         
                         ?>
                         <tr>
-                            <td><a href="<?php echo $link; ?>"><?php echo $name; ?></a></td>
+                            <td><a href="<?php echo $link; ?>"><?php echo $place_name; ?></a></td>
                             <td><?php echo $comment; ?></td>
                             <td><?php echo $creation_date; ?></td>
                             <td><a commentType="2" commentId="<?php echo $comment_id; ?>" actionFlag="<?php echo $actionFlag; ?>" href="#" class="action-button commentDeletion" title="accept"><span class="<?php echo $buttonClass; ?>"></span></a></td>

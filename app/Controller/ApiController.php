@@ -2933,9 +2933,9 @@ class ApiController extends AppController{
             $this->loadModel('Photo');
             
             if($type_id == USER_PHOTO_TYPE){
-                $photos = $this->Photo->getUserPhotos($target_id);
+                $photos = $this->Photo->getUserPhotos($target_id, true);
             } else if($type_id == PLACE_PHOTO_TYPE){
-                $photos = $this->Photo->getPlacePhotos($target_id);
+                $photos = $this->Photo->getPlacePhotos($target_id, true);
             }
             
             //Count unread notifications
@@ -3379,11 +3379,11 @@ class ApiController extends AppController{
             $this->loadModel('Place');
             $this->loadModel('Photo');
             $place = $this->Place->getPlaceById($place_id, $user_id);
-            $comments = $this->Place->getPlaceComments($place_id);
+            $comments = $this->Place->getPlaceComments($place_id, true);
             $likes = $this->Place->getPlaceLikes($place_id);
             $checkins = $this->Place->getPlaceCheckins($place_id);
             $lastCheckin = $this->Place->getLastCheckin($user_id, $place_id);
-            $photos = $this->Photo->getPlacePhotos($place_id);
+            $photos = $this->Photo->getPlacePhotos($place_id, true);
             
             //Count unread notifications
             $this->loadModel('UserNotification');
